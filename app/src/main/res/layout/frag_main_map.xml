@@ -1,0 +1,63 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchActivity">
+
+    <FrameLayout
+        android:id="@+id/flContentFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="72dp"
+        android:gravity="center"
+        android:background="@drawable/shape_rounded_white"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <com.brain_socket.tapdrive.view.TextViewCustomFont
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="Select Car Type"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/ts_text_normal"
+            app:fontId="1"
+            />
+
+        <ImageView
+            android:id="@+id/btnFilter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:padding="4dp"
+            android:src="@drawable/arrow_down"/>
+
+    </LinearLayout>
+
+
+    <!--<com.brain_socket.thagheralrafedain.view.AppWorkshopCard-->
+        <!--android:id="@+id/vProviderPreview"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:clickable="true"-->
+        <!--/>-->
+</FrameLayout>

@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Tap&amp;Drive</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- about pager -->
+    <string name="about_pager_title_1">Welcome to the first app for Car rental in the region.</string>
+    <string name="about_pager_desc_1">Lorem ipsum dolor sit amet, consectetur adipiscing</string>
+    <string name="about_pager_title_2">No Hassle just TapDrive</string>
+    <string name="about_pager_desc_2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien elit, sodales vel lectus quis, semper.</string>
+    <string name="about_pager_title_3">Easy and fast to use</string>
+    <string name="about_pager_desc_3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien elit, sodales vel lectus quis, semper scelerisque ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et</string>
+    <string name="about_pager_btn_next">Next</string>
+
+    <!--filters -->
+    <string name="filters_title">Car types</string>
+    <string name="menu_action_done">OK</string>
+    <string name="filters_cancel">Cancel</string>
+    <string name="filters_ok">Ok</string>
+    <string name="filters_group_types">Choose Car Type</string>
+    <string name="filters_select_all">Select all</string>
+
+    <string name="drawer_help">Help</string>
+    <string name="drawer_logout">logout</string>
+    <string name="drawer_profile">PROFILE</string>
+    <string name="drawer_payment">PAYMENT</string>
+    <string name="drawer_trips">TRIP HISTORY</string>
+    <string name="drawer_wish">WISH LIST</string>
+    <string name="drawer_settings">SETTINGS</string>
+
+    <string name="location_not_enabled_msg">Please, Enable Locations services for better results</string>
+    <string name="location_not_enabled_ok">Enable</string>
+    <string name="location_not_enabled_cancel">Cancel</string>
+
+
+</resources>

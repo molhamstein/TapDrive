@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#BBBDC0</color>
+    <color name="colorPrimaryDark">#232222</color>
+    <color name="colorAccent">#BBBDC0</color>
+
+    <color name="app_theme">#f6b221</color>
+    <color name="app_bg">#2b2b2b</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+
+    <color name="gray_xdark">#333333</color>
+    <color name="gray_dark">#999999</color>
+    <color name="gray">#aaaaaa</color>
+    <color name="gray_light">#cccccc</color>
+    <color name="gray_xlight">#eeeeee</color>
+
+    <color name="black_overlay">#66000000</color>
+
+    <!-- Search filters -->
+    <color name="filter_item_bg_active">#356c96f9</color>
+    <color name="filter_item_bg">#e0e0e0</color>
+
+</resources>

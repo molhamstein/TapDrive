@@ -1,0 +1,53 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="#0099cc"
+             tools:context="com.brain_socket.tapdrive.SplashScreen">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/splash"
+        android:scaleType="fitXY"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#66000000"/>
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/splash_logo"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"/>
+
+    <ImageView
+        android:id="@+id/ivName"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_marginTop="170dp"
+        android:src="@drawable/splash_name"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"/>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="70dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="30dp"
+        android:textSize="@dimen/ts_title_normal"
+        android:text="LOADING"
+        android:textColor="@color/white"/>
+
+</FrameLayout>
