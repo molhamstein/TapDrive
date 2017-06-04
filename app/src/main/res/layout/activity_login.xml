@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.brain_socket.tapdrive.LoginActivity"
+    android:background="@drawable/login_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/logo_login"/>
+
+        <com.brain_socket.tapdrive.view.EditTextCustomFont
+            android:id="@+id/etEmail"
+            android:layout_width="@dimen/login_element_width"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="40dp"
+            android:drawableLeft="@drawable/ic_email"
+            android:background="@drawable/shape_rounded_edit_text"
+            android:paddingRight="25dp"
+            android:paddingLeft="25dp"
+            android:layout_gravity="center"
+            android:textSize="@dimen/ts_text_normal"
+            android:textColor="@color/black"
+            android:hint="@string/activity_login_hint_email"
+            android:gravity="center"
+            android:inputType="textEmailAddress"
+            android:layout_centerInParent="true"
+            app:fontId="1"/>
+
+        <com.brain_socket.tapdrive.view.EditTextCustomFont
+            android:id="@+id/etPassword"
+            android:layout_width="@dimen/login_element_width"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="8dp"
+            android:drawableLeft="@drawable/ic_psw"
+            android:background="@drawable/shape_rounded_edit_text"
+            android:paddingRight="25dp"
+            android:paddingLeft="29dp"
+            android:layout_gravity="center"
+            android:inputType="textPassword"
+            android:textSize="@dimen/ts_text_normal"
+            android:textColor="@color/black"
+            android:hint="@string/activity_login_password_hint"
+            android:gravity="center"
+            app:fontId="1"/>
+
+        <com.brain_socket.tapdrive.view.TextViewCustomFont
+            android:id="@+id/btnForgetPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="right|center_vertical"
+            android:layout_marginRight="30dp"
+            android:text="@string/activity_login_forgot_password_hint"
+            android:textSize="@dimen/ts_text_normal"
+            android:textColor="@color/white"
+            app:fontId="2"/>
+
+        <com.brain_socket.tapdrive.view.TextViewCustomFont
+            android:id="@+id/btnLogin"
+            android:layout_width="180dp"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/shape_black_rounded_button"
+            android:textSize="@dimen/ts_text_normal"
+            android:textColor="@color/white"
+            android:text="@string/activity_login_btn_login"
+            app:fontId="2"/>
+
+        <com.brain_socket.tapdrive.view.TextViewCustomFont
+            android:id="@+id/btnNewUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="@dimen/ts_text_normal"
+            android:textColor="@color/white"
+            android:text="@string/activity_login_btn_new_user"
+            app:fontId="2"/>
+
+        <View
+            android:id="@+id/vSeperator"
+            android:layout_width="@dimen/login_element_width"
+            android:layout_height="0.6dp"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="center"
+            android:background="@color/black"></View>
+
+        <com.brain_socket.tapdrive.view.TextViewCustomFont
+            android:id="@+id/tvOrConnectWith"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="@dimen/ts_text_normal"
+            android:textColor="@color/white"
+            android:text="@string/activity_login_or_connect_with"
+            app:fontId="2"/>
+
+        <com.brain_socket.tapdrive.view.TextViewCustomFont
+            android:id="@+id/btnFacebookLogin"
+            android:layout_width="@dimen/login_element_width"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_fb"
+            android:background="@drawable/shape_rounded_facebook_button"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:textSize="@dimen/ts_text_normal"
+            android:textColor="@color/white"
+            android:text="@string/activity_login_btn_facebook"
+            app:fontId="2"/>
+
+        <com.brain_socket.tapdrive.view.TextViewCustomFont
+            android:id="@+id/btnTwitterLogin"
+            android:layout_width="@dimen/login_element_width"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_twitter"
+            android:background="@drawable/shape_rounded_twitter_button"
+            android:paddingRight="25dp"
+            android:paddingLeft="25dp"
+            android:textSize="@dimen/ts_text_normal"
+            android:textColor="@color/white"
+            android:text="@string/activity_login_btn_twitter"
+            app:fontId="2"/>
+
+        <com.brain_socket.tapdrive.view.TextViewCustomFont
+            android:id="@+id/btnSkipLogin"
+            android:layout_width="@dimen/login_element_width"
+            android:layout_height="@dimen/login_button_height"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/shape_rounded_twitter_button"
+            android:textSize="@dimen/ts_text_normal"
+            android:textColor="@color/white"
+            android:text="@string/activity_register_login_skip"
+            app:fontId="2"/>
+
+    </LinearLayout>
+
+</ScrollView>

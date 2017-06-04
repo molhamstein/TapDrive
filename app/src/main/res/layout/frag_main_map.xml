@@ -52,6 +52,101 @@
 
     </LinearLayout>
 
+    <!-- vehicle type filter bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/app_theme"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom|center"
+        android:gravity="center">
+
+        <LinearLayout
+            android:id="@+id/llCarsFilter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_profile"/>
+            <com.brain_socket.tapdrive.view.TextViewCustomFont
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Cars"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_text_big"
+                app:fontId="3"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llYachtsFilter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+            <View
+                android:layout_width="1dp"
+                android:layout_height="20dp"
+                android:background="@color/white"
+                android:layout_gravity="center_vertical"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_profile"
+                android:layout_gravity="center_vertical"/>
+            <com.brain_socket.tapdrive.view.TextViewCustomFont
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Yacht"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_text_big"
+                app:fontId="3"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/llCoptersFilter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:clickable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+            <View
+                android:layout_width="1dp"
+                android:layout_height="20dp"
+                android:background="@color/white"
+                android:layout_gravity="center_vertical"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_profile"/>
+            <com.brain_socket.tapdrive.view.TextViewCustomFont
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Copter"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_text_big"
+                app:fontId="3"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
 
     <!--<com.brain_socket.thagheralrafedain.view.AppWorkshopCard-->
         <!--android:id="@+id/vProviderPreview"-->

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:background="@color/com_facebook_blue">
+    
+    <ImageView
+        android:id="@+id/ivFilterIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/ic_email"/>
+    <com.brain_socket.tapdrive.view.TextViewCustomFont
+        android:id="@+id/tvVehicleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/ivFilterIcon"
+        android:textSize="@dimen/ts_text_normal"
+        android:textColor="@color/black"
+        android:text="Vehicle"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvFilters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@+id/ivFilterIcon"/>
+<View
+    android:id="@+id/vSeperator"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_below="@+id/rvFilters"
+    android:background="@android:color/holo_green_dark"/>
+
+    <ImageView
+        android:id="@+id/ivPriceIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/vSeperator"
+        android:src="@drawable/ic_profile"/>
+    <com.brain_socket.tapdrive.view.TextViewCustomFont
+        android:id="@+id/tvPriceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivPriceIcon"
+        android:layout_below="@+id/vSeperator"
+        android:textSize="@dimen/ts_text_normal"
+        android:textColor="@color/black"
+        android:text="Price"/>
+
+    <com.appyvet.rangebar.RangeBar
+        android:id="@+id/rbPrice"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_below="@+id/ivPriceIcon"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        app:tickStart="5"
+        app:tickInterval="1"
+        app:tickEnd="10"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
+
+
+    <com.brain_socket.tapdrive.view.TextViewCustomFont
+        android:id="@+id/btnCancel"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rbPrice"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/shape_black_rounded_button"
+        android:padding="8dp"
+        android:gravity="center"
+        android:textSize="@dimen/ts_text_normal"
+        android:textColor="@color/white"
+        android:text="Cancel"
+        app:fontId="1"/>
+    <com.brain_socket.tapdrive.view.TextViewCustomFont
+        android:id="@+id/btnApply"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rbPrice"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/shape_rounded_button_primary"
+        android:padding="8dp"
+        android:gravity="center"
+        android:textSize="@dimen/ts_text_normal"
+        android:textColor="@color/white"
+        android:text="Apply"
+        app:fontId="1"/>
+
+</RelativeLayout>

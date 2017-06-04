@@ -22,6 +22,7 @@
     <string name="filters_ok">Ok</string>
     <string name="filters_group_types">Choose Car Type</string>
     <string name="filters_select_all">Select all</string>
+    <string name="filters_select_car_type">Select Car Type</string>
 
     <string name="drawer_help">Help</string>
     <string name="drawer_logout">logout</string>
@@ -35,5 +36,42 @@
     <string name="location_not_enabled_ok">Enable</string>
     <string name="location_not_enabled_cancel">Cancel</string>
 
+    <!-- LoginActivity -->
+    <string name="activity_login_hint_email">Email</string>
+    <string name="activity_login_password_hint">Password</string>
+    <string name="activity_login_forgot_password_hint">Forgot Password?</string>
+    <string name="activity_login_btn_login">Log In</string>
+    <string name="activity_login_btn_new_user">New User ? Register !</string>
+    <string name="activity_login_or_connect_with">Or connect with</string>
+    <string name="activity_login_btn_facebook">Facebook</string>
+    <string name="activity_login_btn_twitter">Twitter</string>
+
+    <!-- RegisterActivity -->
+    <string name="activity_register_account_info">Account Info</string>
+    <string name="activity_register_hint_email">Email</string>
+    <string name="activity_register_hint_phone">Phone</string>
+    <string name="activity_register_hint_birth_day">Birthday</string>
+    <string name="activity_register_hint_password">Password</string>
+    <string name="activity_register_already_have_account">Already have account?</string>
+    <string name="activity_register_btn_login">login</string>
+    <string name="activity_register_add_your_photo">Add your photo</string>
+    <string name="activity_register_hint_full_name">Full Name</string>
+    <string name="activity_register_hint_address">Address</string>
+    <string name="activity_register_congrats">Congratulations!</string>
+    <string name="activity_register_congrats_msg">You can now check amazing car offers and rent the best</string>
+    <string name="activity_register_get_started">Get Started</string>
+    <string name="activity_register_field_required">required</string>
+    <string name="activity_register_login_skip">Skip</string>
+    <string name="activity_register_next">Next Step</string>
+    <string name="activity_register_finish">Finish</string>
+    <string name="activity_register_male">Male</string>
+    <string name="activity_register_female">Female</string>
+    <string name="activity_register_step2_title">Personal Information</string>
+    <string name="activity_register_birthdate">Birthdate</string>
+
+    <!-- MainActivity -->
+    <string name="activity_main_toolbar_car">Cars</string>
+    <string name="activity_main_toolbar_yachts">Yachts</string>
+    <string name="activity_main_toolbar_helicopter">Helicopter</string>
 
 </resources>

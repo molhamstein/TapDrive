@@ -26,7 +26,13 @@ public class IntroActivity extends AppCompatActivity {
     OnClickListener onNextClick = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            parallaxContainer.getViewPager().setCurrentItem(parallaxContainer.getViewPager().getCurrentItem()+1,true);
+            if(view.getId() == R.id.btnNext3){
+                Intent i = new Intent(IntroActivity.this,LoginActivity.class);
+                startActivity(i);
+            }
+            else {
+                parallaxContainer.getViewPager().setCurrentItem(parallaxContainer.getViewPager().getCurrentItem() + 1, true);
+            }
         }
     };
 
@@ -59,10 +65,10 @@ public class IntroActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
 
-                if (position == 2) {
-                    Intent i = new Intent(IntroActivity.this, MainActivity.class);
-                    startActivity(i);
-                }
+//                if (position == 2) {
+//                    Intent i = new Intent(IntroActivity.this,LoginActivity.class);
+//                    startActivity(i);
+//                }
             }
 
             @Override

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/login_element_width"
+    android:layout_height="@dimen/login_button_height"
+    android:background="@drawable/shape_rounded_edit_text">
+
+    <View
+        android:id="@+id/vGenderSelector"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="22dp"
+        android:layout_marginStart="22dp"
+        android:background="@drawable/shape_rounded_gender_selected"></View>
+
+    <com.brain_socket.tapdrive.view.TextViewCustomFont
+        android:id="@+id/tvMale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="55dp"
+        android:layout_marginStart="55dp"
+        android:textSize="@dimen/ts_text_normal"
+        android:textColor="@color/white"
+        android:text="@string/activity_register_male"
+        app:fontId="1"/>
+
+    <com.brain_socket.tapdrive.view.TextViewCustomFont
+        android:id="@+id/tvFemale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="55dp"
+        android:layout_marginEnd="55dp"
+        android:textSize="@dimen/ts_text_normal"
+        android:textColor="@color/white"
+        android:text="@string/activity_register_female"
+        app:fontId="1"/>
+
+</FrameLayout>

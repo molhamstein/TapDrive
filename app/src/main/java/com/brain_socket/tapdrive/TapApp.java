@@ -19,6 +19,7 @@ import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -268,5 +269,16 @@ public class TapApp extends Application implements GoogleApiClient.ConnectionCal
             });
             dialog.show();
         }
+    }
+
+    public static String getPhoneNumber(){
+        String mPhoneNumber = null;
+        try{
+            TelephonyManager tMgr = (TelephonyManager)appContext.getSystemService(Context.TELEPHONY_SERVICE);
+            mPhoneNumber = tMgr.getLine1Number();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return mPhoneNumber;
     }
 }

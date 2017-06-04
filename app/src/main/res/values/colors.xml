@@ -10,12 +10,16 @@
 
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
+    <color name="et_white">#50ffffff</color>
 
     <color name="gray_xdark">#333333</color>
     <color name="gray_dark">#999999</color>
     <color name="gray">#aaaaaa</color>
     <color name="gray_light">#cccccc</color>
     <color name="gray_xlight">#eeeeee</color>
+
+    <color name="facebook_button_color">#3b5999</color>
+    <color name="twitter_button_color">#55acef</color>
 
     <color name="black_overlay">#66000000</color>
 
