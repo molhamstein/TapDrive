@@ -65,6 +65,7 @@
                     android:textSize="@dimen/ts_text_normal"
                     android:textColor="@color/black"
                     android:hint="@string/activity_register_hint_email"
+                    android:inputType="textEmailAddress"
                     android:gravity="center"
                     app:fontId="1"/>
                 <com.brain_socket.tapdrive.view.EditTextCustomFont
@@ -169,6 +170,7 @@
                     android:textColor="@color/black"
                     android:hint="@string/activity_register_hint_birth_day"
                     android:gravity="center"
+                    android:editable="false"
                     app:fontId="1"/>
 
             </LinearLayout>

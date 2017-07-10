@@ -40,7 +40,8 @@
             android:gravity="center"
             android:inputType="textEmailAddress"
             android:layout_centerInParent="true"
-            app:fontId="1"/>
+            app:fontId="1"
+            android:text="samer.shatta@gmail.com"/>
 
         <com.brain_socket.tapdrive.view.EditTextCustomFont
             android:id="@+id/etPassword"
@@ -57,7 +58,8 @@
             android:textColor="@color/black"
             android:hint="@string/activity_login_password_hint"
             android:gravity="center"
-            app:fontId="1"/>
+            app:fontId="1"
+            android:text="123456"/>
 
         <com.brain_socket.tapdrive.view.TextViewCustomFont
             android:id="@+id/btnForgetPassword"

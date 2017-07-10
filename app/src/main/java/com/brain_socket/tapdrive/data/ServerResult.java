@@ -4,13 +4,13 @@ import java.util.HashMap;
 
 public class ServerResult {
 
-    private static int[] errors = {
-            ServerAccess.ERROR_CODE_userExistsBefore,
-            ServerAccess.ERROR_CODE_userNotExists ,
-            ServerAccess.ERROR_CODE_unknown ,
-            ServerAccess.ERROR_CODE_userExistsBefore ,
-            ServerAccess.ERROR_CODE_appVersionInvalid,
-            ServerAccess.ERROR_CODE_updateAvailable
+    private static String[] errors = {
+            ServerAccess.USER_EXIST_BEFORE,
+            ServerAccess.USER_NOT_EXIST,
+            ServerAccess.UNKNOWN_EXCEPTION ,
+            ServerAccess.MODEL_NOT_FOUND,
+            ServerAccess.VALIDATION_ERROR,
+            ServerAccess.USER_NOT_FOUND,
     };
 
     private int statusCode;
@@ -49,8 +49,8 @@ public class ServerResult {
         return  statusCode;
     }
 
-    public void setStatusCode(int flag) {
-        this.statusCode = flag;
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
     }
 
     public void setApiError(String apiError) {
@@ -70,14 +70,17 @@ public class ServerResult {
     }
 
     public boolean isValid() {
-        for(int error : errors) {
-            if(statusCode == error)
+        if(apiError == "")
+            return true;
+        for(String error : errors) {
+            if(apiError.equals(error))
                 return false;
         }
         return true;
     }
 
     public boolean connectionFailed (){
-        return  apiError != null || statusCode >= 600 ;//(statusCode == ServerAccess.RESPONCE_FORMAT_ERROR_CODE || flag == ServerAccess.CONNECTION_ERROR_CODE );
+        //return  apiError != "" || statusCode >= 600 ;
+        return  statusCode >= 600 ;
     }
 }

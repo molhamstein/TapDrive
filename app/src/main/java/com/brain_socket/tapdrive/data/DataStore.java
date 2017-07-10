@@ -6,6 +6,7 @@ import android.os.Handler;
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.AppUser;
+import com.brain_socket.tapdrive.model.UserModel;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class DataStore {
     private ArrayList<DataStoreUpdateListener> updateListeners;
     private ServerAccess serverHandler;
 
-    private AppUser me;
+    private UserModel me;
     private String apiAccessToken;
     private App_ACCESS_MODE accessMode;
 
@@ -193,25 +194,30 @@ public class DataStore {
     //-------------------------------------------
 
     /**
-     * @param FBID     : pass null if signing-up without facebook
+     * @param email
      * @param callback
      */
-    public void attemptSignUp(final String phoneNum, final String firstName, final String lastName, final String countryCode, final String versionId, final String FBID, final DataRequestCallback callback) {
+    public void attemptSignUp(final String email,final String password,final String fullName,
+                              final String phone,final String gender,final String birthday,
+                              final String countryId,final String socialId,final String socialPlatform,
+                              final DataRequestCallback callback) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.registerUser(firstName, lastName, phoneNum, countryCode, versionId, FBID);
+                ServerResult result = serverHandler.registerUser(email,password,fullName,phone,gender,birthday,countryId,socialId,socialPlatform);
                 if (result.connectionFailed()) {
                     success = false;
                 } else {
                     try {
-                        AppUser me = (AppUser) result.getPairs().get("appUser");
-                        apiAccessToken = me.getAccessToken();
-                        setApiAccessToken(apiAccessToken);
-                        setMe(me);
-                        broadcastloginStateChange();
+                        if(result.isValid()){
+                            UserModel me = (UserModel) result.getPairs().get("appUser");
+                            apiAccessToken = me.getToken();
+                            setApiAccessToken(apiAccessToken);
+                            setMe(me);
+                            broadcastloginStateChange();
+                        }
                     } catch (Exception e) {
                         success = false;
                     }
@@ -221,23 +227,39 @@ public class DataStore {
         }).start();
     }
 
-    /**
-     * attempting login using phone number
-     *
-     * @param phoneNumfinal if the phone number was found in the DB the user will be logged in otherwise error code will be returned
-     */
-    public void attemptLogin(final String phoneNumfinal, final DataRequestCallback callback) {
+    public void attemptForgetUserPassword(final String email, final DataRequestCallback callback) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.login(phoneNumfinal);
-                if (result.getRequestStatusCode() >= 600) {
+                ServerResult result = serverHandler.forgetUserPassword(email);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    /**
+     * attempting login using phone number
+     *
+     * @param email
+     */
+    public void attemptLogin(final String email,final String password,final String socialId,final String socialPlatform, final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.login(email,password,socialId,socialPlatform);
+                if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {
                     if (result.isValid()) {
-                        me = (AppUser) result.getPairs().get("appUser");
-                        apiAccessToken = me.getAccessToken();
+                        me = (UserModel) result.getPairs().get("appUser");
+                        apiAccessToken = me.getToken();
                         setApiAccessToken(apiAccessToken);
                         setMe(me);
                         broadcastloginStateChange();
@@ -373,14 +395,14 @@ public class DataStore {
         return me != null;
     }
 
-    public AppUser getMe() {
+    public UserModel getMe() {
         if (me == null)
             me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, new TypeToken<AppUser>() {
             }.getType());
         return me;
     }
 
-    public void setMe(AppUser newUser) {
+    public void setMe(UserModel newUser) {
         if (isUserLoggedIn())
             this.me = newUser;
         DataCacheProvider.getInstance().storeObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, newUser);
