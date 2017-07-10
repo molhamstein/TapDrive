@@ -10,7 +10,7 @@ public class ServerResult {
             ServerAccess.UNKNOWN_EXCEPTION ,
             ServerAccess.MODEL_NOT_FOUND,
             ServerAccess.VALIDATION_ERROR,
-            ServerAccess.USER_NOT_FOUND,
+            ServerAccess.USER_NOT_EXIST,
     };
 
     private int statusCode;
