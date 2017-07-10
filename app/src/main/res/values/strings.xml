@@ -85,5 +85,6 @@
     <string name="activity_forget_password_btn_submit">Submit</string>
     <string name="activity_forget_password_request_sent">Forget password request sent, check your mailbox.</string>
     <string name="activity_forget_password_request_failed">Forget password request failed</string>
+    <string name="activity_forget_password_user_not_found">User not found</string>
 
 </resources>

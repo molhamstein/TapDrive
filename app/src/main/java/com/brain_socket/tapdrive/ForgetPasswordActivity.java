@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.brain_socket.tapdrive.data.DataStore;
+import com.brain_socket.tapdrive.data.ServerAccess;
 import com.brain_socket.tapdrive.data.ServerResult;
 
 public class ForgetPasswordActivity extends AppCompatActivity implements View.OnClickListener {
@@ -71,7 +72,8 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
                     Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_request_sent), Toast.LENGTH_LONG).show();
                     finish();
                 }else{
-                    Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_request_failed), Toast.LENGTH_LONG).show();
+                    if(result.getApiError().equals(ServerAccess.USER_NOT_FOUND))
+                        Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_user_not_found), Toast.LENGTH_LONG).show();
                 }
             }else{
                 Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_request_failed), Toast.LENGTH_LONG).show();
