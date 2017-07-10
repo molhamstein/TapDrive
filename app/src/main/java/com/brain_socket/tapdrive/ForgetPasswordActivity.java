@@ -72,7 +72,7 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
                     Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_request_sent), Toast.LENGTH_LONG).show();
                     finish();
                 }else{
-                    if(result.getApiError().equals(ServerAccess.USER_NOT_FOUND))
+                    if(result.getApiError().equals(ServerAccess.USER_NOT_EXIST))
                         Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_user_not_found), Toast.LENGTH_LONG).show();
                 }
             }else{

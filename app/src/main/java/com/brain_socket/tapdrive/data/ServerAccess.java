@@ -39,7 +39,6 @@ public class ServerAccess {
     public static final String TOKEN_NOT_PROVIDED = "TOKEN_NOT_PROVIDED";
     public static final String TOKEN_EXPIRED = "TOKEN_EXPIRED";
     public static final String TOKEN_INVALID = "TOKEN_INVALID";
-    public static final String USER_NOT_FOUND = "USER_NOT_FOUND";
     public static final String INVALID_RESET_PASSWORD_TOKEN = "INVALID_RESET_PASSWORD_TOKEN";
 
     // api
