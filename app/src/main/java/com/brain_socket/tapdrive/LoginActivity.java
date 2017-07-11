@@ -1,8 +1,8 @@
 package com.brain_socket.tapdrive;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
@@ -11,7 +11,7 @@ import com.github.florent37.viewanimator.ViewAnimator;
 
 import java.util.ArrayList;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView etEmail;
     private TextView etPassword;
     private ArrayList<View> uiElements;
@@ -29,12 +29,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         animateUiElementsArray();
     }
 
-    private void init(){
-        if(uiElements == null) uiElements = new ArrayList<View>();
+    private void init() {
+        if (uiElements == null) uiElements = new ArrayList<View>();
 
         View ivLogo = findViewById(R.id.ivLogo);
-        etEmail = (TextView)findViewById(R.id.etEmail);
-        etPassword = (TextView)findViewById(R.id.etPassword);
+        etEmail = (TextView) findViewById(R.id.etEmail);
+        etPassword = (TextView) findViewById(R.id.etPassword);
         View btnForgetPassword = findViewById(R.id.btnForgetPassword);
         View btnLogin = findViewById(R.id.btnLogin);
         View btnFacebookLogin = findViewById(R.id.btnFacebookLogin);
@@ -67,29 +67,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnSkipLogin.setOnClickListener(this);
     }
 
-    private void hideUiElement(){
-        if(uiElements != null && uiElements.size() > 0){
-            for(View v : uiElements)
+    private void hideUiElement() {
+        if (uiElements != null && uiElements.size() > 0) {
+            for (View v : uiElements)
                 v.setAlpha(0);
         }
     }
 
-    private void createNewUser(){
-        Intent i = new Intent(LoginActivity.this,RegisterActivity.class);
+    private void createNewUser() {
+        Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(i);
     }
 
-    private void animateUiElementsArray(){
-        if(uiElements != null && uiElements.size() > 0){
-            for(int i=0;i<uiElements.size();i++){
-                animateLoginPageUiElements(uiElements.get(i),((i+1)*130));
+    private void animateUiElementsArray() {
+        if (uiElements != null && uiElements.size() > 0) {
+            for (int i = 0; i < uiElements.size(); i++) {
+                animateLoginPageUiElements(uiElements.get(i), ((i + 1) * 130));
             }
         }
     }
 
-    private void animateLoginPageUiElements(View v,int delay){
+    private void animateLoginPageUiElements(View v, int delay) {
 
-        ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0,1).duration(1000)
+        ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(1000)
                 .interpolator(new OvershootInterpolator())
                 .start();
     }
@@ -98,11 +98,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         int viewId = v.getId();
 
-        switch (viewId){
+        switch (viewId) {
             case R.id.btnForgetPassword:
                 break;
             case R.id.btnLogin:
-
                 break;
             case R.id.btnFacebookLogin:
                 break;
@@ -112,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 createNewUser();
                 break;
             case R.id.btnSkipLogin:
-                Intent i = new Intent(LoginActivity.this,MainActivity.class);
+                Intent i = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(i);
                 break;
         }
