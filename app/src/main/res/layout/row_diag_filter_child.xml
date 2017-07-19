@@ -12,7 +12,7 @@
               android:paddingRight="10dp"
               android:paddingTop="16dp">
 
-    <com.brain_socket.tapdrive.view.TextViewCustomFont
+    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

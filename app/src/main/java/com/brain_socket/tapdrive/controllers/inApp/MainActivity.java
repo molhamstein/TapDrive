@@ -1,6 +1,5 @@
-package com.brain_socket.tapdrive;
+package com.brain_socket.tapdrive.controllers.inApp;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,10 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.TranslateAnimation;
+import android.widget.TextView;
 
-import com.brain_socket.tapdrive.Fragments.FragMap;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
+import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.customViews.RoundedImageView;
+import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.model.AppCarBrand;
+import com.brain_socket.tapdrive.model.UserModel;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -30,8 +34,9 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     View rlMainContent;
 
-
     ArrayList<AppCarBrand> brands;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,12 +113,20 @@ public class MainActivity extends AppCompatActivity
         ab.setDisplayShowCustomEnabled(true); // enable overriding the default toolbar layout
         ab.setDisplayShowTitleEnabled(false); // disable the default title element here (for centered title)
 
+        View headerLayout = navigationView.getHeaderView(0);
+        RoundedImageView profilePicture = (RoundedImageView) headerLayout.findViewById(R.id.ivProfilePic);
+        TextView userName = (TextView) headerLayout.findViewById(R.id.tvUserName);
+
+        UserModel me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
+        userName.setText(me.getUsername());
+        Glide.with(this).load(me.getPhoto()).into(profilePicture);
+
     }
 
     private void showBrandOnMap() {
         fragmentManager = getSupportFragmentManager();
-        FragMap fragMap = FragMap.newInstance(brands);
-        fragment = fragMap;
+        MapFragment mapFragment = MapFragment.newInstance(brands);
+        fragment = mapFragment;
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_MAIN_MAP_FRAG)
                 .commit();
@@ -131,9 +144,11 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
-
         }
+
+//        else if (id == R.id.nav_manage) {
+//
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

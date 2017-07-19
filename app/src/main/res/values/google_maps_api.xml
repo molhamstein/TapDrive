@@ -15,5 +15,8 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">AIzaSyDgfAZ8PON6EehHCmsyCfzOyxgI1jk9A0M</string>
+
+    <!--Molham's Google Maps API Key-->
+    <!--<string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">AIzaSyDgfAZ8PON6EehHCmsyCfzOyxgI1jk9A0M</string>-->
+    <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">AIzaSyDCxQzPV9pOgX5_8Cc9fq68ybMiVc_A6xQ</string>
 </resources>

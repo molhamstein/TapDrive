@@ -3,7 +3,7 @@ package com.brain_socket.tapdrive.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.brain_socket.tapdrive.TapApp;
+import com.brain_socket.tapdrive.utils.TapApp;
 import com.brain_socket.tapdrive.model.AppBaseModel;
 
 import org.json.JSONArray;
@@ -24,6 +24,7 @@ public class DataCacheProvider {
     public static final String KEY_APP_ARRAY_WORKSHOPS = "workshops";
     public static final String KEY_APP_ARRAY_BRANDS = "brands";
     public static final String KEY_APP_ACCESS_MODE = "accessMode";
+    public static final String KEY_APP_CATEGORIES = "categories";
 
 
     private static DataCacheProvider cacheProvider = null;

@@ -1,4 +1,4 @@
-package com.brain_socket.tapdrive.view;
+package com.brain_socket.tapdrive.customViews;
 
 import android.content.Context;
 import android.content.res.TypedArray;

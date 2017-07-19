@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.brain_socket.tapdrive.LoginActivity"
+    tools:context="com.brain_socket.tapdrive.controllers.onBoarding.LoginActivity"
     android:background="@drawable/login_bg">
 
     <LinearLayout
@@ -24,7 +24,7 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/logo_login"/>
 
-        <com.brain_socket.tapdrive.view.EditTextCustomFont
+        <com.brain_socket.tapdrive.customViews.EditTextCustomFont
             android:id="@+id/etEmail"
             android:layout_width="@dimen/login_element_width"
             android:layout_height="@dimen/login_button_height"
@@ -40,9 +40,10 @@
             android:gravity="center"
             android:inputType="textEmailAddress"
             android:layout_centerInParent="true"
-            app:fontId="1"/>
+            app:fontId="1"
+            android:text="samer.shatta@gmail.com"/>
 
-        <com.brain_socket.tapdrive.view.EditTextCustomFont
+        <com.brain_socket.tapdrive.customViews.EditTextCustomFont
             android:id="@+id/etPassword"
             android:layout_width="@dimen/login_element_width"
             android:layout_height="@dimen/login_button_height"
@@ -57,9 +58,10 @@
             android:textColor="@color/black"
             android:hint="@string/activity_login_password_hint"
             android:gravity="center"
-            app:fontId="1"/>
+            app:fontId="1"
+            android:text="123456"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/btnForgetPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,7 +73,7 @@
             android:textColor="@color/white"
             app:fontId="2"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/btnLogin"
             android:layout_width="180dp"
             android:layout_height="@dimen/login_button_height"
@@ -84,7 +86,7 @@
             android:text="@string/activity_login_btn_login"
             app:fontId="2"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/btnNewUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -104,7 +106,7 @@
             android:layout_gravity="center"
             android:background="@color/black"></View>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/tvOrConnectWith"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,7 +118,7 @@
             android:text="@string/activity_login_or_connect_with"
             app:fontId="2"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/btnFacebookLogin"
             android:layout_width="@dimen/login_element_width"
             android:layout_height="@dimen/login_button_height"
@@ -132,7 +134,7 @@
             android:text="@string/activity_login_btn_facebook"
             app:fontId="2"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/btnTwitterLogin"
             android:layout_width="@dimen/login_element_width"
             android:layout_height="@dimen/login_button_height"
@@ -148,7 +150,7 @@
             android:text="@string/activity_login_btn_twitter"
             app:fontId="2"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/btnSkipLogin"
             android:layout_width="@dimen/login_element_width"
             android:layout_height="@dimen/login_button_height"

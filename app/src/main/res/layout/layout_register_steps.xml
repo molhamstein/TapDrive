@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="left"
@@ -26,7 +26,7 @@
             android:text="1"
             app:fontId="1"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -37,7 +37,7 @@
             android:text="2"
             app:fontId="1"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="right"
@@ -64,7 +64,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="7dp">
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/tvStep1"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -76,7 +76,7 @@
             android:text="1"
             app:fontId="1"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/tvStep2"
             android:layout_width="35dp"
             android:layout_height="35dp"
@@ -88,7 +88,7 @@
             android:text="2"
             app:fontId="1"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/tvStep3"
             android:layout_width="35dp"
             android:layout_height="35dp"

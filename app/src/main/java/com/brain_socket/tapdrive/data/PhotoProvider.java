@@ -3,7 +3,7 @@ package com.brain_socket.tapdrive.data;
 import android.widget.ImageView;
 
 import com.brain_socket.tapdrive.R;
-import com.brain_socket.tapdrive.TapApp;
+import com.brain_socket.tapdrive.utils.TapApp;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;

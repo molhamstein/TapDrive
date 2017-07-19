@@ -1,5 +1,6 @@
-package com.brain_socket.tapdrive;
+package com.brain_socket.tapdrive.controllers.onBoarding;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
+import com.brain_socket.tapdrive.utils.Helpers;
+import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
+import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.utils.TapApp;
+import com.brain_socket.tapdrive.data.DataStore;
+import com.brain_socket.tapdrive.data.ServerResult;
+import com.brain_socket.tapdrive.model.UserModel;
 import com.hbb20.CountryCodePicker;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -29,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private EditText etBirthday;
     private CountryCodePicker ccp;
     private View llAlreadyHaveAccount;
+    private Dialog loadingDialog;
 
     private String email;
     private String password;
@@ -54,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void init(){
         if(uiElements == null) uiElements = new ArrayList<View>();
 
+        loadingDialog = TapApp.getNewLoadingDilaog(this);
         gender = Gender.Male;
         vGenderSelector = findViewById(R.id.vGenderSelector);
         View ivLogo = findViewById(R.id.ivLogo);
@@ -132,10 +142,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             if(email.isEmpty()){
                 cancel = true;
+                etEmail.setError(getString(R.string.activity_register_field_required));
                 focusView = etEmail;
+            }else{
+                if(!Helpers.isValidEmail(email)){
+                    etEmail.setError(getString(R.string.activity_register_email_invalid));
+                    cancel = true;
+                    focusView = etEmail;
+                }
             }
             if(password.isEmpty()){
                 cancel = true;
+                etPassword.setError(getString(R.string.activity_register_field_required));
                 focusView = etPassword;
             }
 
@@ -143,7 +161,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 llAlreadyHaveAccount.setVisibility(View.VISIBLE);
                 btnNext.setText(getString(R.string.activity_register_next));
                 focusView.requestFocus();
-                focusView.setError(getString(R.string.activity_register_field_required));
                 return;
             }
             btnNext.setText(getString(R.string.activity_register_finish));
@@ -163,11 +180,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             if(fullName.isEmpty()){
                 cancel = true;
+                etFullName.setError(getString(R.string.activity_register_field_required));
                 focusView = etFullName;
             }
             if(phone.isEmpty()){
                 cancel = true;
+                etPhone.setError(getString(R.string.activity_register_field_required));
                 focusView = etPhone;
+            }
+
+            if(birthdate == null){
+                cancel = true;
+                etBirthday.setError(getString(R.string.activity_register_field_required));
+                focusView = etBirthday;
             }
 
             if(cancel){
@@ -186,12 +211,29 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
         if(registerStep == 3){
-            registerStep = 0;
-            finish();
-            Intent i = new Intent(RegisterActivity.this,MainActivity.class);
-            startActivity(i);
+            loadingDialog.show();
+            DataStore.getInstance().attemptSignUp(email,password,fullName,phone,gender.toString(),birthdate,"1","","",registerCallback);
         }
     }
+
+    DataStore.DataRequestCallback registerCallback = new DataStore.DataRequestCallback() {
+        @Override
+        public void onDataReady(ServerResult result, boolean success) {
+            loadingDialog.dismiss();
+            if(success){
+                UserModel user = (UserModel) result.getValue("appUser");
+                if(user != null){
+                    finish();
+                    Intent i = new Intent(RegisterActivity.this,MainActivity.class);
+                    startActivity(i);
+                }else{
+                    Toast.makeText(RegisterActivity.this, "User exists before", Toast.LENGTH_SHORT).show();
+                }
+            }else{
+                Toast.makeText(RegisterActivity.this, getString(R.string.activity_request_failed), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     private void changeSelectedGender(Gender gen){
         if(gender != gen){
@@ -211,8 +253,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        birthdate = dayOfMonth+"/"+monthOfYear+"/"+year;
-        etBirthday.setText(birthdate);
+//        Date myDate = new Date(year,monthOfYear,dayOfMonth);
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+//        calendar.setTime(myDate);
+//        Date time = calendar.getTime();
+//        SimpleDateFormat outputFmt = new SimpleDateFormat("dd/MM/yyyy");
+//        birthdate = outputFmt.format(time);
+        birthdate = "11/09/1990";
+        etBirthday.setText(dayOfMonth+"/"+monthOfYear+"/"+year);
     }
 
     private void openDatePickerDialog(){
@@ -226,6 +275,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         dpd.show(getFragmentManager(), "Datepickerdialog");
     }
 
+    private void login(){
+        Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+        startActivity(i);
+    }
+
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
@@ -234,6 +288,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 nextRegisterStep();
                 break;
             case R.id.btnLogin:
+                login();
                 this.finish();
                 break;
             case R.id.tvMale:

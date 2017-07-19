@@ -27,4 +27,7 @@
     <color name="filter_item_bg_active">#356c96f9</color>
     <color name="filter_item_bg">#e0e0e0</color>
 
+    <color name="mdtp_accent_color">#f6b221</color>
+    <color name="mdtp_accent_color_dark">#232222</color>
+
 </resources>

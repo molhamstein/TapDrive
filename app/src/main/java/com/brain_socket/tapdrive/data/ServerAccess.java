@@ -1,11 +1,9 @@
 package com.brain_socket.tapdrive.data;
 
-import android.provider.Settings;
-
-import com.brain_socket.tapdrive.TapApp;
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
-import com.brain_socket.tapdrive.model.AppUser;
+import com.brain_socket.tapdrive.model.AppCategory;
+import com.brain_socket.tapdrive.model.UserModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,19 +23,23 @@ import java.util.Random;
 public class ServerAccess {
     // GENERIC ERROR CODES
 
-    public static final int ERROR_CODE_userExistsBefore = -2;
-    public static final int ERROR_CODE_userNotExists = -3;
-    public static final int ERROR_CODE_UNAUTHENTICATED = -4;
-    public static final int ERROR_CODE_unknown = -1000;
-    public static final int ERROR_CODE_appVersionInvalid= -121;
-    public static final int ERROR_CODE_updateAvailable=  -122;
-
-    public static final int RESPONCE_FORMAT_ERROR_CODE = 601 ;
-    public static final int CONNECTION_ERROR_CODE = 600 ;
-    public static final int REQUEST_SUCCESS_CODE = 0 ;
+    public static final String VALIDATION_ERROR = "VALIDATION_ERROR";
+    public static final String INCORRECT_EMAIL_OR_PASSWORD = "INCORRECT_EMAIL_OR_PASSWORD";
+    public static final String USER_EXIST_BEFORE = "USER_EXIST_BEFORE";
+    public static final String USER_NOT_EXIST = "USER_NOT_EXIST";
+    public static final String UNAUTHENTICATED = "UNAUTHENTICATED";
+    public static final String UNAUTHORIZED = "UNAUTHORIZED";
+    public static final String MODEL_NOT_FOUND = "MODEL_NOT_FOUND";
+    public static final String UNKNOWN_EXCEPTION = "UNKNOWN_EXCEPTION";
+    public static final String INTERNAL_ERROR = "INTERNAL_ERROR";
+    public static final String SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE";
+    public static final String TOKEN_NOT_PROVIDED = "TOKEN_NOT_PROVIDED";
+    public static final String TOKEN_EXPIRED = "TOKEN_EXPIRED";
+    public static final String TOKEN_INVALID = "TOKEN_INVALID";
+    public static final String INVALID_RESET_PASSWORD_TOKEN = "INVALID_RESET_PASSWORD_TOKEN";
 
     // api
-    static final String BASE_SERVICE_URL = "http://thageralrafedain.com/mobile_app/api";
+    static final String BASE_SERVICE_URL = "http://tap-drive.com/tapdrive_api/public/index.php/api/v1";
 
     private static ServerAccess serverAccess = null;
 
@@ -56,37 +58,35 @@ public class ServerAccess {
     //////////////////
     // login
     /////////////////
-    public ServerResult login(String phoneNum) {
+    public ServerResult login(String email,String password,String socialId,String socialToken) {
         ServerResult result = new ServerResult();
-        AppUser me  = null ;
+        UserModel me  = null ;
         boolean isRegistered = false;
         try {
             // parameters
             JSONObject jsonPairs = new JSONObject();
-            jsonPairs.put("mobile_number", phoneNum);
-            try{
-                String deviceId = Settings.Secure.getString(TapApp.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-                jsonPairs.put("imei", deviceId);
-            } catch(Exception e){
-                e.printStackTrace();
-            }
+            jsonPairs.put("email", email);
+            jsonPairs.put("password",password);
+            jsonPairs.put("social_id",socialId);
+            jsonPairs.put("social_platform",socialToken);
+
             // url
-            String url = BASE_SERVICE_URL + "/auth/mobileLogin";
+            String url = BASE_SERVICE_URL + "/auth/login";
+
             // send request
             ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
             result.setStatusCode(apiResult.getStatusCode());
             result.setApiError(apiResult.getApiError());
-            JSONObject jsonResponse = new JSONObject(apiResult.response);
-            if (jsonResponse != null && apiResult.statusCode != 400) { // check if response is empty
-                me = AppUser.fromJson(jsonResponse);
+            JSONObject jsonResponse = apiResult.getResponseJsonObject(); //new JSONObject(apiResult.response);
+            if (jsonResponse != null && apiResult.statusCode == 200) { // check if response is empty
+                me = UserModel.fromJson(jsonResponse);
                 isRegistered = true;
             }
-            if(apiResult.statusCode == 400 && result.getApiError().equals("MODEL_NOT_FOUND")){
+            if(apiResult.statusCode == 200 && result.getApiError().equals(MODEL_NOT_FOUND)){
                 isRegistered = false;
-                result.setStatusCode(ERROR_CODE_userNotExists);
             }
         } catch (Exception e) {
-            result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
         }
         result.addPair("appUser", me);
         result.addPair("isRegistered",isRegistered);
@@ -96,99 +96,148 @@ public class ServerAccess {
     /**
      * register a new user with UserName and phoneNumber
      */
-    public ServerResult registerUser(String fName,String lName, String phoneNum, String countryCode, String versionId, String FBID) {
+    public ServerResult registerUser(String email,String password,String fullName,
+                                     String phone, String gender, String birthday,
+                                     String countryId,String socialId,String socialPlatform) {
         ServerResult result = new ServerResult();
-        AppUser me  = null ;
+        UserModel me  = null ;
         try {
             // parameters
             JSONObject jsonPairs = new JSONObject();
-            jsonPairs.put("country_id", 1);
-            jsonPairs.put("mobile_number", phoneNum);
-            jsonPairs.put("name", fName);
-            jsonPairs.put("country_code", countryCode);
-            jsonPairs.put("facebook_token", FBID);
+            jsonPairs.put("email",email);
+            jsonPairs.put("password",password);
+            jsonPairs.put("full_name",fullName);
+            jsonPairs.put("phone",phone);
+            jsonPairs.put("gender",gender.toLowerCase());
+            jsonPairs.put("birthday",birthday);
+            jsonPairs.put("country_id",countryId);
+            jsonPairs.put("social_id",socialId);
+            jsonPairs.put("social_platform",socialPlatform);
 
-            try{
-                String deviceId = Settings.Secure.getString(TapApp.getAppContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-                jsonPairs.put("imei", deviceId);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
             // url
             String url = BASE_SERVICE_URL + "/auth/register";
+
             // send request
             ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
             result.setStatusCode(apiResult.getStatusCode());
             result.setApiError(apiResult.getApiError());
-            JSONObject jsonResponse = new JSONObject(apiResult.response);
+            JSONObject jsonResponse = apiResult.getResponseJsonObject();
             if (jsonResponse != null) { // check if response is empty
-                me = AppUser.fromJson(jsonResponse);
-            }
-            if(apiResult.statusCode == 409 && result.getApiError().equals("USER_EXIST_BEFORE")){
-                result.setStatusCode(ERROR_CODE_userExistsBefore);
+                me = UserModel.fromJson(jsonResponse);
             }
         } catch (Exception e) {
-            result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
         }
         result.addPair("appUser", me);
 
         return result;
     }
 
-    public ServerResult requestVerificationMsg(String accessToken) {
+    public ServerResult forgetUserPassword(String email){
         ServerResult result = new ServerResult();
-        boolean msgSent = false ;
         try {
             // parameters
             JSONObject jsonPairs = new JSONObject();
-            jsonPairs.put("access_token", accessToken);
+            jsonPairs.put("email",email);
+
             // url
-            String url = BASE_SERVICE_URL + "/index.php/verification_messages_api/send_verification_code";
+            String url = BASE_SERVICE_URL + "/auth/forget_password";
+
             // send request
-            ApiRequestResult apiResult = httpRequest(url, jsonPairs,"post",null);
-            JSONObject jsonResponse = apiResult.getResponseJsonObject();
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
             result.setStatusCode(apiResult.getStatusCode());
             result.setApiError(apiResult.getApiError());
+            JSONObject jsonResponse = apiResult.getResponseJsonObject();
             if (jsonResponse != null) { // check if response is empty
-                if(apiResult.getStatusCode() == REQUEST_SUCCESS_CODE){
-                    msgSent = true ;
-                }
+
             }
         } catch (Exception e) {
-            result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
         }
-        result.addPair("msgSent", msgSent);
+
+        return result;
+    }
+
+    public ServerResult requestVerificationMsg(String accessToken) {
+        ServerResult result = new ServerResult();
+//        boolean msgSent = false ;
+//        try {
+//            // parameters
+//            JSONObject jsonPairs = new JSONObject();
+//            jsonPairs.put("access_token", accessToken);
+//            // url
+//            String url = BASE_SERVICE_URL + "/index.php/verification_messages_api/send_verification_code";
+//            // send request
+//            ApiRequestResult apiResult = httpRequest(url, jsonPairs,"post",null);
+//            JSONObject jsonResponse = apiResult.getResponseJsonObject();
+//            result.setStatusCode(apiResult.getStatusCode());
+//            result.setApiError(apiResult.getApiError());
+//            if (jsonResponse != null) { // check if response is empty
+//                if(apiResult.getStatusCode() == REQUEST_SUCCESS_CODE){
+//                    msgSent = true ;
+//                }
+//            }
+//        } catch (Exception e) {
+//            result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+//        }
+//        result.addPair("msgSent", msgSent);
 
         return result;
     }
 
     public ServerResult verifyAccount(String accessToken, String verifMsg) {
         ServerResult result = new ServerResult();
-        boolean verified = false ;
-        try {
-            // parameters
-            JSONObject jsonPairs = new JSONObject();
-            jsonPairs.put("access_token", accessToken);
-            jsonPairs.put("verification_code", verifMsg);
-            // url
-            String url = BASE_SERVICE_URL + "/index.php/verification_messages_api/accept_verification_code";
-            // send request
-            ApiRequestResult apiResult = httpRequest(url, jsonPairs,"post",null);
-            JSONObject jsonResponse = apiResult.getResponseJsonObject();
-            result.setStatusCode(apiResult.getStatusCode());
-            result.setApiError(apiResult.getApiError());
-            if (jsonResponse != null) { // check if response is empty
-                if(apiResult.getStatusCode() == REQUEST_SUCCESS_CODE){
-                    verified = true ;
-                }
-            }
-        } catch (Exception e) {
-            result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
-        }
-        result.addPair("verified", verified);
+//        boolean verified = false ;
+//        try {
+//            // parameters
+//            JSONObject jsonPairs = new JSONObject();
+//            jsonPairs.put("access_token", accessToken);
+//            jsonPairs.put("verification_code", verifMsg);
+//            // url
+//            String url = BASE_SERVICE_URL + "/index.php/verification_messages_api/accept_verification_code";
+//            // send request
+//            ApiRequestResult apiResult = httpRequest(url, jsonPairs,"post",null);
+//            JSONObject jsonResponse = apiResult.getResponseJsonObject();
+//            result.setStatusCode(apiResult.getStatusCode());
+//            result.setApiError(apiResult.getApiError());
+//            if (jsonResponse != null) { // check if response is empty
+//                if(apiResult.getStatusCode() == REQUEST_SUCCESS_CODE){
+//                    verified = true ;
+//                }
+//            }
+//        } catch (Exception e) {
+//            result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+//        }
+//        result.addPair("verified", verified);
         return result;
     }
 
+    public ServerResult getCategories() {
+        ServerResult result = new ServerResult();
+
+        try {
+            // url
+            String url = BASE_SERVICE_URL + "/categories";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, null, "get", null);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONArray jsonResponse = apiResult.getResponseJsonArray();
+            if (jsonResponse != null) { // check if response is empty
+                ArrayList<AppCategory> categories = new ArrayList<>();
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    categories.add(AppCategory.fromJson(jsonResponse.getJSONObject(i)));
+                }
+                result.addPair("categories", categories);
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+
+        return result;
+
+    }
 
     public ServerResult getNearbyWorkshops(float centerLat, float centerLng, float radius, ArrayList<AppCarBrand> brands) {
         ServerResult result = new ServerResult();
@@ -370,18 +419,20 @@ public class ServerAccess {
             if (response != null && !response.equals("")) { // check if response is empty
                 if(jsonResponse == null )
                     jsonResponse = new JSONObject(response);
-                if(!jsonResponse.isNull("object"))
-                    return jsonResponse.getJSONObject("object");
+                if(jsonResponse.has("data"))
+                    return jsonResponse.getJSONObject("data");
             }
             return null;
         }
 
         public JSONArray getResponseJsonArray() throws JSONException{
-            JSONArray res = null;
             if (response != null && !response.equals("")) { // check if response is empty
-                res = new JSONArray(response);
+                if(jsonResponse == null )
+                    jsonResponse = new JSONObject(response);
+                if(jsonResponse.has("data"))
+                    return jsonResponse.getJSONArray("data");
             }
-            return res;
+            return null;
         }
 
         public int getStatusCode(){
@@ -392,10 +443,10 @@ public class ServerAccess {
             try {
                 if(jsonResponse == null )
                     jsonResponse = new JSONObject(response);
-                if(jsonResponse.has("error"))
-                    return jsonResponse.getString("error");
-                else
-                    return null;
+                if(jsonResponse.has("error")){
+                    JSONObject errorJsonObject = jsonResponse.getJSONObject("error");
+                    return errorJsonObject.getString("code");
+                }
             }catch (Exception e){}
             return "";
         }

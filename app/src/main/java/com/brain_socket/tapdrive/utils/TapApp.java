@@ -1,6 +1,5 @@
-package com.brain_socket.tapdrive;
+package com.brain_socket.tapdrive.utils;
 
-import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,11 +12,9 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -25,7 +22,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
+import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.data.DataStore;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,6 +33,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
+import io.fabric.sdk.android.Fabric;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,6 +53,7 @@ public class TapApp extends Application implements GoogleApiClient.ConnectionCal
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         appContext = this;
         sharedGsonParser = new Gson();
         DataStore.getInstance().startScheduledUpdates();

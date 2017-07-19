@@ -1,20 +1,14 @@
-package com.brain_socket.tapdrive;
+package com.brain_socket.tapdrive.controllers.onBoarding;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.google.android.gms.maps.model.Marker;
-import com.prolificinteractive.parallaxpager.OnViewCreatedListener;
+import com.brain_socket.tapdrive.R;
 import com.prolificinteractive.parallaxpager.ParallaxContainer;
 import com.prolificinteractive.parallaxpager.ParallaxContextWrapper;
 
@@ -26,11 +20,11 @@ public class IntroActivity extends AppCompatActivity {
     OnClickListener onNextClick = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(view.getId() == R.id.btnNext3){
-                Intent i = new Intent(IntroActivity.this,LoginActivity.class);
+            if (view.getId() == R.id.btnNext3) {
+                Intent i = new Intent(IntroActivity.this, LoginActivity.class);
                 startActivity(i);
-            }
-            else {
+                finish();
+            } else {
                 parallaxContainer.getViewPager().setCurrentItem(parallaxContainer.getViewPager().getCurrentItem() + 1, true);
             }
         }
@@ -48,7 +42,7 @@ public class IntroActivity extends AppCompatActivity {
         super.attachBaseContext(new ParallaxContextWrapper(newBase));
     }
 
-    private void init(){
+    private void init() {
         parallaxContainer = (ParallaxContainer) findViewById(R.id.pcPagesContainer);
 
         parallaxContainer.setLooping(false);
@@ -84,7 +78,7 @@ public class IntroActivity extends AppCompatActivity {
             btn1.setOnClickListener(onNextClick);
             btn2.setOnClickListener(onNextClick);
             btn3.setOnClickListener(onNextClick);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
