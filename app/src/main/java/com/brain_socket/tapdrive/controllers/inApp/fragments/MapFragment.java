@@ -15,10 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.brain_socket.tapdrive.popups.DiagPickFilter;
-import com.brain_socket.tapdrive.popups.DiagPickFilter.FiltersPickerCallback;
 import com.brain_socket.tapdrive.R;
-import com.brain_socket.tapdrive.utils.TapApp;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.DataStore.DataRequestCallback;
 import com.brain_socket.tapdrive.data.DataStore.DataStoreUpdateListener;
@@ -26,6 +23,9 @@ import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
+import com.brain_socket.tapdrive.popups.DiagPickFilter;
+import com.brain_socket.tapdrive.popups.DiagPickFilter.FiltersPickerCallback;
+import com.brain_socket.tapdrive.utils.TapApp;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class MapFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, OnMarkerClickListener, GoogleMap.InfoWindowAdapter, FiltersPickerCallback, DataStoreUpdateListener{
+public class MapFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, OnMarkerClickListener, GoogleMap.InfoWindowAdapter, FiltersPickerCallback, DataStoreUpdateListener {
 
 
     SupportMapFragment fragment;
@@ -58,18 +58,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     HashMap<String, LocatableWorkshop> mapMarkerIdToLocatableProvider;
     LocatableWorkshop selectedLocatableWorkshop;
 
-//    AppWorkshopCard vItemDetailsPreview;
+    //    AppWorkshopCard vItemDetailsPreview;
     boolean focusMap;
-
-
-    float radius;
-    double centerLat;
-    double centerLon;
-
-    Handler handler;
-
-    ArrayList<AppCarBrand> filterBrands;
-
     public DataRequestCallback searchResultCallback = new DataRequestCallback() {
         @Override
         public void onDataReady(ServerResult result, boolean success) {
@@ -88,12 +78,23 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             }
         }
     };
+    float radius;
+    double centerLat;
+    double centerLon;
+    Handler handler;
+    ArrayList<AppCarBrand> filterBrands;
+    GoogleMap.OnCameraChangeListener onCameraChangeListener = new GoogleMap.OnCameraChangeListener() {
+        @Override
+        public void onCameraChange(CameraPosition cameraPosition) {
+            getNearByBrands();
+        }
+    };
 
     public static MapFragment newInstance(ArrayList<AppCarBrand> brandsFilter) {
         MapFragment frag = new MapFragment();
         Bundle extras = new Bundle();
 
-        if(brandsFilter != null)
+        if (brandsFilter != null)
             extras.putString("brand", AppBaseModel.getJSONArray(brandsFilter).toString());
         frag.setArguments(extras);
         return frag;
@@ -101,9 +102,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
     public void resolveExtra(Bundle extra) {
         try {
-            if(extra.containsKey("brand")) {
+            if (extra.containsKey("brand")) {
                 String jsonStr = extra.getString("brand");
-                filterBrands = AppBaseModel.getArrayFromJsonSting(jsonStr, new TypeToken<ArrayList<AppCarBrand>>(){}.getType());
+                filterBrands = AppBaseModel.getArrayFromJsonSting(jsonStr, new TypeToken<ArrayList<AppCarBrand>>() {
+                }.getType());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,7 +207,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                             && locatableWorkshop.workshop.getId().equals(selectedLocatableWorkshop.workshop.getId());
 
                     locatableWorkshop.markerOptions = new MarkerOptions()
-                                    .position(brand.getCoords())
+                            .position(brand.getCoords())
                             .icon(BitmapDescriptorFactory.fromResource(locatableWorkshop.workshop.getMarkerResource()));
                     this.providers.add(locatableWorkshop);
                 }
@@ -218,6 +220,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
     /**
      * used to re draw all providers and update Camera position if required
+     *
      * @param providers array of providers that wil be represented on map with markers
      * @param focusMap: if true, we animated the map camera to the current user location
      */
@@ -243,7 +246,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 if (focusMap) {
                     LatLngBounds bounds = builder.build();
                     LatLng userLocation = new LatLng(DataStore.getInstance().getMyLocationLatitude(), DataStore.getInstance().getMyLocationLongitude());
-                    if(userLocation.latitude != 0 && userLocation.longitude != 0)
+                    if (userLocation.latitude != 0 && userLocation.longitude != 0)
                         focusMapToCoords(userLocation);
                 }
             }
@@ -362,14 +365,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         DataStore.getInstance().requestNearbyWorkshops((float) centerLat, (float) centerLon, radius, filterBrands, searchResultCallback);
     }
 
-    GoogleMap.OnCameraChangeListener onCameraChangeListener = new GoogleMap.OnCameraChangeListener() {
-        @Override
-        public void onCameraChange(CameraPosition cameraPosition) {
-            getNearByBrands();
-        }
-    };
-
-
     @Override
     public void onFiltersSelected(ArrayList<AppCarBrand> categories) {
         hidePreview();
@@ -382,25 +377,29 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     /// ------- DataStore Broadcasts -----
     //
     @Override
-    public void onDataStoreUpdate() {}
+    public void onDataStoreUpdate() {
+    }
 
     @Override
     public void onUserLocationUpdate() {
-        if(focusMap) {
+        if (focusMap) {
             LatLng userLocation = new LatLng(DataStore.getInstance().getMyLocationLatitude(), DataStore.getInstance().getMyLocationLongitude());
             focusMapToCoords(userLocation);
         }
     }
 
     @Override
-    public void onLoginStateChange() {}
+    public void onLoginStateChange() {
+    }
+
     @Override
-    public void onNewEventNotificationsAvailable() {}
+    public void onNewEventNotificationsAvailable() {
+    }
 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btnFilter:
                 DiagPickFilter diag = new DiagPickFilter(getContext(), filterBrands, this);
                 diag.show();
@@ -408,25 +407,17 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         }
     }
 
-    public static class LocatableWorkshop {
-        AppCar workshop;
-        MarkerOptions markerOptions;
-
-        enum MarkType {BRAND, BRANCH}
-        MarkType type;
-    }
-
     ///
     /// ------ permissions -----
     ///
-    public void requestLocationPermissionIfRequired(){
+    public void requestLocationPermissionIfRequired() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{permission.ACCESS_FINE_LOCATION},TapApp.PERMISSIONS_REQUEST_LOCATION);
-            }else{
+                requestPermissions(new String[]{permission.ACCESS_FINE_LOCATION}, TapApp.PERMISSIONS_REQUEST_LOCATION);
+            } else {
                 TapApp.checkAndPromptForLocationServices(getActivity());
             }
-        }else{
+        } else {
             TapApp.checkAndPromptForLocationServices(getActivity());
         }
     }
@@ -440,5 +431,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 }
             }
         }
+    }
+
+    public static class LocatableWorkshop {
+        AppCar workshop;
+        MarkerOptions markerOptions;
+        MarkType type;
+
+        enum MarkType {BRAND, BRANCH}
     }
 }
