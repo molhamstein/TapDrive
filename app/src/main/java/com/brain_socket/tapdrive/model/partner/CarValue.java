@@ -28,14 +28,18 @@ public class CarValue extends AppBaseModel {
             carValue.value = json.optString("value");
             carValue.categoryField = CategoryField.fromJson(json.optJSONObject("categoryField"));
 
-            ArrayList<FieldOption> fieldOptions = new ArrayList<>();
-            JSONArray fieldOptionsJSONArray = json.optJSONArray("categoryFieldOption");
-            if (fieldOptionsJSONArray.length() > 0) {
-                for (int i = 0; i < fieldOptionsJSONArray.length(); i++) {
-                    fieldOptions.add(FieldOption.fromJson(fieldOptionsJSONArray.optJSONObject(i)));
+            if (json.has("categoryFieldOption")) {
+                ArrayList<FieldOption> fieldOptions = new ArrayList<>();
+                JSONArray fieldOptionsJSONArray = json.optJSONArray("categoryFieldOption");
+                if (fieldOptionsJSONArray.length() > 0) {
+                    for (int i = 0; i < fieldOptionsJSONArray.length(); i++) {
+                        fieldOptions.add(FieldOption.fromJson(fieldOptionsJSONArray.optJSONObject(i)));
+                    }
                 }
+                carValue.setFieldOptions(fieldOptions);
+            } else {
+                carValue.setFieldOptions(new ArrayList<FieldOption>());
             }
-            carValue.setFieldOptions(fieldOptions);
 
             return carValue;
         } catch (Exception ignored) {

@@ -10,12 +10,14 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.controllers.inApp.adapters.VehiclesAdapter;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.DataStore.DataRequestCallback;
 import com.brain_socket.tapdrive.data.DataStore.DataStoreUpdateListener;
@@ -23,9 +25,10 @@ import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
+import com.brain_socket.tapdrive.model.partner.Car;
 import com.brain_socket.tapdrive.model.partner.Partner;
-import com.brain_socket.tapdrive.popups.DiagPickFilter;
 import com.brain_socket.tapdrive.popups.DiagPickFilter.FiltersPickerCallback;
+import com.brain_socket.tapdrive.utils.Helpers;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,13 +46,21 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.gson.reflect.TypeToken;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class MapFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, OnMarkerClickListener, GoogleMap.InfoWindowAdapter, FiltersPickerCallback, DataStoreUpdateListener {
 
+    @BindView(R.id.sliding_layout)
+    SlidingUpPanelLayout slidingUpPanelLayout;
+    @BindView(R.id.vehicles_recycler_view)
+    RecyclerView vehiclesRecyclerView;
 
     SupportMapFragment fragment;
     GoogleMap googleMap;
@@ -57,7 +68,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     ArrayList<LocatableWorkshop> providers = null;
     ArrayList<Partner> partners = null;
     HashMap<String, LocatableWorkshop> mapMarkerIdToLocatableProvider;
-    LocatableWorkshop selectedLocatableWorkshop;
+    LocatableWorkshop selectedPartner;
+
+    VehiclesAdapter vehiclesAdapter;
 
     //    AppWorkshopCard vItemDetailsPreview;
     boolean focusMap;
@@ -91,12 +104,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         }
     };
 
-    public static MapFragment newInstance(ArrayList<AppCarBrand> brandsFilter) {
+    public static MapFragment newInstance() {
         MapFragment frag = new MapFragment();
         Bundle extras = new Bundle();
-
-        if (brandsFilter != null)
-            extras.putString("brand", AppBaseModel.getJSONArray(brandsFilter).toString());
         frag.setArguments(extras);
         return frag;
     }
@@ -116,6 +126,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_main_map, container, false);
+        ButterKnife.bind(this, view);
         resolveExtra(getArguments());
         return view;
     }
@@ -173,20 +184,26 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         this.googleMap = googleMap;
         this.googleMap.setOnCameraChangeListener(onCameraChangeListener);
         this.googleMap.setOnMarkerClickListener(this);
-        this.googleMap.setMyLocationEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                this.googleMap.setMyLocationEnabled(true);
+            }
+        } else {
+            this.googleMap.setMyLocationEnabled(true);
+        }
         // used to force Google maps bring
         // the marker to top onClick by showing an empty info window
         this.googleMap.setInfoWindowAdapter(this);
         this.googleMap.setOnMapClickListener(new OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                selectedLocatableWorkshop = null;
+                selectedPartner = null;
                 hidePreview();
             }
         });
 
         // initial data load
-        selectedLocatableWorkshop = null;
+        selectedPartner = null;
         focusMap = true;
         getNearbyPartners();
     }
@@ -201,15 +218,15 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
                 for (Partner partner : partners) {
                     LocatableWorkshop locatableWorkshop = new LocatableWorkshop();
-                    locatableWorkshop.workshop = partner;
+                    locatableWorkshop.partner = partner;
                     locatableWorkshop.type = LocatableWorkshop.MarkType.BRAND;
-                    boolean isSelected = selectedLocatableWorkshop != null
-                            && locatableWorkshop.workshop != null
-                            && locatableWorkshop.workshop.getId().equals(selectedLocatableWorkshop.workshop.getId());
+                    boolean isSelected = selectedPartner != null
+                            && locatableWorkshop.partner != null
+                            && locatableWorkshop.partner.getId().equals(selectedPartner.partner.getId());
 
                     locatableWorkshop.markerOptions = new MarkerOptions()
                             .position(partner.getCoords())
-                            .icon(BitmapDescriptorFactory.fromResource(locatableWorkshop.workshop.getMarkerResource()));
+                            .icon(BitmapDescriptorFactory.fromResource(locatableWorkshop.partner.getMarkerResource()));
                     this.providers.add(locatableWorkshop);
                 }
                 // Map
@@ -238,7 +255,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                         mapMarkerIdToLocatableProvider.put(marker.getId(), provider);
                         LatLng position = provider.markerOptions.getPosition();
                         builder.include(position);
-                        if (selectedLocatableWorkshop != null && provider.workshop.getId().equals(selectedLocatableWorkshop.workshop.getId()))
+                        if (selectedPartner != null && provider.partner.getId().equals(selectedPartner.partner.getId()))
                             marker.showInfoWindow();
                     } catch (Exception e) {
                     }
@@ -293,15 +310,15 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     }
 
     public void displayProviderDetailsPreview(LocatableWorkshop locatableWorkshop) {
-//        if (locatableWorkshop != null && locatableWorkshop.workshop != null) {
-//            vItemDetailsPreview.updateUI(locatableWorkshop.workshop);
+//        if (locatableWorkshop != null && locatableWorkshop.partner != null) {
+//            vItemDetailsPreview.updateUI(locatableWorkshop.partner);
 //            vItemDetailsPreview.setVisibility(View.VISIBLE);
 //        }
     }
 
     public void displayBrandPreview(AppCar workshop) {
-//        if (workshop != null) {
-//            vItemDetailsPreview.updateUI(workshop);
+//        if (partner != null) {
+//            vItemDetailsPreview.updateUI(partner);
 //            vItemDetailsPreview.setVisibility(View.VISIBLE);
 //        }
     }
@@ -319,15 +336,45 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             LocatableWorkshop locatableWorkshop = mapMarkerIdToLocatableProvider.get(marker.getId());
             if (locatableWorkshop != null) {
                 displayProviderDetailsPreview(locatableWorkshop);
-                selectedLocatableWorkshop = locatableWorkshop;
+                selectedPartner = locatableWorkshop;
                 //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_active));
                 ///TODO trigger marker animation
                 focusMapOnMarker(marker.getPosition());
+                populateVehiclesData(selectedPartner);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
+    }
+
+    private void populateVehiclesData(LocatableWorkshop selectedPartner) {
+
+        if (selectedPartner.partner.getCars().size() > 0) {
+            slidingUpPanelLayout.setPanelHeight(Helpers.dpToPx(getActivity(), 200));
+
+            if (vehiclesAdapter == null) {
+                vehiclesAdapter = new VehiclesAdapter(getActivity(), selectedPartner.partner.getCars());
+                vehiclesRecyclerView.setAdapter(vehiclesAdapter);
+                vehiclesAdapter.notifyDataSetChanged();
+            } else {
+                vehiclesAdapter.setData(selectedPartner.partner.getCars());
+                vehiclesAdapter.notifyDataSetChanged();
+            }
+        } else {
+            slidingUpPanelLayout.setPanelHeight(Helpers.dpToPx(getActivity(), 0));
+            slidingUpPanelLayout.requestLayout();
+
+            if (vehiclesAdapter == null) {
+                vehiclesAdapter = new VehiclesAdapter(getActivity(), new ArrayList<Car>());
+                vehiclesRecyclerView.setAdapter(vehiclesAdapter);
+                vehiclesAdapter.notifyDataSetChanged();
+            } else {
+                vehiclesAdapter.setData(new ArrayList<Car>());
+                vehiclesAdapter.notifyDataSetChanged();
+            }
+        }
+
     }
 
     // used to force Google maps bring
@@ -429,13 +476,18 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             case TapApp.PERMISSIONS_REQUEST_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     TapApp.checkAndPromptForLocationServices(getActivity());
+                    try {
+                        this.googleMap.setMyLocationEnabled(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
 
     public static class LocatableWorkshop {
-        Partner workshop;
+        Partner partner;
         MarkerOptions markerOptions;
         MarkType type;
 

@@ -44,6 +44,8 @@ public class Partner extends AppBaseModel {
                     }
                 }
                 partner.setCars(cars);
+            } else {
+                partner.setCars(new ArrayList<Car>());
             }
 
             partner.country = Country.fromJson(json.optJSONObject("country"));

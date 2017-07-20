@@ -34,16 +34,12 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     View rlMainContent;
 
-    ArrayList<AppCarBrand> brands;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        showBrandOnMap();
+        showMap();
     }
 
     @Override
@@ -123,9 +119,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void showBrandOnMap() {
+    private void showMap() {
         fragmentManager = getSupportFragmentManager();
-        MapFragment mapFragment = MapFragment.newInstance(brands);
+        MapFragment mapFragment = MapFragment.newInstance();
         fragment = mapFragment;
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_MAIN_MAP_FRAG)
