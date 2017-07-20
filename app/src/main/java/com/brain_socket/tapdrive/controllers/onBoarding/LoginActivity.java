@@ -15,7 +15,7 @@ import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.ServerResult;
-import com.brain_socket.tapdrive.model.UserModel;
+import com.brain_socket.tapdrive.model.user.UserModel;
 import com.github.florent37.viewanimator.ViewAnimator;
 
 import java.util.ArrayList;

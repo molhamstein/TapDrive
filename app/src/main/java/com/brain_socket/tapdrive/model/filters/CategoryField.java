@@ -1,5 +1,6 @@
-package com.brain_socket.tapdrive.model;
+package com.brain_socket.tapdrive.model.filters;
 
+import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,17 +25,17 @@ public class CategoryField extends AppBaseModel {
     @SerializedName("name_ar")
     private String arabicName;
     private String type;
-    private ArrayList<FieldOptions> options;
+    private ArrayList<FieldOption> options;
 
     public static CategoryField fromJson(JSONObject json) {
         try {
             CategoryField field = TapApp.getSharedGsonParser().fromJson(json.toString(), CategoryField.class);
 
             if (json.has("options")) {
-                ArrayList<FieldOptions> options = new ArrayList<>();
+                ArrayList<FieldOption> options = new ArrayList<>();
                 JSONArray optionsJSONArray = json.getJSONArray("options");
                 for (int i = 0; i < optionsJSONArray.length(); i++) {
-                    FieldOptions fieldOption = FieldOptions.fromJson(optionsJSONArray.getJSONObject(i));
+                    FieldOption fieldOption = FieldOption.fromJson(optionsJSONArray.getJSONObject(i));
                     options.add(fieldOption);
                 }
                 field.setOptions(options);
@@ -106,11 +107,11 @@ public class CategoryField extends AppBaseModel {
         this.type = type;
     }
 
-    public ArrayList<FieldOptions> getOptions() {
+    public ArrayList<FieldOption> getOptions() {
         return options;
     }
 
-    public void setOptions(ArrayList<FieldOptions> options) {
+    public void setOptions(ArrayList<FieldOption> options) {
         this.options = options;
     }
 }

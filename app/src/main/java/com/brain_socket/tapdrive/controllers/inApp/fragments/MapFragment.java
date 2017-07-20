@@ -23,6 +23,7 @@ import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
+import com.brain_socket.tapdrive.model.partner.Partner;
 import com.brain_socket.tapdrive.popups.DiagPickFilter;
 import com.brain_socket.tapdrive.popups.DiagPickFilter.FiltersPickerCallback;
 import com.brain_socket.tapdrive.utils.TapApp;
@@ -54,7 +55,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     GoogleMap googleMap;
 
     ArrayList<LocatableWorkshop> providers = null;
-    ArrayList<AppCar> workshops = null;
+    ArrayList<Partner> partners = null;
     HashMap<String, LocatableWorkshop> mapMarkerIdToLocatableProvider;
     LocatableWorkshop selectedLocatableWorkshop;
 
@@ -64,12 +65,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         @Override
         public void onDataReady(ServerResult result, boolean success) {
             if (success) {
-                ArrayList<AppCar> brands;
+                ArrayList<Partner> brands;
                 try {
-                    if (result.getPairs().containsKey("workshops")) {
+                    if (result.getPairs().containsKey("partners")) {
                         brands = new ArrayList<>();
-                        ArrayList<AppCar> recievedShops = (ArrayList<AppCar>) result.get("workshops");
-                        brands.addAll(recievedShops);
+                        ArrayList<Partner> recievedPartners = (ArrayList<Partner>) result.get("partners");
+                        brands.addAll(recievedPartners);
                         updateView(brands, focusMap);
                         focusMap = false;
                     }
@@ -86,7 +87,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     GoogleMap.OnCameraChangeListener onCameraChangeListener = new GoogleMap.OnCameraChangeListener() {
         @Override
         public void onCameraChange(CameraPosition cameraPosition) {
-            getNearByBrands();
+            getNearbyPartners();
         }
     };
 
@@ -137,13 +138,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     private void init() {
 
 //        vItemDetailsPreview = (AppWorkshopCard) getView().findViewById(R.id.vProviderPreview);
-        View btnFilter = getView().findViewById(R.id.btnFilter);
+//        View btnFilter = getView().findViewById(R.id.btnFilter);
 
         focusMap = false;
         mapMarkerIdToLocatableProvider = new HashMap<>();
         handler = new Handler();
 
-        btnFilter.setOnClickListener(this);
+//        btnFilter.setOnClickListener(this);
 
         // load Map Frag
         FragmentManager fm = getChildFragmentManager();
@@ -187,27 +188,27 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         // initial data load
         selectedLocatableWorkshop = null;
         focusMap = true;
-        getNearByBrands();
+        getNearbyPartners();
     }
 
     @SuppressLint("StringFormatMatches")
-    private void updateView(ArrayList<AppCar> brands, boolean reFocusMap) {
-        this.workshops = brands;
+    private void updateView(ArrayList<Partner> partners, boolean reFocusMap) {
+        this.partners = partners;
         try {
-            if (brands != null && googleMap != null) {
+            if (partners != null && googleMap != null) {
 
                 this.providers = new ArrayList<>();
 
-                for (AppCar brand : brands) {
+                for (Partner partner : partners) {
                     LocatableWorkshop locatableWorkshop = new LocatableWorkshop();
-                    locatableWorkshop.workshop = brand;
+                    locatableWorkshop.workshop = partner;
                     locatableWorkshop.type = LocatableWorkshop.MarkType.BRAND;
                     boolean isSelected = selectedLocatableWorkshop != null
                             && locatableWorkshop.workshop != null
                             && locatableWorkshop.workshop.getId().equals(selectedLocatableWorkshop.workshop.getId());
 
                     locatableWorkshop.markerOptions = new MarkerOptions()
-                            .position(brand.getCoords())
+                            .position(partner.getCoords())
                             .icon(BitmapDescriptorFactory.fromResource(locatableWorkshop.workshop.getMarkerResource()));
                     this.providers.add(locatableWorkshop);
                 }
@@ -342,8 +343,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         return null;
     }
 
-    private void getNearByBrands() {
-        Log.i("MAP", "getNearByBrands");
+    private void getNearbyPartners() {
+        Log.i("MAP", "getNearbyPartners");
         //get coordinates of center screen point
         VisibleRegion vr = googleMap.getProjection().getVisibleRegion();
         centerLat = vr.latLngBounds.getCenter().latitude;
@@ -362,7 +363,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
         radius = centerLoc.distanceTo(middlleSouthLocation);
         Log.i("Params", centerLat + "," + centerLon + "," + radius);
-        DataStore.getInstance().requestNearbyWorkshops((float) centerLat, (float) centerLon, radius, filterBrands, searchResultCallback);
+        DataStore.getInstance().getNearbyPartners((int) radius, searchResultCallback);
     }
 
     @Override
@@ -370,7 +371,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         hidePreview();
         focusMap = true;
         this.filterBrands = categories;
-        getNearByBrands();
+        getNearbyPartners();
     }
 
     ///
@@ -400,10 +401,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btnFilter:
-                DiagPickFilter diag = new DiagPickFilter(getContext(), filterBrands, this);
-                diag.show();
-                break;
+//            case R.id.btnFilter:
+//                DiagPickFilter diag = new DiagPickFilter(getContext(), filterBrands, this);
+//                diag.show();
+//                break;
         }
     }
 
@@ -434,7 +435,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     }
 
     public static class LocatableWorkshop {
-        AppCar workshop;
+        Partner workshop;
         MarkerOptions markerOptions;
         MarkType type;
 

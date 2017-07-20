@@ -1,5 +1,6 @@
-package com.brain_socket.tapdrive.model;
+package com.brain_socket.tapdrive.model.filters;
 
+import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +10,7 @@ import org.json.JSONObject;
  * Created by EYADOOS-PC on 7/17/2017.
  */
 
-public class FieldOptions extends AppBaseModel {
+public class FieldOption extends AppBaseModel {
 
     private String id;
     @SerializedName("category_id")
@@ -23,14 +24,14 @@ public class FieldOptions extends AppBaseModel {
     @SerializedName("name_ar")
     private String arabicName;
 
-    public static FieldOptions fromJson(JSONObject json) {
+    public static FieldOption fromJson(JSONObject json) {
         try {
-            FieldOptions option = TapApp.getSharedGsonParser().fromJson(json.toString(), FieldOptions.class);
+            FieldOption option = TapApp.getSharedGsonParser().fromJson(json.toString(), FieldOption.class);
             return option;
         } catch (Exception ignored) {
             ignored.printStackTrace();
         }
-        return new FieldOptions();
+        return new FieldOption();
     }
 
     public JSONObject getJsonObject() {

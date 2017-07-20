@@ -15,7 +15,7 @@ import com.brain_socket.tapdrive.utils.TapApp;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.ServerResult;
-import com.brain_socket.tapdrive.model.AppCategory;
+import com.brain_socket.tapdrive.model.filters.Category;
 import com.github.florent37.viewanimator.ViewAnimator;
 
 import com.google.gson.reflect.TypeToken;
@@ -102,7 +102,7 @@ public class SplashScreen extends AppCompatActivity implements DataStore.DataReq
                 handler.post(proceedToIntroRunnable);
             }
         } else {
-            ArrayList<AppCategory> categories = DataCacheProvider.getInstance().getStoredArrayWithKey(DataCacheProvider.KEY_APP_CATEGORIES, new TypeToken<AppCategory>(){}.getType());
+            ArrayList<Category> categories = DataCacheProvider.getInstance().getStoredArrayWithKey(DataCacheProvider.KEY_APP_CATEGORIES, new TypeToken<Category>(){}.getType());
             if (categories != null) {
 
                 if (categories.size() > 0) {

@@ -2,8 +2,9 @@ package com.brain_socket.tapdrive.data;
 
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
-import com.brain_socket.tapdrive.model.AppCategory;
-import com.brain_socket.tapdrive.model.UserModel;
+import com.brain_socket.tapdrive.model.filters.Category;
+import com.brain_socket.tapdrive.model.partner.Partner;
+import com.brain_socket.tapdrive.model.user.UserModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -225,9 +226,9 @@ public class ServerAccess {
             result.setApiError(apiResult.getApiError());
             JSONArray jsonResponse = apiResult.getResponseJsonArray();
             if (jsonResponse != null) { // check if response is empty
-                ArrayList<AppCategory> categories = new ArrayList<>();
+                ArrayList<Category> categories = new ArrayList<>();
                 for (int i = 0; i < jsonResponse.length(); i++) {
-                    categories.add(AppCategory.fromJson(jsonResponse.getJSONObject(i)));
+                    categories.add(Category.fromJson(jsonResponse.getJSONObject(i)));
                 }
                 result.addPair("categories", categories);
             }
@@ -321,6 +322,40 @@ public class ServerAccess {
         }
         result.addPair("workshops",workshops);
         return result;
+    }
+
+    public ServerResult getNearbyPartners(int categoryId, int radius) {
+        ServerResult result = new ServerResult();
+        try {
+            // parameters
+            JSONObject jsonPairs = new JSONObject();
+            jsonPairs.put("category_id", categoryId);
+            jsonPairs.put("radius",radius);
+
+            // url
+            String url = BASE_SERVICE_URL + "/partners/nearby";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONArray jsonResponse = apiResult.getResponseJsonArray();
+            if (jsonResponse != null) { // check if response is empty
+                ArrayList<Partner> partners = new ArrayList<>();
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    partners.add(Partner.fromJson(jsonResponse.getJSONObject(i)));
+                }
+                result.addPair("partners", partners);
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+        return result;
+
+    }
+
+    public ServerResult getNearbyPartners(int radius) {
+        return getNearbyPartners(1, radius);
     }
 
     /**

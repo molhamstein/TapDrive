@@ -3,11 +3,10 @@ package com.brain_socket.tapdrive.data;
 import android.location.Location;
 import android.os.Handler;
 
-import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
-import com.brain_socket.tapdrive.model.AppCategory;
+import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.AppUser;
-import com.brain_socket.tapdrive.model.UserModel;
+import com.brain_socket.tapdrive.model.user.UserModel;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -280,8 +279,22 @@ public class DataStore {
                 if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {
-                    ArrayList<AppCategory> categories = (ArrayList<AppCategory>) result.getPairs().get("categories");
+                    ArrayList<Category> categories = (ArrayList<Category>) result.getPairs().get("categories");
                     setCategories(categories);
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void getNearbyPartners(final int radius, final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getNearbyPartners(radius);
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
                 }
                 invokeCallback(callback, success, result); // invoking the callback
             }
@@ -426,7 +439,7 @@ public class DataStore {
         DataCacheProvider.getInstance().storeObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, newUser);
     }
 
-    public void setCategories(ArrayList<AppCategory> categories) {
+    public void setCategories(ArrayList<Category> categories) {
         DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_CATEGORIES, categories);
     }
 

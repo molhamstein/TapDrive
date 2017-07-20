@@ -1,5 +1,6 @@
-package com.brain_socket.tapdrive.model;
+package com.brain_socket.tapdrive.model.filters;
 
+import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * Created by EYADOOS-PC on 7/17/2017.
  */
 
-public class AppCategory extends AppBaseModel {
+public class Category extends AppBaseModel {
 
     private String id;
     @SerializedName("name_en")
@@ -21,9 +22,9 @@ public class AppCategory extends AppBaseModel {
     private String arabicName;
     private ArrayList<CategoryField> fields;
 
-    public static AppCategory fromJson(JSONObject json) {
+    public static Category fromJson(JSONObject json) {
         try {
-            AppCategory category = TapApp.getSharedGsonParser().fromJson(json.toString(), AppCategory.class);
+            Category category = TapApp.getSharedGsonParser().fromJson(json.toString(), Category.class);
 
             if (json.has("fields")) {
                 ArrayList<CategoryField> fields = new ArrayList<>();
@@ -39,7 +40,7 @@ public class AppCategory extends AppBaseModel {
         } catch (Exception ignored) {
             ignored.printStackTrace();
         }
-        return new AppCategory();
+        return new Category();
     }
 
     public JSONObject getJsonObject() {

@@ -20,7 +20,7 @@ import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.model.AppCarBrand;
-import com.brain_socket.tapdrive.model.UserModel;
+import com.brain_socket.tapdrive.model.user.UserModel;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;

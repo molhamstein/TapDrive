@@ -1,5 +1,6 @@
-package com.brain_socket.tapdrive.model;
+package com.brain_socket.tapdrive.model.user;
 
+import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.google.gson.annotations.SerializedName;
 
