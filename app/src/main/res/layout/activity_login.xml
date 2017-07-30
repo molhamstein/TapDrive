@@ -41,7 +41,7 @@
             android:inputType="textEmailAddress"
             android:layout_centerInParent="true"
             app:fontId="1"
-            android:text="samer.shatta@gmail.com"/>
+            android:text="fatherboard1@gmail.com"/>
 
         <com.brain_socket.tapdrive.customViews.EditTextCustomFont
             android:id="@+id/etPassword"

@@ -1,5 +1,6 @@
 package com.brain_socket.tapdrive.controllers.inApp;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
@@ -116,6 +120,31 @@ public class MainActivity extends AppCompatActivity
         UserModel me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
         userName.setText(me.getUsername());
         Glide.with(this).load(me.getPhoto()).into(profilePicture);
+
+        final View myView = findViewById(R.id.awesome_card);
+        ImageView filtersButton = (ImageView) findViewById(R.id.filters_icon);
+
+        filtersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // get the center for the clipping circle
+                int cx = (myView.getLeft() + myView.getRight()) / 2;
+                int cy = (myView.getTop() + myView.getBottom()) / 2;
+
+                // get the final radius for the clipping circle
+                int dx = Math.max(cx, myView.getWidth() - cx);
+                int dy = Math.max(cy, myView.getHeight() - cy);
+                float finalRadius = (float) Math.hypot(dx, dy);
+
+                // Android native animator
+                Animator animator =
+                        io.codetail.animation.ViewAnimationUtils.createCircularReveal(myView, cx, cy, 0, finalRadius);
+                animator.setInterpolator(new AccelerateDecelerateInterpolator());
+                animator.setDuration(500);
+                animator.start();
+            }
+        });
+
 
     }
 
