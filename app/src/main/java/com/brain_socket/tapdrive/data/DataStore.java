@@ -2,6 +2,7 @@ package com.brain_socket.tapdrive.data;
 
 import android.location.Location;
 import android.os.Handler;
+import android.util.Log;
 
 import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;

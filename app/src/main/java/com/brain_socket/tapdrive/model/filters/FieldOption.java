@@ -91,4 +91,9 @@ public class FieldOption extends AppBaseModel {
     public void setArabicName(String arabicName) {
         this.arabicName = arabicName;
     }
+
+    @Override
+    public String toString() {
+        return getEnglishName();
+    }
 }

@@ -8,8 +8,11 @@ import android.view.View;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
+import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
 import com.brain_socket.tapdrive.model.partner.Car;
 import com.bumptech.glide.Glide;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by MhannaCloudAppers on 7/20/2017.
@@ -35,12 +38,18 @@ public class VehicleItemViewHolder extends RecyclerView.ViewHolder {
         itemDriveNowButton = (TextViewCustomFont) rootView.findViewById(R.id.item_drive_now_button);
     }
 
-    public void bindData(Car car) {
+    public void bindData(final Car car) {
 
         Glide.with(context).load(car.getPhoto()).into(itemImage);
         itemName.setText(car.getName());
         itemDailyPrice.setText("Daily Price: " + car.getDailyPrice() + " AED");
         itemHourlyPrice.setText("Hourly Price: " + car.getHourlyPrice() + " AED");
+        itemDriveNowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(new BookVehicleButtonClicked(car));
+            }
+        });
 
     }
 
