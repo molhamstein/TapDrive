@@ -24,7 +24,7 @@
             android:gravity="center"
             android:text="Booking Information"
             android:textColor="@color/black"
-            android:textSize="@dimen/ts_title_big"
+            android:textSize="@dimen/ts_title_small"
             app:fontId="3" />
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="BMX 6"
-                    android:textSize="@dimen/ts_title_small"
+                    android:textSize="@dimen/ts_text_normal"
                     app:fontId="3" />
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Daily Price: 20.0 AED"
-                    android:textSize="@dimen/ts_text_normal"
+                    android:textSize="@dimen/ts_text_small"
                     app:fontId="2" />
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Hourly Price: 1.0 AED"
-                    android:textSize="@dimen/ts_text_normal"
+                    android:textSize="@dimen/ts_text_small"
                     app:fontId="2" />
 
             </LinearLayout>
@@ -237,7 +237,7 @@
                 android:text="LET'S DRIVE"
                 android:textAllCaps="true"
                 android:background="@drawable/yellow_button_background"
-                android:textSize="16sp"
+                android:textSize="@dimen/ts_text_normal"
                 app:fontId="3" />
 
         </LinearLayout>

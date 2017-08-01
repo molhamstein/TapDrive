@@ -7,6 +7,7 @@ import android.util.Log;
 import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.AppUser;
+import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.user.UserModel;
 import com.google.gson.reflect.TypeToken;
 
@@ -288,12 +289,12 @@ public class DataStore {
         }).start();
     }
 
-    public void getNearbyPartners(final int radius, final DataRequestCallback callback) {
+    public void getNearbyPartners(final float latitude, final float longitude, final int radius, final MapFilters mapFilters, final DataRequestCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.getNearbyPartners(radius);
+                ServerResult result = serverHandler.getNearbyPartners(latitude, longitude, radius, mapFilters);
                 if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 }

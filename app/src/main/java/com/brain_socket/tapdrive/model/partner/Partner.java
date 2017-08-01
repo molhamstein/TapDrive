@@ -4,6 +4,7 @@ import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,6 +19,7 @@ public class Partner extends AppBaseModel {
 
     private String id;
     private String baseUserId;
+    @SerializedName("full_name")
     private String name;
     private String email;
     private String address;

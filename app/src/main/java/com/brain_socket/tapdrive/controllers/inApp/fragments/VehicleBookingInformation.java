@@ -102,7 +102,7 @@ public class VehicleBookingInformation extends Fragment {
     private void bindData() {
 
         Glide.with(getActivity()).load(car.getPhoto()).into(itemImage);
-        itemName.setText(car.getName());
+        itemName.setText(car.getEnglishName());
         itemDailyPrice.setText("Daily Price: " + car.getDailyPrice() + " AED");
         itemHourlyPrice.setText("Hourly Price: " + car.getHourlyPrice() + " AED");
 

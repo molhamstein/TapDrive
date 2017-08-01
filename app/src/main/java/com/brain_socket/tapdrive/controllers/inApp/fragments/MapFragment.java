@@ -17,14 +17,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
 import com.brain_socket.tapdrive.controllers.inApp.adapters.VehiclesAdapter;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.DataStore.DataRequestCallback;
 import com.brain_socket.tapdrive.data.DataStore.DataStoreUpdateListener;
 import com.brain_socket.tapdrive.data.ServerResult;
+import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
 import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
+import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.partner.Car;
 import com.brain_socket.tapdrive.model.partner.Partner;
 import com.brain_socket.tapdrive.popups.DiagPickFilter.FiltersPickerCallback;
@@ -47,6 +50,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.gson.reflect.TypeToken;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,6 +108,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         @Override
         public void onCameraChange(CameraPosition cameraPosition) {
             getNearbyPartners();
+
+            ((MainActivity) getActivity()).closeFiltersView();
         }
     };
 
@@ -199,6 +208,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             public void onMapClick(LatLng latLng) {
                 selectedPartner = null;
                 hidePreview();
+
+                ((MainActivity) getActivity()).closeFiltersView();
             }
         });
 
@@ -333,6 +344,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     @Override
     public boolean onMarkerClick(Marker marker) {
         try {
+            ((MainActivity) getActivity()).closeFiltersView();
+
             LocatableWorkshop locatableWorkshop = mapMarkerIdToLocatableProvider.get(marker.getId());
             if (locatableWorkshop != null) {
                 displayProviderDetailsPreview(locatableWorkshop);
@@ -410,7 +423,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
         radius = centerLoc.distanceTo(middlleSouthLocation);
         Log.i("Params", centerLat + "," + centerLon + "," + radius);
-        DataStore.getInstance().getNearbyPartners((int) radius, searchResultCallback);
+        DataStore.getInstance().getNearbyPartners((float) centerLat, (float) centerLon, (int) radius, ((MainActivity) getActivity()).getMapFilters(), searchResultCallback);
+//        DataStore.getInstance().getNearbyPartners((float) centerLat, (float) centerLon, radius, 0, activity.getKeyWord(), activity.getCategoriesFilter(), null, searchResultCallback);
     }
 
     @Override
@@ -493,4 +507,24 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
         enum MarkType {BRAND, BRANCH}
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFiltersUpdated(MapFilters mapFilters) {
+
+        getNearbyPartners();
+
+    }
+
 }

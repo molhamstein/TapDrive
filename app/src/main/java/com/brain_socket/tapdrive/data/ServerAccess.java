@@ -3,6 +3,7 @@ package com.brain_socket.tapdrive.data;
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;
+import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.partner.Partner;
 import com.brain_socket.tapdrive.model.user.UserModel;
 
@@ -59,17 +60,17 @@ public class ServerAccess {
     //////////////////
     // login
     /////////////////
-    public ServerResult login(String email,String password,String socialId,String socialToken) {
+    public ServerResult login(String email, String password, String socialId, String socialToken) {
         ServerResult result = new ServerResult();
-        UserModel me  = null ;
+        UserModel me = null;
         boolean isRegistered = false;
         try {
             // parameters
             JSONObject jsonPairs = new JSONObject();
             jsonPairs.put("email", email);
-            jsonPairs.put("password",password);
-            jsonPairs.put("social_id",socialId);
-            jsonPairs.put("social_platform",socialToken);
+            jsonPairs.put("password", password);
+            jsonPairs.put("social_id", socialId);
+            jsonPairs.put("social_platform", socialToken);
 
             // url
             String url = BASE_SERVICE_URL + "/auth/login";
@@ -83,37 +84,37 @@ public class ServerAccess {
                 me = UserModel.fromJson(jsonResponse);
                 isRegistered = true;
             }
-            if(apiResult.statusCode == 200 && result.getApiError().equals(MODEL_NOT_FOUND)){
+            if (apiResult.statusCode == 200 && result.getApiError().equals(MODEL_NOT_FOUND)) {
                 isRegistered = false;
             }
         } catch (Exception e) {
             //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
         }
         result.addPair("appUser", me);
-        result.addPair("isRegistered",isRegistered);
+        result.addPair("isRegistered", isRegistered);
         return result;
     }
 
     /**
      * register a new user with UserName and phoneNumber
      */
-    public ServerResult registerUser(String email,String password,String fullName,
+    public ServerResult registerUser(String email, String password, String fullName,
                                      String phone, String gender, String birthday,
-                                     String countryId,String socialId,String socialPlatform) {
+                                     String countryId, String socialId, String socialPlatform) {
         ServerResult result = new ServerResult();
-        UserModel me  = null ;
+        UserModel me = null;
         try {
             // parameters
             JSONObject jsonPairs = new JSONObject();
-            jsonPairs.put("email",email);
-            jsonPairs.put("password",password);
-            jsonPairs.put("full_name",fullName);
-            jsonPairs.put("phone",phone);
-            jsonPairs.put("gender",gender.toLowerCase());
-            jsonPairs.put("birthday",birthday);
-            jsonPairs.put("country_id",countryId);
-            jsonPairs.put("social_id",socialId);
-            jsonPairs.put("social_platform",socialPlatform);
+            jsonPairs.put("email", email);
+            jsonPairs.put("password", password);
+            jsonPairs.put("full_name", fullName);
+            jsonPairs.put("phone", phone);
+            jsonPairs.put("gender", gender.toLowerCase());
+            jsonPairs.put("birthday", birthday);
+            jsonPairs.put("country_id", countryId);
+            jsonPairs.put("social_id", socialId);
+            jsonPairs.put("social_platform", socialPlatform);
 
             // url
             String url = BASE_SERVICE_URL + "/auth/register";
@@ -134,12 +135,12 @@ public class ServerAccess {
         return result;
     }
 
-    public ServerResult forgetUserPassword(String email){
+    public ServerResult forgetUserPassword(String email) {
         ServerResult result = new ServerResult();
         try {
             // parameters
             JSONObject jsonPairs = new JSONObject();
-            jsonPairs.put("email",email);
+            jsonPairs.put("email", email);
 
             // url
             String url = BASE_SERVICE_URL + "/auth/forget_password";
@@ -243,21 +244,21 @@ public class ServerAccess {
     public ServerResult getNearbyWorkshops(float centerLat, float centerLng, float radius, ArrayList<AppCarBrand> brands) {
         ServerResult result = new ServerResult();
         ArrayList<AppCar> workshops = null;
-        try{
+        try {
             JSONObject params = new JSONObject();
 
-            params.put("lat",centerLat);
-            params.put("lon",centerLng);
-            params.put("dist",radius);
+            params.put("lat", centerLat);
+            params.put("lon", centerLng);
+            params.put("dist", radius);
 
-            if(brands != null) {
+            if (brands != null) {
                 ArrayList<String> brandsIdsArray = new ArrayList<>();
                 for (AppCarBrand brand : brands) {
                     brandsIdsArray.add(brand.getId());
                 }
                 String commaSeperatedArray = brandsIdsArray.toString();
                 commaSeperatedArray = commaSeperatedArray.replace("[", "").replace("]", "").replaceAll("\\s", "").trim();
-                params.put("brands",commaSeperatedArray);
+                params.put("brands", commaSeperatedArray);
             }
 
             Random rand = new Random();
@@ -317,20 +318,26 @@ public class ServerAccess {
 //                }
 //            }
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        result.addPair("workshops",workshops);
+        result.addPair("workshops", workshops);
         return result;
     }
 
-    public ServerResult getNearbyPartners(int categoryId, int radius) {
+    public ServerResult getNearbyPartners(int categoryId, final float latitude, final float longitude, final int radius, final MapFilters mapFilters) {
         ServerResult result = new ServerResult();
         try {
             // parameters
             JSONObject jsonPairs = new JSONObject();
             jsonPairs.put("category_id", categoryId);
-            jsonPairs.put("radius",radius);
+            jsonPairs.put("radius", radius);
+            jsonPairs.put("longitude", longitude);
+            jsonPairs.put("latitude", latitude);
+            jsonPairs.put("price_from", mapFilters.getPriceFrom());
+            jsonPairs.put("price_to", mapFilters.getPriceTo());
+            jsonPairs.put("category_options_ids", mapFilters.getCategoryOptionsIds());
+
 
             // url
             String url = BASE_SERVICE_URL + "/partners/nearby";
@@ -354,13 +361,14 @@ public class ServerAccess {
 
     }
 
-    public ServerResult getNearbyPartners(int radius) {
-        return getNearbyPartners(1, radius);
+    public ServerResult getNearbyPartners(final float latitude, final float longitude, final int radius, final MapFilters mapFilters) {
+        return getNearbyPartners(1, latitude, longitude, radius, mapFilters);
     }
 
     /**
      * send Https request through connection
-     * @param method  get or post
+     *
+     * @param method get or post
      */
     public ApiRequestResult httpRequest(String url, JSONObject jsonPairs, String method, JSONObject headers) {
         String result = null;
@@ -440,54 +448,53 @@ public class ServerAccess {
         return requestResult;
     }
 
-    public static class ApiRequestResult{
+    public static class ApiRequestResult {
         String response;
         int statusCode;
         int apiErrorCode;
         JSONObject jsonResponse;
 
-        public boolean connectionSuccess(){
-            return  statusCode <400;
+        public boolean connectionSuccess() {
+            return statusCode < 400;
         }
 
         public JSONObject getResponseJsonObject() throws JSONException {
             if (response != null && !response.equals("")) { // check if response is empty
-                if(jsonResponse == null )
+                if (jsonResponse == null)
                     jsonResponse = new JSONObject(response);
-                if(jsonResponse.has("data"))
+                if (jsonResponse.has("data"))
                     return jsonResponse.getJSONObject("data");
             }
             return null;
         }
 
-        public JSONArray getResponseJsonArray() throws JSONException{
+        public JSONArray getResponseJsonArray() throws JSONException {
             if (response != null && !response.equals("")) { // check if response is empty
-                if(jsonResponse == null )
+                if (jsonResponse == null)
                     jsonResponse = new JSONObject(response);
-                if(jsonResponse.has("data"))
+                if (jsonResponse.has("data"))
                     return jsonResponse.getJSONArray("data");
             }
             return null;
         }
 
-        public int getStatusCode(){
+        public int getStatusCode() {
             return statusCode;
         }
 
         public String getApiError() {
             try {
-                if(jsonResponse == null )
+                if (jsonResponse == null)
                     jsonResponse = new JSONObject(response);
-                if(jsonResponse.has("error")){
+                if (jsonResponse.has("error")) {
                     JSONObject errorJsonObject = jsonResponse.getJSONObject("error");
                     return errorJsonObject.getString("code");
                 }
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
             return "";
         }
     }
-
-
 
 
 }

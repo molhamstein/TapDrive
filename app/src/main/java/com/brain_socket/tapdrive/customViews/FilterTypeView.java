@@ -29,7 +29,7 @@ public class FilterTypeView extends RelativeLayout {
     TextViewCustomFont filterValueText;
 
     LayoutInflater mInflater;
-    Pair<Integer, String> selectedItem;
+    private Pair<Integer, String> selectedItem;
     private CategoryField categoryField;
     private boolean hidden = false;
     private String parentOptionId = "";
@@ -95,7 +95,7 @@ public class FilterTypeView extends RelativeLayout {
         new MaterialDialog.Builder(getContext())
                 .title("Select " + getCategoryField().getEnglishName())
                 .items(data == null ? getCategoryField().getOptions() : data)
-                .itemsCallbackSingleChoice(selectedItem == null ? 0 : selectedItem.first, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackSingleChoice(getSelectedItem() == null ? 0 : getSelectedItem().first, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         /**
@@ -106,10 +106,10 @@ public class FilterTypeView extends RelativeLayout {
                             if (!text.toString().equalsIgnoreCase("")) {
                                 filterValueText.setText(getCategoryField().getEnglishName() + ": " + text);
                                 if (data == null) {
-                                    selectedItem = new Pair<>(which, getCategoryField().getOptions().get(which).getId());
+                                    setSelectedItem(new Pair<>(which, getCategoryField().getOptions().get(which).getId()));
                                     EventBus.getDefault().post(new FilterSelectedEvent(FilterTypeView.this, getCategoryField().getOptions().get(which).getId()));
                                 } else {
-                                    selectedItem = new Pair<>(which, data.get(which));
+                                    setSelectedItem(new Pair<>(which, data.get(which)));
                                     EventBus.getDefault().post(new FilterSelectedEvent(FilterTypeView.this, data.get(which)));
                                 }
 
@@ -139,7 +139,7 @@ public class FilterTypeView extends RelativeLayout {
         new MaterialDialog.Builder(getContext())
                 .title("Select " + getCategoryField().getEnglishName())
                 .items(fieldOptions)
-                .itemsCallbackSingleChoice(selectedItem == null ? 0 : selectedItem.first, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackSingleChoice(getSelectedItem() == null ? 0 : getSelectedItem().first, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                         /**
@@ -149,7 +149,7 @@ public class FilterTypeView extends RelativeLayout {
                         if (text != null) {
                             if (!text.toString().equalsIgnoreCase("")) {
                                 filterValueText.setText(getCategoryField().getEnglishName() + ": " + text);
-                                selectedItem = new Pair<>(which, fieldOptions.get(which).getId());
+                                setSelectedItem(new Pair<>(which, fieldOptions.get(which).getId()));
                                 EventBus.getDefault().post(new FilterSelectedEvent(FilterTypeView.this, fieldOptions.get(which).getId()));
                             }
                         }
@@ -164,7 +164,7 @@ public class FilterTypeView extends RelativeLayout {
 
     public void clearSelected() {
 
-        selectedItem = null;
+        setSelectedItem(null);
         filterValueText.setText(getCategoryField().getEnglishName());
 
     }
@@ -196,5 +196,13 @@ public class FilterTypeView extends RelativeLayout {
 
     public void setParentOptionId(String parentOptionId) {
         this.parentOptionId = parentOptionId;
+    }
+
+    public Pair<Integer, String> getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(Pair<Integer, String> selectedItem) {
+        this.selectedItem = selectedItem;
     }
 }

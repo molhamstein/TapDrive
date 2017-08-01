@@ -32,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
+                android:gravity="center_vertical"
                 android:orientation="vertical">
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
@@ -41,7 +42,7 @@
                     android:layout_gravity="center_horizontal"
                     android:scrollbarSize="@android:color/black"
                     android:text="BMX 6"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/ts_text_normal"
                     app:fontId="3" />
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
@@ -51,7 +52,7 @@
                     android:layout_gravity="center_horizontal"
                     android:scrollbarSize="@android:color/black"
                     android:text="Daily Price: 20.0 AED"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/ts_text_small"
                     app:fontId="2" />
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
@@ -61,13 +62,13 @@
                     android:layout_gravity="center_horizontal"
                     android:scrollbarSize="@android:color/black"
                     android:text="Hourly Price: 1.0 AED"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/ts_text_small"
                     app:fontId="2" />
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
                     android:id="@+id/item_drive_now_button"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_marginEnd="25dp"
                     android:layout_marginStart="25dp"
                     android:layout_marginTop="5dp"
@@ -79,7 +80,7 @@
                     android:text="Drive Now"
                     android:textAllCaps="true"
                     android:background="@drawable/yellow_button_background"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/ts_text_normal"
                     app:fontId="3" />
 
             </LinearLayout>

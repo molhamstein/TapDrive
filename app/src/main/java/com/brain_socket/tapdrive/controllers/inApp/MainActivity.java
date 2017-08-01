@@ -2,6 +2,7 @@ package com.brain_socket.tapdrive.controllers.inApp;
 
 import android.animation.Animator;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -12,11 +13,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,8 +35,10 @@ import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
 import com.brain_socket.tapdrive.delegates.FilterSelectedEvent;
 import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.filters.CategoryField;
+import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.partner.Car;
 import com.brain_socket.tapdrive.model.user.UserModel;
+import com.brain_socket.tapdrive.utils.CustomTypefaceSpan;
 import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
@@ -63,7 +67,8 @@ public class MainActivity extends AppCompatActivity
     LinearLayout filterTypesHolder;
     boolean isFiltersOpen = false;
 
-    HashMap<FilterTypeView, ArrayList<FilterTypeView>> filters = new HashMap<>();
+    HashMap<FilterTypeView, ArrayList<FilterTypeView>> filterTypeViews = new HashMap<>();
+    private MapFilters mapFilters = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (isFiltersOpen) {
+            toggleFiltersView();
         } else {
             super.onBackPressed();
         }
@@ -107,6 +114,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setScrimColor(Color.TRANSPARENT);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerClosed(View view) {
                 supportInvalidateOptionsMenu();
@@ -164,6 +172,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu m = navigationView.getMenu();
+        for (int i = 0; i < m.size(); i++) {
+            MenuItem mi = m.getItem(i);
+            applyFontToMenuItem(mi);
+        }
 
         // hide default app logo and name on the left of the toolbar
         final ActionBar ab = getSupportActionBar();
@@ -184,11 +197,6 @@ public class MainActivity extends AppCompatActivity
 
     private void initFiltersView() {
 
-        filtersView = findViewById(R.id.filters_view);
-        FrameLayout.LayoutParams filtersViewParams = (FrameLayout.LayoutParams) filtersView.getLayoutParams();
-        filtersViewParams.topMargin = (int) (toolbar.getLayoutParams().height * 1.4);
-        filtersView.setLayoutParams(filtersViewParams);
-
         toggleFiltersButton = (ImageView) findViewById(R.id.filters_icon);
         toggleFiltersButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +204,12 @@ public class MainActivity extends AppCompatActivity
                 toggleFiltersView();
             }
         });
+
+        filtersView = findViewById(R.id.filters_view);
+//        FrameLayout.LayoutParams filtersViewParams = (FrameLayout.LayoutParams) filtersView.getLayoutParams();
+////        filtersViewParams.topMargin = (int) (toolbar.getLayoutParams().height * 1.4);
+//        filtersViewParams.topMargin = toolbar.getLayoutParams().height + Helpers.getStatusBarHeight(this);
+//        filtersView.setLayoutParams(filtersViewParams);
 
         filterTypesHolder = (LinearLayout) findViewById(R.id.filter_types_layout);
         ArrayList<Category> categories = DataCacheProvider.getInstance().getStoredCategoriesArray();
@@ -209,7 +223,7 @@ public class MainActivity extends AppCompatActivity
                     filterTypesHolder.addView(filterTypeView);
                     filterTypesHolder.requestLayout();
 
-                    filters.put(filterTypeView, null);
+                    filterTypeViews.put(filterTypeView, null);
 
                 } else {
 
@@ -217,7 +231,7 @@ public class MainActivity extends AppCompatActivity
                     filterTypesHolder.addView(filterTypeView);
                     filterTypesHolder.requestLayout();
 
-                    Iterator it = filters.entrySet().iterator();
+                    Iterator it = filterTypeViews.entrySet().iterator();
                     while (it.hasNext()) {
                         Map.Entry pair = (Map.Entry) it.next();
 
@@ -226,11 +240,11 @@ public class MainActivity extends AppCompatActivity
                             if (pair.getValue() == null) {
                                 ArrayList<FilterTypeView> values = new ArrayList<>();
                                 values.add(filterTypeView);
-                                filters.put(parentFilterTypeView, values);
+                                filterTypeViews.put(parentFilterTypeView, values);
                             } else {
-                                ArrayList<FilterTypeView> values = filters.get(parentFilterTypeView);
+                                ArrayList<FilterTypeView> values = filterTypeViews.get(parentFilterTypeView);
                                 values.add(filterTypeView);
-                                filters.put(parentFilterTypeView, values);
+                                filterTypeViews.put(parentFilterTypeView, values);
                             }
                         }
                     }
@@ -243,7 +257,7 @@ public class MainActivity extends AppCompatActivity
 
         final TextViewCustomFont minPriceValue = (TextViewCustomFont) findViewById(R.id.min_price_value);
         final TextViewCustomFont maxPriceValue = (TextViewCustomFont) findViewById(R.id.max_price_value);
-        RangeBar priceRangeBar = (RangeBar) findViewById(R.id.price_range_bar);
+        final RangeBar priceRangeBar = (RangeBar) findViewById(R.id.price_range_bar);
 
         priceRangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
@@ -252,6 +266,95 @@ public class MainActivity extends AppCompatActivity
                                               String leftPinValue, String rightPinValue) {
                 minPriceValue.setText(leftPinValue);
                 maxPriceValue.setText(rightPinValue);
+            }
+        });
+
+        TextViewCustomFont applyFiltersButton = (TextViewCustomFont) findViewById(R.id.apply_filters_button);
+        TextViewCustomFont resetFiltersButton = (TextViewCustomFont) findViewById(R.id.reset_filters_button);
+
+        resetFiltersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                priceRangeBar.setRangePinsByValue(0, 1000);
+
+                Iterator it = filterTypeViews.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry) it.next();
+
+                    FilterTypeView parentFilterTypeView = (FilterTypeView) pair.getKey();
+
+                    if (pair.getValue() == null) {
+                        parentFilterTypeView.clearSelected();
+                    } else {
+                        parentFilterTypeView.clearSelected();
+                        ArrayList<FilterTypeView> values = filterTypeViews.get(parentFilterTypeView);
+                        for (FilterTypeView filterTypeView : values) {
+                            filterTypeView.clearSelected();
+                        }
+                    }
+
+                }
+
+                if (mapFilters != null) {
+                    mapFilters.clear();
+                } else {
+                    mapFilters = new MapFilters();
+                }
+
+                EventBus.getDefault().post(mapFilters);
+
+                toggleFiltersView();
+
+            }
+        });
+
+        applyFiltersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (mapFilters == null) {
+                    mapFilters = new MapFilters();
+                }
+
+                mapFilters.setPriceFrom(Integer.parseInt(minPriceValue.getText().toString()));
+                mapFilters.setPriceTo(Integer.parseInt(maxPriceValue.getText().toString()));
+
+                StringBuilder optionsIds = new StringBuilder();
+                Iterator it = filterTypeViews.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry) it.next();
+
+                    FilterTypeView parentFilterTypeView = (FilterTypeView) pair.getKey();
+
+                    if (pair.getValue() == null) {
+                        if (parentFilterTypeView.getSelectedItem() != null) {
+                            optionsIds.append(parentFilterTypeView.getSelectedItem().second);
+                            optionsIds.append(",");
+                        }
+                    } else {
+                        if (parentFilterTypeView.getSelectedItem() != null) {
+                            optionsIds.append(parentFilterTypeView.getSelectedItem().second);
+                            optionsIds.append(",");
+                        }
+
+                        ArrayList<FilterTypeView> values = filterTypeViews.get(parentFilterTypeView);
+                        for (FilterTypeView filterTypeView : values) {
+                            if (filterTypeView.getSelectedItem() != null) {
+                                optionsIds.append(filterTypeView.getSelectedItem().second);
+                                optionsIds.append(",");
+                            }
+                        }
+                    }
+
+                }
+
+                mapFilters.setCategoryOptionsIds(optionsIds.toString().substring(0, optionsIds.toString().length() - 1));
+
+                EventBus.getDefault().post(mapFilters);
+
+                toggleFiltersView();
+
             }
         });
 
@@ -368,10 +471,10 @@ public class MainActivity extends AppCompatActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSelectedFilterValueEvent(FilterSelectedEvent filterSelectedEvent) {
 
-        if (filters.get(filterSelectedEvent.getFilterTypeView()) == null) {
+        if (filterTypeViews.get(filterSelectedEvent.getFilterTypeView()) == null) {
             return;
         } else {
-            for (FilterTypeView filterTypeView : filters.get(filterSelectedEvent.getFilterTypeView())) {
+            for (FilterTypeView filterTypeView : filterTypeViews.get(filterSelectedEvent.getFilterTypeView())) {
                 filterTypeView.clearSelected();
                 filterTypeView.setHidden(false);
                 filterTypeView.setParentOptionId(filterSelectedEvent.getParentOptionId());
@@ -411,6 +514,27 @@ public class MainActivity extends AppCompatActivity
         super.onStop();
     }
 
+    private void applyFontToMenuItem(MenuItem mi) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new CustomTypefaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
+    }
 
+    public void closeFiltersView() {
+        if (isFiltersOpen) {
+            toggleFiltersView();
+        }
+    }
 
+    public MapFilters getMapFilters() {
+        if (mapFilters == null) {
+            mapFilters = new MapFilters();
+        }
+        return mapFilters;
+    }
+
+    public void setMapFilters(MapFilters mapFilters) {
+        this.mapFilters = mapFilters;
+    }
 }

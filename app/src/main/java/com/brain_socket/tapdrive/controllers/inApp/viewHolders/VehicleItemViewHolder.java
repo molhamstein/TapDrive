@@ -41,7 +41,7 @@ public class VehicleItemViewHolder extends RecyclerView.ViewHolder {
     public void bindData(final Car car) {
 
         Glide.with(context).load(car.getPhoto()).into(itemImage);
-        itemName.setText(car.getName());
+        itemName.setText(car.getEnglishName());
         itemDailyPrice.setText("Daily Price: " + car.getDailyPrice() + " AED");
         itemHourlyPrice.setText("Hourly Price: " + car.getHourlyPrice() + " AED");
         itemDriveNowButton.setOnClickListener(new View.OnClickListener() {

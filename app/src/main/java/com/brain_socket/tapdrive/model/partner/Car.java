@@ -18,7 +18,10 @@ public class Car extends AppBaseModel {
     private String id;
     @SerializedName("partner_id")
     private String partnerId;
-    private String name;
+    @SerializedName("name_en")
+    private String englishName;
+    @SerializedName("name_ar")
+    private String arabicName;
     @SerializedName("hourly_price")
     private String hourlyPrice;
     @SerializedName("daily_price")
@@ -83,14 +86,6 @@ public class Car extends AppBaseModel {
         this.partnerId = partnerId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getHourlyPrice() {
         return hourlyPrice;
     }
@@ -145,5 +140,21 @@ public class Car extends AppBaseModel {
 
     public void setReservations(ArrayList<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public String getEnglishName() {
+        return englishName;
+    }
+
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
+    }
+
+    public String getArabicName() {
+        return arabicName;
+    }
+
+    public void setArabicName(String arabicName) {
+        this.arabicName = arabicName;
     }
 }
