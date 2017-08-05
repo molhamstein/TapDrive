@@ -113,14 +113,12 @@
             android:layout_marginTop="2dp"
             android:background="#ededed" />
 
-        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/calendar_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:mcv_showOtherDates="all"
             app:mcv_selectionColor="@color/app_theme"
-            />
+            app:mcv_showOtherDates="all" />
 
         <View
             android:layout_width="match_parent"
@@ -131,8 +129,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
             <com.brain_socket.tapdrive.customViews.TextViewCustomFont
                 android:layout_width="wrap_content"
@@ -146,9 +144,9 @@
                 android:id="@+id/selected_from_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:text="-"
                 android:textSize="@dimen/ts_text_normal"
                 app:fontId="3" />
@@ -158,8 +156,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
             <com.brain_socket.tapdrive.customViews.TextViewCustomFont
                 android:layout_width="wrap_content"
@@ -173,9 +171,9 @@
                 android:id="@+id/selected_to_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:text="-"
                 android:textSize="@dimen/ts_text_normal"
                 app:fontId="3" />
@@ -191,8 +189,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             android:weightSum="2">
 
             <LinearLayout
@@ -225,18 +223,18 @@
                 android:id="@+id/item_drive_now_button"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/yellow_button_background"
                 android:gravity="center"
-                android:textColor="@drawable/yellow_text_selector"
-                android:layout_gravity="center_horizontal"
                 android:scrollbarSize="@android:color/black"
                 android:text="LET'S DRIVE"
                 android:textAllCaps="true"
-                android:background="@drawable/yellow_button_background"
+                android:textColor="@drawable/yellow_text_selector"
                 android:textSize="@dimen/ts_text_normal"
                 app:fontId="3" />
 

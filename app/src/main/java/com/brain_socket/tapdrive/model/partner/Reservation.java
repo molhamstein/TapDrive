@@ -5,6 +5,9 @@ import com.brain_socket.tapdrive.utils.TapApp;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by EYADOOS-PC on 7/20/2017.
  */
@@ -13,6 +16,7 @@ public class Reservation extends AppBaseModel {
 
     private String orderStartDate;
     private String orderEndDate;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public static Reservation fromJson(JSONObject json) {
         try {
@@ -29,16 +33,28 @@ public class Reservation extends AppBaseModel {
         return null;
     }
 
-    public String getOrderStartDate() {
-        return orderStartDate;
+    public Date getOrderStartDate() {
+        try {
+            Date date = sdf.parse(this.orderStartDate);
+            return date;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Date();
     }
 
     public void setOrderStartDate(String orderStartDate) {
         this.orderStartDate = orderStartDate;
     }
 
-    public String getOrderEndDate() {
-        return orderEndDate;
+    public Date getOrderEndDate() {
+        try {
+            Date date = sdf.parse(this.orderEndDate);
+            return date;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Date();
     }
 
     public void setOrderEndDate(String orderEndDate) {

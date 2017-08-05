@@ -272,42 +272,13 @@ public class DataStore {
         }).start();
     }
 
-    public void getCategories(final DataRequestCallback callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean success = true;
-                ServerResult result = serverHandler.getCategories();
-                if (result.getRequestStatusCode() >= 400) {
-                    success = false;
-                } else {
-                    ArrayList<Category> categories = (ArrayList<Category>) result.getPairs().get("categories");
-                    setCategories(categories);
-                }
-                invokeCallback(callback, success, result); // invoking the callback
-            }
-        }).start();
-    }
-
-    public void getNearbyPartners(final float latitude, final float longitude, final int radius, final MapFilters mapFilters, final DataRequestCallback callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean success = true;
-                ServerResult result = serverHandler.getNearbyPartners(latitude, longitude, radius, mapFilters);
-                if (result.getRequestStatusCode() >= 400) {
-                    success = false;
-                }
-                invokeCallback(callback, success, result); // invoking the callback
-            }
-        }).start();
-    }
-
     public void logoutUser() {
         try {
             stopScheduledUpdates();
             clearLocalData();
+            broadcastloginStateChange();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -369,37 +340,58 @@ public class DataStore {
         }).start();
     }
 
-//    //--------------------
-//    // Brands
-//    //----------------------------------------------
-//    public void requestBrands(final String keyWord, final DataRequestCallback callback) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                boolean success = true;
-//                ServerResult result = serverHandler.getBrands(keyWord);
-//                if (result.connectionFailed()) {
-//                    success = false;
-//                } else {
-//                    if (result.isValid()) {
-//                        ArrayList<BrandModel> arrayRecieved = (ArrayList<BrandModel>) result.get("brands");
-//                        if (arrayRecieved != null && !arrayRecieved.isEmpty()) {
-//                            brands = arrayRecieved;
-//                            DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_ARRAY_BRANDS, arrayRecieved);
-//                        }
-//                    }
-//                }
-//                broadcastDataStoreUpdate();
-//                invokeCallback(callback, success, result); // invoking the callback
-//            }
-//        }).start();
-//    }
-
 
 
     //--------------------
     // Getters
     //----------------------------------------------
+
+    public void getCategories(final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getCategories();
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+                    ArrayList<Category> categories = (ArrayList<Category>) result.getPairs().get("categories");
+                    setCategories(categories);
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void getNearbyPartners(final float latitude, final float longitude, final int radius, final MapFilters mapFilters, final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getNearbyPartners(latitude, longitude, radius, mapFilters);
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void getOrders(final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getOrders();
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
 
     public ArrayList<AppCarBrand> getBrands() {
         return brands;

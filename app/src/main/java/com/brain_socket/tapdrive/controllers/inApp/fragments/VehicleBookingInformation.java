@@ -2,8 +2,10 @@ package com.brain_socket.tapdrive.controllers.inApp.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,18 @@ import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.model.partner.Car;
+import com.brain_socket.tapdrive.model.partner.Reservation;
+import com.brain_socket.tapdrive.utils.DayDisableDecorator;
 import com.bumptech.glide.Glide;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnRangeSelectedListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,7 +103,50 @@ public class VehicleBookingInformation extends Fragment {
                 .setCalendarDisplayMode(CalendarMode.MONTHS)
                 .commit();
 
-        calendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_MULTIPLE);
+        calendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE);
+
+        ArrayList<CalendarDay> disabledDates = new ArrayList<>();
+
+        for (Reservation reservation : car.getReservations()) {
+
+            Calendar cal1 = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            cal1.setTime(reservation.getOrderStartDate());
+            cal2.setTime(reservation.getOrderEndDate());
+
+            boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                    cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+
+            if (sameDay) {
+                disabledDates.add(CalendarDay.from(cal1));
+            } else {
+                while (!cal1.after(cal2)) {
+                    disabledDates.add(CalendarDay.from(cal1));
+                    cal1.add(Calendar.DATE, 1);
+                }
+            }
+
+        }
+
+        calendarView.addDecorator(new DayDisableDecorator(disabledDates, getActivity()));
+
+        calendarView.setOnRangeSelectedListener(new OnRangeSelectedListener() {
+            @Override
+            public void onRangeSelected(@NonNull MaterialCalendarView widget, @NonNull List<CalendarDay> dates) {
+
+                for (CalendarDay calendarDay : dates) {
+                    Log.d("EYAD", "onRangeSelected: " + calendarDay.getDay());
+                }
+
+            }
+        });
+
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                Log.d("EYAD", "onRangeSelected: " + date.getDay());
+            }
+        });
 
     }
 

@@ -1,6 +1,7 @@
 package com.brain_socket.tapdrive.controllers.inApp;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -26,11 +27,15 @@ import android.widget.TextView;
 import com.appyvet.rangebar.RangeBar;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation;
+import com.brain_socket.tapdrive.controllers.onBoarding.IntroActivity;
+import com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen;
 import com.brain_socket.tapdrive.customViews.FilterTypeView;
 import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
+import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
 import com.brain_socket.tapdrive.delegates.FilterSelectedEvent;
 import com.brain_socket.tapdrive.model.filters.Category;
@@ -55,6 +60,7 @@ public class MainActivity extends AppCompatActivity
 
     private static String TAG_MAIN_MAP_FRAG = "mainMapFrag";
     private static String TAG_BOOKING_INFORMATION_FRAG = "bookingInformationFrag";
+    private static String TAG_TRIP_HISTORY_FRAG = "tripHistoryFrag";
 
     Fragment fragment;
     FragmentManager fragmentManager;
@@ -69,6 +75,10 @@ public class MainActivity extends AppCompatActivity
 
     HashMap<FilterTypeView, ArrayList<FilterTypeView>> filterTypeViews = new HashMap<>();
     private MapFilters mapFilters = null;
+
+    TextViewCustomFont toolbarTitle;
+    ImageView toolbarLogo;
+    TextViewCustomFont logoutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +119,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void init() {
+        toolbarTitle = (TextViewCustomFont) findViewById(R.id.toolbar_title);
+        toolbarLogo = (ImageView) findViewById(R.id.toolbar_logo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         rlMainContent = findViewById(R.id.rlMainContent);
         setSupportActionBar(toolbar);
@@ -157,6 +169,8 @@ public class MainActivity extends AppCompatActivity
                     });
                 } else {
                     //show hamburger
+                    toolbarTitle.setVisibility(View.GONE);
+                    toolbarLogo.setVisibility(View.VISIBLE);
                     toggleFiltersButton.setVisibility(View.VISIBLE);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     toggle.syncState();
@@ -190,6 +204,17 @@ public class MainActivity extends AppCompatActivity
         UserModel me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
         userName.setText(me.getUsername());
         Glide.with(this).load(me.getPhoto()).into(profilePicture);
+
+        logoutButton = (TextViewCustomFont) findViewById(R.id.btnLogout);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataStore.getInstance().logoutUser();
+                Intent intent = new Intent(MainActivity.this, SplashScreen.class);
+                MainActivity.this.startActivity(intent);
+                MainActivity.this.finish();
+            }
+        });
 
         initFiltersView();
 
@@ -451,11 +476,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camara) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_profile) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_notifications) {
+
+        } else if (id == R.id.nav_trip_history) {
+            openTripHistoryScreen();
+        } else {
 
         }
 
@@ -465,7 +492,7 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -496,8 +523,24 @@ public class MainActivity extends AppCompatActivity
         VehicleBookingInformation vehicleBookingInformation = VehicleBookingInformation.newInstance(car);
         fragment = vehicleBookingInformation;
         fragmentManager.beginTransaction()
-                .add(R.id.flMainFragmentContainer, fragment, TAG_MAIN_MAP_FRAG)
-                .addToBackStack(TAG_MAIN_MAP_FRAG)
+                .add(R.id.flMainFragmentContainer, fragment, TAG_BOOKING_INFORMATION_FRAG)
+                .addToBackStack(TAG_BOOKING_INFORMATION_FRAG)
+                .commit();
+
+    }
+
+    private void openTripHistoryScreen() {
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText("History");
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        TripHistoryFragment tripHistoryFragment = new TripHistoryFragment();
+        fragment = tripHistoryFragment;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_TRIP_HISTORY_FRAG)
+                .addToBackStack(TAG_TRIP_HISTORY_FRAG)
                 .commit();
 
     }

@@ -18,6 +18,8 @@ public class Car extends AppBaseModel {
     private String id;
     @SerializedName("partner_id")
     private String partnerId;
+    @SerializedName("name")
+    private String name;
     @SerializedName("name_en")
     private String englishName;
     @SerializedName("name_ar")
@@ -156,5 +158,13 @@ public class Car extends AppBaseModel {
 
     public void setArabicName(String arabicName) {
         this.arabicName = arabicName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

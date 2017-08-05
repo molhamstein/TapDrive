@@ -1,9 +1,12 @@
 package com.brain_socket.tapdrive.data;
 
+import android.util.Log;
+
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
+import com.brain_socket.tapdrive.model.orders.Order;
 import com.brain_socket.tapdrive.model.partner.Partner;
 import com.brain_socket.tapdrive.model.user.UserModel;
 
@@ -57,9 +60,6 @@ public class ServerAccess {
     }
     // API calls // ------------------------------------------------
 
-    //////////////////
-    // login
-    /////////////////
     public ServerResult login(String email, String password, String socialId, String socialToken) {
         ServerResult result = new ServerResult();
         UserModel me = null;
@@ -363,6 +363,35 @@ public class ServerAccess {
 
     public ServerResult getNearbyPartners(final float latitude, final float longitude, final int radius, final MapFilters mapFilters) {
         return getNearbyPartners(1, latitude, longitude, radius, mapFilters);
+    }
+
+    public ServerResult getOrders() {
+        ServerResult result = new ServerResult();
+        try {
+            // parameters
+            JSONObject headers = new JSONObject();
+            headers.put("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN));
+
+            // url
+            String url = BASE_SERVICE_URL + "/orders";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, null, "get", headers);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONArray jsonResponse = apiResult.getResponseJsonArray();
+            Log.d("EYAD", "getOrders: " + jsonResponse);
+            if (jsonResponse != null) { // check if response is empty
+                ArrayList<Order> orders = new ArrayList<>();
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    orders.add(Order.fromJson(jsonResponse.getJSONObject(i)));
+                }
+                result.addPair("orders", orders);
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+        return result;
     }
 
     /**

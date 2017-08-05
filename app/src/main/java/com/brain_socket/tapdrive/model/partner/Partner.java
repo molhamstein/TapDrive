@@ -25,8 +25,8 @@ public class Partner extends AppBaseModel {
     private String address;
     private String phone;
     private String logo;
-    private float latitude;
-    private float longitude;
+    private String latitude;
+    private String longitude;
     private String token;
     private ArrayList<Car> cars;
     private Country country;
@@ -118,19 +118,29 @@ public class Partner extends AppBaseModel {
     }
 
     public float getLatitude() {
-        return latitude;
+        if (latitude != null) {
+            if (!latitude.equalsIgnoreCase("")) {
+                return Float.parseFloat(latitude);
+            }
+        }
+        return 0.0f;
     }
 
     public void setLatitude(float latitude) {
-        this.latitude = latitude;
+        this.latitude = latitude + "";
     }
 
     public float getLongitude() {
-        return longitude;
+        if (longitude != null) {
+            if (!longitude.equalsIgnoreCase("")) {
+                return Float.parseFloat(longitude);
+            }
+        }
+        return 0.0f;
     }
 
     public void setLongitude(float longitude) {
-        this.longitude = longitude;
+        this.longitude = longitude + "";
     }
 
     public String getToken() {
@@ -171,7 +181,7 @@ public class Partner extends AppBaseModel {
 
     public LatLng getCoords(){
         try {
-            LatLng coords = new LatLng(latitude, longitude);
+            LatLng coords = new LatLng(getLatitude(), getLongitude());
             return coords;
         }catch (Exception e){
             return new LatLng(0, 0);
