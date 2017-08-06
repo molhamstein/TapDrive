@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.appyvet.rangebar.RangeBar;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation;
 import com.brain_socket.tapdrive.controllers.onBoarding.IntroActivity;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG_MAIN_MAP_FRAG = "mainMapFrag";
     private static String TAG_BOOKING_INFORMATION_FRAG = "bookingInformationFrag";
     private static String TAG_TRIP_HISTORY_FRAG = "tripHistoryFrag";
+    private static String TAG_SETTINGS_FRAG = "settingsFrag";
 
     Fragment fragment;
     FragmentManager fragmentManager;
@@ -483,7 +485,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_trip_history) {
             openTripHistoryScreen();
         } else {
-
+            openSettingsScreen();
         }
 
 //        else if (id == R.id.nav_manage) {
@@ -494,6 +496,8 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return false;
     }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSelectedFilterValueEvent(FilterSelectedEvent filterSelectedEvent) {
@@ -541,6 +545,22 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_TRIP_HISTORY_FRAG)
                 .addToBackStack(TAG_TRIP_HISTORY_FRAG)
+                .commit();
+
+    }
+
+    private void openSettingsScreen() {
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText("Settings");
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        SettingsFragment settingsFragment = new SettingsFragment();
+        fragment = settingsFragment;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_SETTINGS_FRAG)
+                .addToBackStack(TAG_SETTINGS_FRAG)
                 .commit();
 
     }

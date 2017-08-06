@@ -9,6 +9,7 @@ import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.model.orders.Order;
+import com.brain_socket.tapdrive.utils.Helpers;
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
@@ -59,8 +60,9 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
         } else {
             totalCostTextView.setText("Total Cost: 0 AED");
         }
-        timeFromTextView.setText("From: " + order.getStartDate());
-        timeToTextView.setText("To: " + order.getEndDate());
+
+        timeFromTextView.setText("From: " + Helpers.getFormattedDateString(order.getStartDate()));
+        timeToTextView.setText("To: " + Helpers.getFormattedDateString(order.getEndDate()));
 
 
     }

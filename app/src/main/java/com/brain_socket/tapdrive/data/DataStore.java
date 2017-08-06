@@ -8,6 +8,7 @@ import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.AppUser;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
+import com.brain_socket.tapdrive.model.partner.Country;
 import com.brain_socket.tapdrive.model.user.UserModel;
 import com.google.gson.reflect.TypeToken;
 
@@ -346,6 +347,23 @@ public class DataStore {
     // Getters
     //----------------------------------------------
 
+    public void getCountries(final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getCountries();
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+                    ArrayList<Country> countries = (ArrayList<Country>) result.getPairs().get("countries");
+                    setCountries(countries);
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     public void getCategories(final DataRequestCallback callback) {
         new Thread(new Runnable() {
             @Override
@@ -435,6 +453,10 @@ public class DataStore {
 
     public void setCategories(ArrayList<Category> categories) {
         DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_CATEGORIES, categories);
+    }
+
+    public void setCountries(ArrayList<Country> countries) {
+        DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_COUNTRIES, countries);
     }
 
     public void setApiAccessToken(String apiAccessToken) {

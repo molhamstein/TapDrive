@@ -7,6 +7,7 @@ import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.orders.Order;
+import com.brain_socket.tapdrive.model.partner.Country;
 import com.brain_socket.tapdrive.model.partner.Partner;
 import com.brain_socket.tapdrive.model.user.UserModel;
 
@@ -380,7 +381,6 @@ public class ServerAccess {
             result.setStatusCode(apiResult.getStatusCode());
             result.setApiError(apiResult.getApiError());
             JSONArray jsonResponse = apiResult.getResponseJsonArray();
-            Log.d("EYAD", "getOrders: " + jsonResponse);
             if (jsonResponse != null) { // check if response is empty
                 ArrayList<Order> orders = new ArrayList<>();
                 for (int i = 0; i < jsonResponse.length(); i++) {
@@ -392,6 +392,33 @@ public class ServerAccess {
             //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
         }
         return result;
+    }
+
+    public ServerResult getCountries() {
+        ServerResult result = new ServerResult();
+
+        try {
+            // url
+            String url = BASE_SERVICE_URL + "/countries";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, null, "get", null);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONArray jsonResponse = apiResult.getResponseJsonArray();
+            if (jsonResponse != null) { // check if response is empty
+                ArrayList<Country> countries = new ArrayList<>();
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    countries.add(Country.fromJson(jsonResponse.getJSONObject(i)));
+                }
+                result.addPair("countries", countries);
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+
+        return result;
+
     }
 
     /**

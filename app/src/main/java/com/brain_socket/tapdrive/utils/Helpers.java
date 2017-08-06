@@ -6,6 +6,9 @@ import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.Window;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Albert on 7/8/17.
  */
@@ -39,6 +42,25 @@ public class Helpers {
         int titleBarHeight= contentViewTop - statusBarHeight;
 
         return statusBarHeight;
+    }
+
+    public static String getFormattedDateString(String unformattedDateString) {
+
+        try {
+
+            SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            SimpleDateFormat appDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+            Date date = serverDateFormat.parse(unformattedDateString);
+
+            return appDateFormat.format(date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "";
+
     }
 
 }

@@ -27,6 +27,7 @@ public class DataCacheProvider {
     public static final String KEY_APP_ARRAY_BRANDS = "brands";
     public static final String KEY_APP_ACCESS_MODE = "accessMode";
     public static final String KEY_APP_CATEGORIES = "categories";
+    public static final String KEY_APP_COUNTRIES = "countries";
 
 
     private static DataCacheProvider cacheProvider = null;
