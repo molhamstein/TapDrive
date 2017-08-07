@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -23,6 +24,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
@@ -33,31 +35,26 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
-import io.fabric.sdk.android.Fabric;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Molham on 12/02/16.
  */
 public class TapApp extends Application implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    public static final int PERMISSIONS_REQUEST_LOCATION = 33;
+    private static final long oneDayMillies = 24 * 60 * 60 * 1000;
+    private static final long oneHourMillies = 60 * 60 * 1000;
+    private static final long oneMinuteMillies = 60 * 1000;
     public static TapApp appContext;
+    public static String sDefSystemLanguage;
     private static Gson sharedGsonParser;
     private static GoogleApiClient mGoogleApiClient;
-
-    public static final int PERMISSIONS_REQUEST_LOCATION = 33;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Fabric.with(this, new Crashlytics());
-        appContext = this;
-        sharedGsonParser = new Gson();
-        DataStore.getInstance().startScheduledUpdates();
-    }
 
     public static TapApp getAppContext() {
         return appContext;
@@ -87,10 +84,6 @@ public class TapApp extends Application implements GoogleApiClient.ConnectionCal
         }
         return res;
     }
-
-    private static final long oneDayMillies = 24 * 60 * 60 * 1000;
-    private static final long oneHourMillies = 60 * 60 * 1000;
-    private static final long oneMinuteMillies = 60 * 1000;
 
     public static String getDateString(long date) {
 
@@ -181,6 +174,95 @@ public class TapApp extends Application implements GoogleApiClient.ConnectionCal
         return true;
     }
 
+    public static void requestLastUserKnownLocation() {
+        if (mGoogleApiClient == null) {
+            // init google apis client
+            mGoogleApiClient = new GoogleApiClient.Builder(TapApp.getAppContext())
+                    .addConnectionCallbacks(TapApp.getAppContext())
+                    .addOnConnectionFailedListener(TapApp.getAppContext())
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+        if (!mGoogleApiClient.isConnected())
+            mGoogleApiClient.connect();
+    }
+
+    public static void disconnectGoogleApiClient() {
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    /////
+    ///------- Utiles -------
+    public static void checkAndPromptForLocationServices(final Activity activity) {
+        LocationManager lm = (LocationManager) TapApp.appContext.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        if (!gps_enabled && !network_enabled) {
+            // notify user
+            AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
+            dialog.setMessage(TapApp.appContext.getResources().getString(R.string.location_not_enabled_msg));
+            dialog.setPositiveButton(TapApp.appContext.getResources().getString(R.string.location_not_enabled_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    activity.startActivity(myIntent);
+                    //get gps
+                }
+            });
+            dialog.setNegativeButton(TapApp.appContext.getString(R.string.location_not_enabled_cancel), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                }
+            });
+            dialog.show();
+        }
+    }
+
+    public static String getPhoneNumber() {
+        String mPhoneNumber = null;
+        try {
+            TelephonyManager tMgr = (TelephonyManager) appContext.getSystemService(Context.TELEPHONY_SERVICE);
+            mPhoneNumber = tMgr.getLine1Number();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return mPhoneNumber;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Fabric.with(this, new Crashlytics());
+        appContext = this;
+        sharedGsonParser = new Gson();
+        DataStore.getInstance().startScheduledUpdates();
+        sDefSystemLanguage = Locale.getDefault().getLanguage();
+
+        if (!DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_APP_LOCALE).equalsIgnoreCase("")) {
+            LocalizationHelper.setLocale(getApplicationContext(), DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_APP_LOCALE));
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        sDefSystemLanguage = newConfig.locale.getLanguage();
+    }
+
     /**
      * Runs when a GoogleApiClient object successfully connects.
      */
@@ -209,77 +291,10 @@ public class TapApp extends Application implements GoogleApiClient.ConnectionCal
         mGoogleApiClient.connect();
     }
 
-
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
             DataStore.getInstance().setMeLastLocation(location);
         }
-    }
-
-    public static void requestLastUserKnownLocation() {
-        if (mGoogleApiClient == null) {
-            // init google apis client
-            mGoogleApiClient = new GoogleApiClient.Builder(TapApp.getAppContext())
-                    .addConnectionCallbacks(TapApp.getAppContext())
-                    .addOnConnectionFailedListener(TapApp.getAppContext())
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-        if (!mGoogleApiClient.isConnected())
-            mGoogleApiClient.connect();
-    }
-
-    public static void disconnectGoogleApiClient() {
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
-
-
-    /////
-    ///------- Utiles -------
-    public static void checkAndPromptForLocationServices(final Activity activity){
-        LocationManager lm = (LocationManager)TapApp.appContext.getSystemService(Context.LOCATION_SERVICE);
-        boolean gps_enabled = false;
-        boolean network_enabled = false;
-
-        try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch(Exception ex) {}
-
-        try {
-            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {}
-
-        if(!gps_enabled && !network_enabled) {
-            // notify user
-            AlertDialog.Builder dialog = new AlertDialog.Builder(activity);
-            dialog.setMessage(TapApp.appContext.getResources().getString(R.string.location_not_enabled_msg));
-            dialog.setPositiveButton(TapApp.appContext.getResources().getString(R.string.location_not_enabled_ok), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    activity.startActivity(myIntent);
-                    //get gps
-                }
-            });
-            dialog.setNegativeButton(TapApp.appContext.getString(R.string.location_not_enabled_cancel), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface paramDialogInterface, int paramInt) {}
-            });
-            dialog.show();
-        }
-    }
-
-    public static String getPhoneNumber(){
-        String mPhoneNumber = null;
-        try{
-            TelephonyManager tMgr = (TelephonyManager)appContext.getSystemService(Context.TELEPHONY_SERVICE);
-            mPhoneNumber = tMgr.getLine1Number();
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-        return mPhoneNumber;
     }
 }

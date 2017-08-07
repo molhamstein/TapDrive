@@ -47,7 +47,7 @@
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="30dp"
         android:textSize="@dimen/ts_title_normal"
-        android:text="LOADING"
+        android:text="@string/loading"
         android:textColor="@color/white"/>
 
 </FrameLayout>

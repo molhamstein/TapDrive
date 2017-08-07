@@ -1,5 +1,6 @@
 package com.brain_socket.tapdrive.controllers.inApp.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,9 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen;
+import com.brain_socket.tapdrive.data.DataCacheProvider;
+import com.brain_socket.tapdrive.utils.LocalizationHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +52,21 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        String locale = LocalizationHelper.getCurrentLocale();
+
+        if (!locale.equalsIgnoreCase("")) {
+            if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                englishLanguageButton.setChecked(true);
+            } else {
+                arabicLanguageButton.setChecked(true);
+            }
+        } else {
+            if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                englishLanguageButton.setChecked(true);
+            } else {
+                arabicLanguageButton.setChecked(true);
+            }
+        }
 
     }
 
@@ -61,8 +80,20 @@ public class SettingsFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.english_language_button:
+                LocalizationHelper.setLocale(getActivity(), "en");
+                DataCacheProvider.getInstance().storeStringWithKey(DataCacheProvider.KEY_APP_LOCALE, LocalizationHelper.ENGLISH_LOCALE);
+                Intent intent = new Intent(getActivity(), SplashScreen.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 break;
             case R.id.arabic_language_button:
+                LocalizationHelper.setLocale(getActivity(), "ar");
+                DataCacheProvider.getInstance().storeStringWithKey(DataCacheProvider.KEY_APP_LOCALE, LocalizationHelper.ARABIC_LOCALE);
+                Intent intent1 = new Intent(getActivity(), SplashScreen.class);
+                getActivity().startActivity(intent1);
+                getActivity().finish();
+                getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 break;
             case R.id.terms_of_service_button:
                 break;

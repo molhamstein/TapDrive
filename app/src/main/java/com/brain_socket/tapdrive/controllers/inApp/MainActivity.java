@@ -45,6 +45,7 @@ import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.partner.Car;
 import com.brain_socket.tapdrive.model.user.UserModel;
 import com.brain_socket.tapdrive.utils.CustomTypefaceSpan;
+import com.brain_socket.tapdrive.utils.LocalizationHelper;
 import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
@@ -142,7 +143,24 @@ public class MainActivity extends AppCompatActivity
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
                 //slide main content with the drawer
-                rlMainContent.setTranslationX(slideOffset * drawerView.getWidth());
+
+                String locale = LocalizationHelper.getCurrentLocale();
+                if (!locale.equalsIgnoreCase("")) {
+                    if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                        rlMainContent.setTranslationX(slideOffset * drawerView.getWidth());
+                    } else {
+                        rlMainContent.setTranslationX(- (slideOffset * drawerView.getWidth()));
+
+                    }
+                } else {
+                    if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                        rlMainContent.setTranslationX(slideOffset * drawerView.getWidth());
+                    } else {
+                        rlMainContent.setTranslationX(- (slideOffset * drawerView.getWidth()));
+
+                    }
+                }
+
                 //rlMainContent.setScaleX(1.0f - (slideOffset * 0.05f));
                 rlMainContent.setScaleY(1.0f - (slideOffset * 0.05f));
                 drawer.bringChildToFront(drawerView);
@@ -463,15 +481,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void showMap() {
-        fragmentManager = getSupportFragmentManager();
-        MapFragment mapFragment = MapFragment.newInstance();
-        fragment = mapFragment;
-        fragmentManager.beginTransaction()
-                .add(R.id.flMainFragmentContainer, fragment, TAG_MAIN_MAP_FRAG)
-                .commit();
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -561,6 +570,17 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_SETTINGS_FRAG)
                 .addToBackStack(TAG_SETTINGS_FRAG)
+                .commit();
+
+    }
+
+    private void showMap() {
+
+        fragmentManager = getSupportFragmentManager();
+        MapFragment mapFragment = MapFragment.newInstance();
+        fragment = mapFragment;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_MAIN_MAP_FRAG)
                 .commit();
 
     }
