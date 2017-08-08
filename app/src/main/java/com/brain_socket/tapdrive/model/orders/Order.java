@@ -45,7 +45,7 @@ public class Order extends AppBaseModel {
 
     @Override
     public String getId() {
-        return null;
+        return id;
     }
 
     public void setId(String id) {

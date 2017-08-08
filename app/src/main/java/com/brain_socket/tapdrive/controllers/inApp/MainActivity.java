@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG_BOOKING_INFORMATION_FRAG = "bookingInformationFrag";
     private static String TAG_TRIP_HISTORY_FRAG = "tripHistoryFrag";
     private static String TAG_SETTINGS_FRAG = "settingsFrag";
+    private static String TAG_NOTIFICATIONS_FRAG = "notificationsFrag";
 
     Fragment fragment;
     FragmentManager fragmentManager;
@@ -407,7 +408,23 @@ public class MainActivity extends AppCompatActivity
 
     private void toggleFiltersView() {
 
-        int cx = filtersView.getRight();
+        int cx;
+
+        String locale = LocalizationHelper.getCurrentLocale();
+        if (!locale.equalsIgnoreCase("")) {
+            if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                cx = filtersView.getRight();
+            } else {
+                cx = filtersView.getLeft();
+            }
+        } else {
+            if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                cx = filtersView.getRight();
+            } else {
+                cx = filtersView.getLeft();
+            }
+        }
+
         int cy = filtersView.getTop();
 
         // get the final radius for the clipping circle
@@ -490,7 +507,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_notifications) {
-
+            openNotificationsScreen();
         } else if (id == R.id.nav_trip_history) {
             openTripHistoryScreen();
         } else {
@@ -505,7 +522,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return false;
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -542,10 +558,26 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    private void openNotificationsScreen() {
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText(R.string.notifications_screen_title);
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        TripHistoryFragment tripHistoryFragment = new TripHistoryFragment();
+        fragment = tripHistoryFragment;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_NOTIFICATIONS_FRAG)
+                .addToBackStack(TAG_NOTIFICATIONS_FRAG)
+                .commit();
+
+    }
+
     private void openTripHistoryScreen() {
 
         toolbarLogo.setVisibility(View.GONE);
-        toolbarTitle.setText("History");
+        toolbarTitle.setText(R.string.history_screen_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
@@ -561,7 +593,7 @@ public class MainActivity extends AppCompatActivity
     private void openSettingsScreen() {
 
         toolbarLogo.setVisibility(View.GONE);
-        toolbarTitle.setText("Settings");
+        toolbarTitle.setText(R.string.settings_screen_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();

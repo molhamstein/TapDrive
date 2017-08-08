@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.utils.LocalizationHelper;
 
 
 /**
@@ -25,8 +26,8 @@ import com.brain_socket.tapdrive.R;
 public class TextViewCustomFont extends TextView {
 
     // fonts
-    private static Typeface fontFaceRegular = null;
-    private static Typeface fontFaceBold = null;
+    public static Typeface fontFaceRegular = null;
+    public static Typeface fontFaceBold = null;
 
     public TextViewCustomFont(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -70,7 +71,23 @@ public class TextViewCustomFont extends TextView {
     public static Typeface getTFThin(Context context) {
         try {
             if (fontFaceRegular == null) {
-                fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/gotham-light.ttf");
+
+                String locale = LocalizationHelper.getCurrentLocale();
+
+                if (!locale.equalsIgnoreCase("")) {
+                    if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/gotham-light.ttf");
+                    } else {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Regular.ttf");
+                    }
+                } else {
+                    if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/gotham-light.ttf");
+                    } else {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Regular.ttf");
+                    }
+                }
+
             }
         } catch (Exception e) {
             fontFaceRegular = Typeface.DEFAULT;
@@ -81,7 +98,23 @@ public class TextViewCustomFont extends TextView {
     public static Typeface getTFRegular(Context context) {
         try {
             if (fontFaceRegular == null) {
-                fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.ttf");
+
+                String locale = LocalizationHelper.getCurrentLocale();
+
+                if (!locale.equalsIgnoreCase("")) {
+                    if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.ttf");
+                    } else {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Regular.ttf");
+                    }
+                } else {
+                    if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Regular.ttf");
+                    } else {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Regular.ttf");
+                    }
+                }
+
             }
         } catch (Exception e) {
             fontFaceRegular = Typeface.DEFAULT;
@@ -92,7 +125,23 @@ public class TextViewCustomFont extends TextView {
     public static Typeface getTFBold(Context context) {
         try {
             if (fontFaceBold == null) {
-                fontFaceBold = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Bold.ttf");
+
+                String locale = LocalizationHelper.getCurrentLocale();
+
+                if (!locale.equalsIgnoreCase("")) {
+                    if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                        fontFaceBold = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Bold.ttf");
+                    } else {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Bold.ttf");
+                    }
+                } else {
+                    if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                        fontFaceBold = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Bold.ttf");
+                    } else {
+                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Bold.ttf");
+                    }
+                }
+
             }
         } catch (Exception e) {
             fontFaceBold = Typeface.DEFAULT;

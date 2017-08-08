@@ -90,5 +90,17 @@
     <string name="activity_forget_password_request_failed">Forget password request failed</string>
     <string name="activity_forget_password_user_not_found">User not found</string>
     <string name="loading">جاري التحميل</string>
+    <string name="history_screen_title">الحجوزات السابقة</string>
+    <string name="settings_screen_title">الإعدادات</string>
+    <string name="notifications_screen_title">الإشعارات</string>
+    <string name="payment_method">Payment method</string>
+    <string name="cash_on_delivery">Cash on Delivery</string>
+    <string name="pay_to_the_driver_when_you_get_your_car">Pay to the driver when you get your car</string>
+    <string name="months">Months</string>
+    <string name="weeks">Weeks</string>
+    <string name="days">Days</string>
+    <string name="hours">Hours</string>
+    <string name="total">Total</string>
+    <string name="book">Book</string>
 
 </resources>

@@ -411,6 +411,22 @@ public class DataStore {
         }).start();
     }
 
+    public void getServerNotifications(final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getServerNotifications();
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     public ArrayList<AppCarBrand> getBrands() {
         return brands;
     }

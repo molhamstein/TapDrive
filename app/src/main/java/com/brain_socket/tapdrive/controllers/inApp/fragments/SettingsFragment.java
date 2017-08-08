@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen;
+import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.utils.LocalizationHelper;
 
@@ -82,6 +83,8 @@ public class SettingsFragment extends Fragment {
             case R.id.english_language_button:
                 LocalizationHelper.setLocale(getActivity(), "en");
                 DataCacheProvider.getInstance().storeStringWithKey(DataCacheProvider.KEY_APP_LOCALE, LocalizationHelper.ENGLISH_LOCALE);
+                TextViewCustomFont.fontFaceBold = null;
+                TextViewCustomFont.fontFaceRegular = null;
                 Intent intent = new Intent(getActivity(), SplashScreen.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();
@@ -90,6 +93,8 @@ public class SettingsFragment extends Fragment {
             case R.id.arabic_language_button:
                 LocalizationHelper.setLocale(getActivity(), "ar");
                 DataCacheProvider.getInstance().storeStringWithKey(DataCacheProvider.KEY_APP_LOCALE, LocalizationHelper.ARABIC_LOCALE);
+                TextViewCustomFont.fontFaceBold = null;
+                TextViewCustomFont.fontFaceRegular = null;
                 Intent intent1 = new Intent(getActivity(), SplashScreen.class);
                 getActivity().startActivity(intent1);
                 getActivity().finish();
