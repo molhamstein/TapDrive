@@ -24,6 +24,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnRangeSelectedListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -61,6 +62,7 @@ public class VehicleBookingInformation extends Fragment {
     Unbinder unbinder;
 
     private Car car;
+    boolean selectedRange = false;
 
     public VehicleBookingInformation() {
         // Required empty public constructor
@@ -105,7 +107,7 @@ public class VehicleBookingInformation extends Fragment {
 
         calendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE);
 
-        ArrayList<CalendarDay> disabledDates = new ArrayList<>();
+        final ArrayList<CalendarDay> disabledDates = new ArrayList<>();
 
         for (Reservation reservation : car.getReservations()) {
 
@@ -134,9 +136,93 @@ public class VehicleBookingInformation extends Fragment {
             @Override
             public void onRangeSelected(@NonNull MaterialCalendarView widget, @NonNull List<CalendarDay> dates) {
 
-                for (CalendarDay calendarDay : dates) {
-                    Log.d("EYAD", "onRangeSelected: " + calendarDay.getDay());
+                disabledDates.clear();
+
+                for (Reservation reservation : car.getReservations()) {
+
+                    Calendar cal1 = Calendar.getInstance();
+                    Calendar cal2 = Calendar.getInstance();
+                    cal1.setTime(reservation.getOrderStartDate());
+                    cal2.setTime(reservation.getOrderEndDate());
+
+                    boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+
+                    if (sameDay) {
+                        disabledDates.add(CalendarDay.from(cal1));
+                    } else {
+                        while (!cal1.after(cal2)) {
+                            disabledDates.add(CalendarDay.from(cal1));
+                            cal1.add(Calendar.DATE, 1);
+                        }
+                    }
+
                 }
+
+                calendarView.addDecorator(new DayDisableDecorator(disabledDates, getActivity()));
+
+                ArrayList<CalendarDay> selectedDays = new ArrayList<>();
+                int index = 0;
+
+                Log.d("EYAD", "onRangeSelected: dates " + dates.size());
+                Log.d("EYAD", "onRangeSelected: dis dates " + disabledDates.size());
+
+                for (CalendarDay selectedDay : dates) {
+                    for (CalendarDay disabledDay : disabledDates) {
+                        boolean sameDay = selectedDay.getYear() == disabledDay.getYear() &&
+                                selectedDay.getMonth() == disabledDay.getMonth() &&
+                                selectedDay.getDay() == disabledDay.getDay();
+
+                        if (!sameDay) {
+                            if (index < 1) {
+                                selectedDays.add(selectedDay);
+                            }
+                        } else {
+                            if (index < 1) {
+                                index++;
+                                selectedDays.add(selectedDay);
+                                disabledDates.remove(disabledDay);
+                                calendarView.addDecorator(new DayDisableDecorator(disabledDates, getActivity()));
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!selectedRange) {
+                    selectedRange = true;
+                    calendarView.selectRange(selectedDays.get(0), selectedDays.get(selectedDays.size() - 1));
+                }
+
+                selectedFromDate.setText(selectedDays.get(0).getYear() + "/" + (selectedDays.get(0).getMonth() + 1) + "/" + selectedDays.get(0).getDay() + " " + "00:00");
+
+                Reservation lastDayReservation = null;
+
+                for (Reservation reservation : car.getReservations()) {
+
+                    Calendar cal1 = Calendar.getInstance();
+                    Calendar cal2 = Calendar.getInstance();
+                    cal1.setTime(reservation.getOrderStartDate());
+                    cal2.setTime(reservation.getOrderEndDate());
+
+                    boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+
+                    if (sameDay) {
+                        lastDayReservation = reservation;
+                        break;
+                    }
+
+                }
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(lastDayReservation.getOrderStartDate());
+                cal.add(Calendar.MINUTE, -30);
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                String lastDayReservationOrderStartTime = simpleDateFormat.format(cal.getTime());
+
+                selectedToDate.setText(cal.get(Calendar.YEAR) + "/" + cal.get(Calendar.MONTH) + "/" + cal.get(Calendar.DAY_OF_MONTH) + " " + lastDayReservationOrderStartTime);
 
             }
         });
@@ -144,7 +230,10 @@ public class VehicleBookingInformation extends Fragment {
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                Log.d("EYAD", "onRangeSelected: " + date.getDay());
+                selectedRange = false;
+
+                selectedFromDate.setText(date.getYear() + "/" + (date.getMonth() + 1) + "/" + date.getDay() + " " + "00:00");
+                selectedToDate.setText(date.getYear() + "/" + (date.getMonth() + 1) + "/" + date.getDay() + " " + "01:00");
             }
         });
 

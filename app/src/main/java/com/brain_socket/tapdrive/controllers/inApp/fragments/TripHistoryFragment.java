@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,8 @@ import butterknife.Unbinder;
 
 public class TripHistoryFragment extends Fragment {
 
-    private static final int ORDERS_SCREEN_TYPE = 0;
-    private static final int NOTIFICATIONS_SCREEN_TYPE = 1;
+    public static final int ORDERS_SCREEN_TYPE = 0;
+    public static final int NOTIFICATIONS_SCREEN_TYPE = 1;
 
     @BindView(R.id.orders_recycler_view)
     RecyclerView dataRecyclerView;
@@ -102,6 +103,7 @@ public class TripHistoryFragment extends Fragment {
             if (success) {
                 ArrayList<Order> orders;
                 try {
+
                     if (result.getPairs().containsKey("orders")) {
                         orders = new ArrayList<>();
                         ArrayList<Order> receivedOrders = (ArrayList<Order>) result.get("orders");

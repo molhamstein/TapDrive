@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/nav_header_height"
-                android:background="#2b2b2b"
-                android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:background="#2b2b2b"
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/flPhotoContainer"
@@ -29,31 +29,33 @@
 
     <com.brain_socket.tapdrive.customViews.TextViewCustomFont
         android:id="@+id/tvUserName"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/flPhotoContainer"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="10dp"
+        android:gravity="start"
+        android:layout_toEndOf="@id/flPhotoContainer"
         android:layout_toRightOf="@id/flPhotoContainer"
         android:text="Mhd Jarkas"
         android:textColor="@color/white"
         android:textSize="@dimen/ts_title_big"
-        app:fontId="3"
-        />
+        app:fontId="3" />
 
     <com.brain_socket.tapdrive.customViews.TextViewCustomFont
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvUserName"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
+        android:gravity="start"
         android:layout_marginTop="3dp"
+        android:layout_toEndOf="@id/flPhotoContainer"
         android:layout_toRightOf="@id/flPhotoContainer"
         android:text="Starter"
         android:textColor="@color/white"
         android:textSize="@dimen/ts_title_normal"
-        app:fontId="2"
-        />
+        app:fontId="2" />
 
 </RelativeLayout>

@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
-            android:text="Language"
+            android:text="@string/settings_language"
             android:textColor="@color/app_bg"
             android:textSize="@dimen/ts_text_normal"
             app:fontId="2" />
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="20dp"
-                android:text="Terms of service"
+                android:text="@string/settings_terms_of_service"
                 android:textColor="@color/app_bg"
                 android:textSize="@dimen/ts_text_normal"
                 app:fontId="2" />

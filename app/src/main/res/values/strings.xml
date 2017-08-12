@@ -103,5 +103,12 @@
     <string name="hours">Hours</string>
     <string name="total">Total</string>
     <string name="book">Book</string>
+    <string name="filters_vehicle">Vehicle</string>
+    <string name="filters_price">Price</string>
+    <string name="filters_apply">Apply</string>
+    <string name="filters_reset">Reset</string>
+    <string name="panel_vehicles">Vehicles</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_terms_of_service">Terms of service</string>
 
 </resources>

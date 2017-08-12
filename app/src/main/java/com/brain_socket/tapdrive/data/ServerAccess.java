@@ -137,6 +137,42 @@ public class ServerAccess {
         return result;
     }
 
+    public ServerResult updateUser(String email, String fullName,
+                                     String phone, String gender, String birthday,
+                                     String countryId, String socialId, String socialPlatform) {
+        ServerResult result = new ServerResult();
+        UserModel me = null;
+        try {
+            // parameters
+            JSONObject jsonPairs = new JSONObject();
+            jsonPairs.put("email", email);
+            jsonPairs.put("full_name", fullName);
+            jsonPairs.put("phone", phone);
+            jsonPairs.put("gender", gender.toLowerCase());
+            jsonPairs.put("birthday", birthday);
+            jsonPairs.put("country_id", countryId);
+            jsonPairs.put("social_id", socialId);
+            jsonPairs.put("social_platform", socialPlatform);
+
+            // url
+            String url = BASE_SERVICE_URL + "/auth/register";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONObject jsonResponse = apiResult.getResponseJsonObject();
+            if (jsonResponse != null) { // check if response is empty
+                me = UserModel.fromJson(jsonResponse);
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+        result.addPair("appUser", me);
+
+        return result;
+    }
+
     public ServerResult forgetUserPassword(String email) {
         ServerResult result = new ServerResult();
         try {
@@ -391,6 +427,7 @@ public class ServerAccess {
             }
         } catch (Exception e) {
             //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+            e.printStackTrace();
         }
         return result;
     }
@@ -419,6 +456,7 @@ public class ServerAccess {
             }
         } catch (Exception e) {
             //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+            e.printStackTrace();
         }
         return result;
     }

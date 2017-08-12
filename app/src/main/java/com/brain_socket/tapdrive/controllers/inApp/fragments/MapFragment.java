@@ -196,9 +196,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 this.googleMap.setMyLocationEnabled(true);
+                this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             }
         } else {
             this.googleMap.setMyLocationEnabled(true);
+            this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
         // used to force Google maps bring
         // the marker to top onClick by showing an empty info window
@@ -492,6 +494,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                     TapApp.checkAndPromptForLocationServices(getActivity());
                     try {
                         this.googleMap.setMyLocationEnabled(true);
+                        this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -404,7 +404,6 @@ public class DataStore {
                 if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {
-
                 }
                 invokeCallback(callback, success, result); // invoking the callback
             }
