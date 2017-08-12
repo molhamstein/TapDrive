@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#e3e3e3"
     android:clickable="true"
     tools:context="com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment">
 
@@ -11,6 +11,7 @@
         android:id="@+id/orders_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingTop="10dp"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:listitem="@layout/order_item_layout" />
 

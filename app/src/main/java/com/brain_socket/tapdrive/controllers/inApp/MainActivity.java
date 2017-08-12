@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.appyvet.rangebar.RangeBar;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG_BOOKING_INFORMATION_FRAG = "bookingInformationFrag";
     private static String TAG_TRIP_HISTORY_FRAG = "tripHistoryFrag";
     private static String TAG_SETTINGS_FRAG = "settingsFrag";
+    private static String TAG_PROFILE_FRAG = "profileFrag";
     private static String TAG_NOTIFICATIONS_FRAG = "notificationsFrag";
 
     Fragment fragment;
@@ -395,7 +397,9 @@ public class MainActivity extends AppCompatActivity
 
                 }
 
-                mapFilters.setCategoryOptionsIds(optionsIds.toString().substring(0, optionsIds.toString().length() - 1));
+                if (optionsIds.length() > 0) {
+                    mapFilters.setCategoryOptionsIds(optionsIds.toString().substring(0, optionsIds.toString().length() - 1));
+                }
 
                 EventBus.getDefault().post(mapFilters);
 
@@ -505,7 +509,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-
+            openProfileFragment();
         } else if (id == R.id.nav_notifications) {
             openNotificationsScreen();
         } else if (id == R.id.nav_trip_history) {
@@ -565,7 +569,7 @@ public class MainActivity extends AppCompatActivity
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
-        TripHistoryFragment tripHistoryFragment = new TripHistoryFragment();
+        TripHistoryFragment tripHistoryFragment = TripHistoryFragment.newInstance(TripHistoryFragment.NOTIFICATIONS_SCREEN_TYPE);
         fragment = tripHistoryFragment;
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_NOTIFICATIONS_FRAG)
@@ -581,7 +585,7 @@ public class MainActivity extends AppCompatActivity
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
-        TripHistoryFragment tripHistoryFragment = new TripHistoryFragment();
+        TripHistoryFragment tripHistoryFragment = TripHistoryFragment.newInstance(TripHistoryFragment.ORDERS_SCREEN_TYPE);
         fragment = tripHistoryFragment;
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_TRIP_HISTORY_FRAG)
@@ -602,6 +606,22 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_SETTINGS_FRAG)
                 .addToBackStack(TAG_SETTINGS_FRAG)
+                .commit();
+
+    }
+
+    private void openProfileFragment() {
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText("Profile");
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        ProfileFragment profileFragment = new ProfileFragment();
+        fragment = profileFragment;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_PROFILE_FRAG)
+                .addToBackStack(TAG_PROFILE_FRAG)
                 .commit();
 
     }
@@ -630,7 +650,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void applyFontToMenuItem(MenuItem mi) {
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
+        Typeface font;
+
+        String locale = LocalizationHelper.getCurrentLocale();
+
+        if (!locale.equalsIgnoreCase("")) {
+            if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                font = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
+            } else {
+                font = Typeface.createFromAsset(getAssets(), "fonts/DroidKufi-Regular.ttf");
+            }
+        } else {
+            if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                font = Typeface.createFromAsset(getAssets(), "fonts/Montserrat-Regular.ttf");
+            } else {
+                font = Typeface.createFromAsset(getAssets(), "fonts/DroidKufi-Regular.ttf");
+            }
+        }
+
         SpannableString mNewTitle = new SpannableString(mi.getTitle());
         mNewTitle.setSpan(new CustomTypefaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mi.setTitle(mNewTitle);

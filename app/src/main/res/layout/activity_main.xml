@@ -49,10 +49,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:visibility="gone"
                         android:text="Toolbar Title"
                         android:textSize="@dimen/ts_title_small"
-                        app:fontId="2"/>
+                        android:visibility="gone"
+                        app:fontId="2" />
 
                     <ImageView
                         android:id="@+id/toolbar_logo"
@@ -107,7 +107,8 @@
                     android:background="@drawable/shape_frame_white"
                     android:gravity="center"
                     android:text="@string/drawer_help"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    app:fontId="1" />
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
                     android:id="@+id/btnLogout"
@@ -118,7 +119,8 @@
                     android:layout_marginRight="8dp"
                     android:gravity="center"
                     android:text="@string/drawer_logout"
-                    android:textColor="@color/app_theme" />
+                    android:textColor="@color/app_theme"
+                    app:fontId="1" />
 
             </FrameLayout>
 
@@ -151,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="Vehicle"
+                android:text="@string/filters_vehicle"
                 android:textColor="@color/black"
                 android:textSize="@dimen/ts_text_big"
                 app:fontId="2" />
@@ -237,7 +239,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="Price"
+                android:text="@string/filters_price"
                 android:textColor="@color/black"
                 android:textSize="@dimen/ts_text_big"
                 app:fontId="2" />
@@ -310,7 +312,7 @@
                 android:background="@drawable/black_button_background"
                 android:gravity="center"
                 android:scrollbarSize="@android:color/black"
-                android:text="Reset"
+                android:text="@string/filters_reset"
                 android:textAllCaps="true"
                 android:textColor="@drawable/black_text_selector"
                 android:textSize="16sp"
@@ -329,7 +331,7 @@
                 android:background="@drawable/yellow_button_background"
                 android:gravity="center"
                 android:scrollbarSize="@android:color/black"
-                android:text="Apply"
+                android:text="@string/filters_apply"
                 android:textAllCaps="true"
                 android:textColor="@drawable/yellow_text_selector"
                 android:textSize="16sp"

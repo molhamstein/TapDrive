@@ -2,8 +2,8 @@ package com.brain_socket.tapdrive.controllers.onBoarding;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
@@ -11,34 +11,51 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
 
-import com.brain_socket.tapdrive.utils.Helpers;
-import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
 import com.brain_socket.tapdrive.R;
-import com.brain_socket.tapdrive.utils.TapApp;
+import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.model.user.UserModel;
+import com.brain_socket.tapdrive.utils.Helpers;
+import com.brain_socket.tapdrive.utils.TapApp;
 import com.hbb20.CountryCodePicker;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener,DatePickerDialog.OnDateSetListener {
-    private enum Gender {Male,Female};
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
     private ArrayList<View> uiElements;
+
     private ViewAnimator vaRegisterSteps;
     private int registerStep = 1;
-    private View tvStep1,tvStep2,tvStep3;
+    private View tvStep1, tvStep2, tvStep3;
     private View vHorizontalBlackLine;
     private TextView btnNext;
-    private EditText etEmail,etPassword,etPhone,etFullName;
+    private EditText etEmail, etPassword, etPhone, etFullName;
     private View vGenderSelector;
     private EditText etBirthday;
     private CountryCodePicker ccp;
     private View llAlreadyHaveAccount;
     private Dialog loadingDialog;
-
+    DataStore.DataRequestCallback registerCallback = new DataStore.DataRequestCallback() {
+        @Override
+        public void onDataReady(ServerResult result, boolean success) {
+            loadingDialog.dismiss();
+            if (success) {
+                UserModel user = (UserModel) result.getValue("appUser");
+                if (user != null) {
+                    finish();
+                    Intent i = new Intent(RegisterActivity.this, MainActivity.class);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(RegisterActivity.this, "User exists before", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(RegisterActivity.this, getString(R.string.activity_request_failed), Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
     private String email;
     private String password;
     private String fullName;
@@ -60,8 +77,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         animateUiElementsArray();
     }
 
-    private void init(){
-        if(uiElements == null) uiElements = new ArrayList<View>();
+    private void init() {
+        if (uiElements == null) uiElements = new ArrayList<View>();
 
         loadingDialog = TapApp.getNewLoadingDilaog(this);
         gender = Gender.Male;
@@ -75,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         tvStep3 = findViewById(R.id.tvStep3);
         vHorizontalBlackLine = findViewById(R.id.vHorizontalBlackLine);
         etEmail = (EditText) findViewById(R.id.etEmail);
-        etPassword = (EditText)findViewById(R.id.etPassword);
+        etPassword = (EditText) findViewById(R.id.etPassword);
         etFullName = (EditText) findViewById(R.id.etFullName);
         etPhone = (EditText) findViewById(R.id.etPhone);
         View tvMale = findViewById(R.id.tvMale);
@@ -88,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btnLogin.setOnClickListener(this);
         tvMale.setOnClickListener(this);
         tvFemale.setOnClickListener(this);
-        vaRegisterSteps = (ViewAnimator)findViewById(R.id.vaRegisterSteps);
+        vaRegisterSteps = (ViewAnimator) findViewById(R.id.vaRegisterSteps);
         vHorizontalBlackLine.getLayoutParams().width = 0;
         tvStep2.setVisibility(View.GONE);
         tvStep3.setVisibility(View.GONE);
@@ -109,55 +126,54 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         hideUiElements();
     }
 
-    private
-    void hideUiElements(){
-        if(uiElements != null && uiElements.size() > 0){
-            for(View v : uiElements){
+    private void hideUiElements() {
+        if (uiElements != null && uiElements.size() > 0) {
+            for (View v : uiElements) {
                 v.setAlpha(0);
             }
         }
     }
 
-    private void animateUiElementsArray(){
-        if(uiElements != null && uiElements.size() > 0){
-            for(int i=0;i<uiElements.size();i++){
-                animatePageUiElements(uiElements.get(i),((i+1)*130));
+    private void animateUiElementsArray() {
+        if (uiElements != null && uiElements.size() > 0) {
+            for (int i = 0; i < uiElements.size(); i++) {
+                animatePageUiElements(uiElements.get(i), ((i + 1) * 130));
             }
         }
     }
 
-    private void animatePageUiElements(View v,int delay){
-        com.github.florent37.viewanimator.ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0,1).duration(1000)
+    private void animatePageUiElements(View v, int delay) {
+        com.github.florent37.viewanimator.ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(1000)
                 .interpolator(new OvershootInterpolator())
                 .start();
     }
 
-    private void nextRegisterStep(){
+    private void nextRegisterStep() {
         boolean cancel = false;
         EditText focusView = null;
 
-        if(registerStep == 1){
+        if (registerStep == 1) {
             email = etEmail.getText().toString();
             password = etPassword.getText().toString();
 
-            if(email.isEmpty()){
+            if (email.isEmpty()) {
                 cancel = true;
                 etEmail.setError(getString(R.string.activity_register_field_required));
                 focusView = etEmail;
-            }else{
-                if(!Helpers.isValidEmail(email)){
+            } else {
+                if (!Helpers.isValidEmail(email)) {
                     etEmail.setError(getString(R.string.activity_register_email_invalid));
                     cancel = true;
                     focusView = etEmail;
                 }
             }
-            if(password.isEmpty()){
+            if (password.isEmpty()) {
                 cancel = true;
                 etPassword.setError(getString(R.string.activity_register_field_required));
                 focusView = etPassword;
             }
 
-            if(cancel){
+            if (cancel) {
                 llAlreadyHaveAccount.setVisibility(View.VISIBLE);
                 btnNext.setText(getString(R.string.activity_register_next));
                 focusView.requestFocus();
@@ -174,28 +190,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             registerStep++;
             return;
         }
-        if(registerStep == 2){
+        if (registerStep == 2) {
             fullName = etFullName.getText().toString();
             phone = etPhone.getText().toString();
 
-            if(fullName.isEmpty()){
+            if (fullName.isEmpty()) {
                 cancel = true;
                 etFullName.setError(getString(R.string.activity_register_field_required));
                 focusView = etFullName;
             }
-            if(phone.isEmpty()){
+            if (phone.isEmpty()) {
                 cancel = true;
                 etPhone.setError(getString(R.string.activity_register_field_required));
                 focusView = etPhone;
             }
 
-            if(birthdate == null){
+            if (birthdate == null) {
                 cancel = true;
                 etBirthday.setError(getString(R.string.activity_register_field_required));
                 focusView = etBirthday;
             }
 
-            if(cancel){
+            if (cancel) {
                 btnNext.setText(getString(R.string.activity_register_finish));
                 focusView.requestFocus();
                 focusView.setError(getString(R.string.activity_register_field_required));
@@ -210,39 +226,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             registerStep++;
             return;
         }
-        if(registerStep == 3){
+        if (registerStep == 3) {
             loadingDialog.show();
-            DataStore.getInstance().attemptSignUp(email,password,fullName,phone,gender.toString(),birthdate,"1","","",registerCallback);
+            DataStore.getInstance().attemptSignUp(email, password, fullName, phone, gender.toString(), birthdate, "1", "", "", registerCallback);
         }
     }
 
-    DataStore.DataRequestCallback registerCallback = new DataStore.DataRequestCallback() {
-        @Override
-        public void onDataReady(ServerResult result, boolean success) {
-            loadingDialog.dismiss();
-            if(success){
-                UserModel user = (UserModel) result.getValue("appUser");
-                if(user != null){
-                    finish();
-                    Intent i = new Intent(RegisterActivity.this,MainActivity.class);
-                    startActivity(i);
-                }else{
-                    Toast.makeText(RegisterActivity.this, "User exists before", Toast.LENGTH_SHORT).show();
-                }
-            }else{
-                Toast.makeText(RegisterActivity.this, getString(R.string.activity_request_failed), Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
-    private void changeSelectedGender(Gender gen){
-        if(gender != gen){
-            if(gender == Gender.Male){
+    private void changeSelectedGender(Gender gen) {
+        if (gender != gen) {
+            if (gender == Gender.Male) {
                 com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(126).duration(400)
                         .interpolator(new OvershootInterpolator())
                         .start();
                 gender = Gender.Female;
-            }else{
+            } else {
                 com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(0).duration(400)
                         .interpolator(new OvershootInterpolator())
                         .start();
@@ -261,10 +258,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 //        SimpleDateFormat outputFmt = new SimpleDateFormat("dd/MM/yyyy");
 //        birthdate = outputFmt.format(time);
         birthdate = "11/09/1990";
-        etBirthday.setText(dayOfMonth+"/"+monthOfYear+"/"+year);
+        etBirthday.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
     }
 
-    private void openDatePickerDialog(){
+    private void openDatePickerDialog() {
         Calendar now = Calendar.getInstance();
         DatePickerDialog dpd = DatePickerDialog.newInstance(
                 RegisterActivity.this,
@@ -275,15 +272,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         dpd.show(getFragmentManager(), "Datepickerdialog");
     }
 
-    private void login(){
-        Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
+    private void login() {
+        Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(i);
     }
 
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
-        switch (viewId){
+        switch (viewId) {
             case R.id.btnNext:
                 nextRegisterStep();
                 break;
@@ -302,4 +299,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
+
+    private enum Gender {Male, Female}
 }
