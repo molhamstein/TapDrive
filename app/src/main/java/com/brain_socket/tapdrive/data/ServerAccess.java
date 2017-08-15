@@ -1,6 +1,15 @@
 package com.brain_socket.tapdrive.data;
 
+import android.content.ContentUris;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
@@ -11,6 +20,7 @@ import com.brain_socket.tapdrive.model.orders.ServerNotification;
 import com.brain_socket.tapdrive.model.partner.Country;
 import com.brain_socket.tapdrive.model.partner.Partner;
 import com.brain_socket.tapdrive.model.user.UserModel;
+import com.brain_socket.tapdrive.utils.MultipartUtility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,13 +28,20 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class ServerAccess {
@@ -139,34 +156,40 @@ public class ServerAccess {
 
     public ServerResult updateUser(String email, String fullName,
                                      String phone, String gender, String birthday,
-                                     String countryId, String socialId, String socialPlatform) {
+                                     String countryId, String filePath) {
         ServerResult result = new ServerResult();
         UserModel me = null;
         try {
-            // parameters
-            JSONObject jsonPairs = new JSONObject();
-            jsonPairs.put("email", email);
-            jsonPairs.put("full_name", fullName);
-            jsonPairs.put("phone", phone);
-            jsonPairs.put("gender", gender.toLowerCase());
-            jsonPairs.put("birthday", birthday);
-            jsonPairs.put("country_id", countryId);
-            jsonPairs.put("social_id", socialId);
-            jsonPairs.put("social_platform", socialPlatform);
 
             // url
-            String url = BASE_SERVICE_URL + "/auth/register";
+            String url = BASE_SERVICE_URL + "/users";
+            String charset = "UTF-8";
+
+            MultipartUtility multipart = new MultipartUtility(url, charset);
+            multipart.addHeaderField("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN));
+            multipart.addFormField("email", "asdasd");
+            multipart.addFormField("full_name", fullName);
+            multipart.addFormField("phone", phone);
+            multipart.addFormField("gender", gender.toLowerCase());
+            multipart.addFormField("birthday", birthday);
+            multipart.addFormField("country_id", countryId);
+            Log.d("EYAD", "updateUser: " + filePath);
+            multipart.addFilePart("photo", new File(filePath));
+            multipart.addFormField("_method", "PUT");
+            String response = multipart.finish();
 
             // send request
-            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
-            result.setStatusCode(apiResult.getStatusCode());
-            result.setApiError(apiResult.getApiError());
-            JSONObject jsonResponse = apiResult.getResponseJsonObject();
+//            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "put", null);
+//            result.setStatusCode(apiResult.getStatusCode());
+//            result.setApiError(apiResult.getApiError());
+//            JSONObject jsonResponse = apiResult.getResponseJsonObject();
+            JSONObject jsonResponse = new JSONObject(response);
             if (jsonResponse != null) { // check if response is empty
                 me = UserModel.fromJson(jsonResponse);
             }
         } catch (Exception e) {
             //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+            e.printStackTrace();
         }
         result.addPair("appUser", me);
 
@@ -196,6 +219,34 @@ public class ServerAccess {
         }
 
         return result;
+    }
+
+    public ServerResult bookItem(String startDate, String endDate, String itemId, String partnerId) {
+        ServerResult result = new ServerResult();
+        try {
+            // parameters
+            JSONObject jsonPairs = new JSONObject();
+            jsonPairs.put("start_date", startDate);
+            jsonPairs.put("end_date", endDate);
+            jsonPairs.put("item_id", itemId);
+            jsonPairs.put("partner_id", partnerId);
+
+            JSONObject headers = new JSONObject();
+            headers.put("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN));
+
+
+            // url
+            String url = BASE_SERVICE_URL + "/orders";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", headers);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+        return result;
+
     }
 
     public ServerResult requestVerificationMsg(String accessToken) {
@@ -277,90 +328,6 @@ public class ServerAccess {
 
         return result;
 
-    }
-
-    public ServerResult getNearbyWorkshops(float centerLat, float centerLng, float radius, ArrayList<AppCarBrand> brands) {
-        ServerResult result = new ServerResult();
-        ArrayList<AppCar> workshops = null;
-        try {
-            JSONObject params = new JSONObject();
-
-            params.put("lat", centerLat);
-            params.put("lon", centerLng);
-            params.put("dist", radius);
-
-            if (brands != null) {
-                ArrayList<String> brandsIdsArray = new ArrayList<>();
-                for (AppCarBrand brand : brands) {
-                    brandsIdsArray.add(brand.getId());
-                }
-                String commaSeperatedArray = brandsIdsArray.toString();
-                commaSeperatedArray = commaSeperatedArray.replace("[", "").replace("]", "").replaceAll("\\s", "").trim();
-                params.put("brands", commaSeperatedArray);
-            }
-
-            Random rand = new Random();
-            workshops = new ArrayList<>();
-
-            AppCar car = new AppCar();
-
-            car.setLat(25.194f);
-            car.setLng(55.278f);
-            car.setType(0);
-            workshops.add(car);
-
-            car = new AppCar();
-            car.setLat(55.2395999f);
-            car.setLng(25.188200f);
-            car.setType(1);
-            workshops.add(car);
-
-            car = new AppCar();
-            car.setLat(25.188444f);
-            car.setLng(55.2496729f);
-            car.setType(2);
-            workshops.add(car);
-
-            car = new AppCar();
-            car.setLat(25.188444f);
-            car.setLng(55.2501729f);
-            car.setType(3);
-            workshops.add(car);
-
-            car = new AppCar();
-            car.setLat(25.187234f);
-            car.setLng(55.2475229f);
-            car.setType(1);
-            workshops.add(car);
-
-            car = new AppCar();
-            car.setLat(25.188244f);
-            car.setLng(55.2495429f);
-            car.setType(3);
-            workshops.add(car);
-
-            car = new AppCar();
-            car.setLat(25.168244f);
-            car.setLng(55.2495529f);
-            car.setType(3);
-            workshops.add(car);
-
-//            String url = BASE_SERVICE_URL+"/getNearby.php";
-//            ApiRequestResult apiResult = httpRequest(url,params,"post",null);
-//            JSONArray jsonResponse = apiResult.getResponseJsonArray();
-//            if(jsonResponse != null){
-//                workshops = new ArrayList<>();
-//                for(int i=0;i<jsonResponse.length();i++){
-//                    JSONObject ob = jsonResponse.getJSONObject(i);
-//                    workshops.add(WorkshopModel.fromJson(ob));
-//                }
-//            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        result.addPair("workshops", workshops);
-        return result;
     }
 
     public ServerResult getNearbyPartners(int categoryId, final float latitude, final float longitude, final int radius, final MapFilters mapFilters) {

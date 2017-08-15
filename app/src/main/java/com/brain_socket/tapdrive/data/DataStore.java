@@ -29,7 +29,6 @@ public class DataStore {
 
     public enum App_ACCESS_MODE {NOT_LOGGED_IN, NOT_VERIFIED, VERIFIED}
 
-    ;
     private static DataStore instance = null;
 
     private Handler handler;
@@ -230,6 +229,61 @@ public class DataStore {
         }).start();
     }
 
+    public void updateUserInfo(final String email, final String fullName,
+                              final String phone,final String gender,final String birthday,
+                              final String countryId,final String filePath,
+                              final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.updateUser(email,fullName,phone,gender,birthday,countryId,filePath);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                    try {
+                        if(result.isValid()){
+                            UserModel me = (UserModel) result.getPairs().get("appUser");
+                            apiAccessToken = me.getToken();
+                            setApiAccessToken(apiAccessToken);
+                            setMe(me);
+                            broadcastloginStateChange();
+                        }
+                    } catch (Exception e) {
+                        success = false;
+                    }
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void bookItem(final String startDate, final String endDate,
+                              final String itemId, final String partnerId,
+                              final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.bookItem(startDate,endDate,itemId,partnerId);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                    try {
+                        if(result.isValid()){
+
+                        }
+                    } catch (Exception e) {
+                        success = false;
+                    }
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     public void attemptForgetUserPassword(final String email, final DataRequestCallback callback) {
 
         new Thread(new Runnable() {
@@ -316,27 +370,6 @@ public class DataStore {
                 }
                 if (callback != null)
                     invokeCallback(callback, success, result);
-            }
-        }).start();
-    }
-
-    public void requestNearbyWorkshops(final float centerLat, final float centerLng, final float radius, final ArrayList<AppCarBrand> brands, final DataRequestCallback callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean success = true;
-                ServerResult result = serverHandler.getNearbyWorkshops(centerLat, centerLng, radius, brands);
-                if (result.connectionFailed()) {
-                    success = false;
-                } else {
-//                    if (result.isValid()) {
-//                        ArrayList<AppCar> arrayRecieved = (ArrayList<AppCar>) result.get("workshops");
-//                        if (arrayRecieved != null && !arrayRecieved.isEmpty()) {
-//                            workshops = arrayRecieved;
-//                        }
-//                    }
-                }
-                invokeCallback(callback, success, result); // invoking the callback
             }
         }).start();
     }

@@ -110,7 +110,9 @@
                     android:layout_height="wrap_content"
                     app:arrowSize="1dp"
                     app:hideNameCode="true"
-                    app:showFlag="false" />
+                    app:showFlag="false"
+                    app:defaultNameCode="AE"
+                    app:defaultCode="971" />
 
             </FrameLayout>
 

@@ -69,6 +69,8 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.kbeanie:multipicker:1.1.31@aar'
+    compile 'net.danlew:android.joda:2.9.9'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'

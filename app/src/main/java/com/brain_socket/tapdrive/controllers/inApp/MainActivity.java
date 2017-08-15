@@ -2,12 +2,14 @@ package com.brain_socket.tapdrive.controllers.inApp;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -27,11 +29,11 @@ import android.widget.TextView;
 import com.appyvet.rangebar.RangeBar;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.PaymentFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation;
-import com.brain_socket.tapdrive.controllers.onBoarding.IntroActivity;
 import com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen;
 import com.brain_socket.tapdrive.customViews.FilterTypeView;
 import com.brain_socket.tapdrive.customViews.RoundedImageView;
@@ -40,6 +42,7 @@ import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
 import com.brain_socket.tapdrive.delegates.FilterSelectedEvent;
+import com.brain_socket.tapdrive.delegates.PermissionGrantedEvent;
 import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.filters.CategoryField;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG_TRIP_HISTORY_FRAG = "tripHistoryFrag";
     private static String TAG_SETTINGS_FRAG = "settingsFrag";
     private static String TAG_PROFILE_FRAG = "profileFrag";
+    private static String TAG_PAYMENT_FRAG = "paymentFrag";
     private static String TAG_NOTIFICATIONS_FRAG = "notificationsFrag";
 
     Fragment fragment;
@@ -152,14 +156,14 @@ public class MainActivity extends AppCompatActivity
                     if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
                         rlMainContent.setTranslationX(slideOffset * drawerView.getWidth());
                     } else {
-                        rlMainContent.setTranslationX(- (slideOffset * drawerView.getWidth()));
+                        rlMainContent.setTranslationX(-(slideOffset * drawerView.getWidth()));
 
                     }
                 } else {
                     if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
                         rlMainContent.setTranslationX(slideOffset * drawerView.getWidth());
                     } else {
-                        rlMainContent.setTranslationX(- (slideOffset * drawerView.getWidth()));
+                        rlMainContent.setTranslationX(-(slideOffset * drawerView.getWidth()));
 
                     }
                 }
@@ -578,6 +582,18 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void openPaymentScreen(HashMap<String, Pair<Integer, Float>> bookingDetailsHashMap) {
+
+        fragmentManager = getSupportFragmentManager();
+        PaymentFragment paymentFragment = PaymentFragment.newInstance(bookingDetailsHashMap);
+        fragment = paymentFragment;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_PAYMENT_FRAG)
+                .addToBackStack(TAG_PAYMENT_FRAG)
+                .commit();
+
+    }
+
     private void openTripHistoryScreen() {
 
         toolbarLogo.setVisibility(View.GONE);
@@ -676,6 +692,17 @@ public class MainActivity extends AppCompatActivity
     public void closeFiltersView() {
         if (isFiltersOpen) {
             toggleFiltersView();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //resume tasks needing this permission
+            EventBus.getDefault().post(new PermissionGrantedEvent(true));
+        } else {
+            EventBus.getDefault().post(new PermissionGrantedEvent(false));
         }
     }
 

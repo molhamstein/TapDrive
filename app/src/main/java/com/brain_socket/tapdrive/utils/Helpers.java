@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.view.Window;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -54,6 +55,21 @@ public class Helpers {
             Date date = serverDateFormat.parse(unformattedDateString);
 
             return appDateFormat.format(date);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "";
+
+    }
+
+    public static String getFormattedDateString(Calendar unformattedDate) {
+
+        try {
+
+            SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            return serverDateFormat.format(unformattedDate);
 
         } catch (Exception e) {
             e.printStackTrace();

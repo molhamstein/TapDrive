@@ -35,6 +35,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -250,6 +252,8 @@ public class TapApp extends Application implements GoogleApiClient.ConnectionCal
         sharedGsonParser = new Gson();
         DataStore.getInstance().startScheduledUpdates();
         sDefSystemLanguage = Locale.getDefault().getLanguage();
+
+        JodaTimeAndroid.init(this);
 
         if (!DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_APP_LOCALE).equalsIgnoreCase("")) {
             LocalizationHelper.setLocale(getApplicationContext(), DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_APP_LOCALE));
