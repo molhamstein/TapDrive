@@ -69,7 +69,7 @@ public class Helpers {
         try {
 
             SimpleDateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            return serverDateFormat.format(unformattedDate);
+            return serverDateFormat.format(unformattedDate.getTime());
 
         } catch (Exception e) {
             e.printStackTrace();

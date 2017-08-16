@@ -1,18 +1,7 @@
 package com.brain_socket.tapdrive.data;
 
-import android.content.ContentUris;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.brain_socket.tapdrive.model.AppCar;
-import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.orders.Order;
@@ -29,19 +18,12 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class ServerAccess {
@@ -155,8 +137,8 @@ public class ServerAccess {
     }
 
     public ServerResult updateUser(String email, String fullName,
-                                     String phone, String gender, String birthday,
-                                     String countryId, String filePath) {
+                                   String phone, String gender, String birthday,
+                                   String countryId, String filePath) {
         ServerResult result = new ServerResult();
         UserModel me = null;
         try {
@@ -224,7 +206,7 @@ public class ServerAccess {
     public ServerResult bookItem(String startDate, String endDate, String itemId, String partnerId) {
         ServerResult result = new ServerResult();
         try {
-            // parameters
+            // parametersn
             JSONObject jsonPairs = new JSONObject();
             jsonPairs.put("start_date", startDate);
             jsonPairs.put("end_date", endDate);

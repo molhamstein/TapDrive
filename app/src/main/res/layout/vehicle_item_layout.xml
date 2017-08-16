@@ -40,46 +40,78 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:scrollbarSize="@android:color/black"
                     android:text="BMX 6"
-                    android:textSize="@dimen/ts_text_normal"
+                    android:textColor="@color/app_bg"
+                    android:textSize="@dimen/ts_text_big"
                     app:fontId="3" />
 
-                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
-                    android:id="@+id/item_daily_price"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:scrollbarSize="@android:color/black"
-                    android:text="Daily Price: 20.0 AED"
-                    android:textSize="@dimen/ts_text_small"
-                    app:fontId="2" />
+                    android:layout_gravity="center_horizontal">
 
-                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
-                    android:id="@+id/item_hourly_price"
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Daily Price: "
+                        android:textColor="@color/app_bg"
+                        android:textSize="@dimen/ts_text_small"
+                        app:fontId="3" />
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/item_daily_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text=" 20.0 AED"
+                        android:textColor="@color/app_bg"
+                        android:textSize="@dimen/ts_text_small"
+                        app:fontId="2" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:scrollbarSize="@android:color/black"
-                    android:text="Hourly Price: 1.0 AED"
-                    android:textSize="@dimen/ts_text_small"
-                    app:fontId="2" />
+                    android:layout_gravity="center_horizontal">
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Hourly Price: "
+                        android:textColor="@color/app_bg"
+                        android:textSize="@dimen/ts_text_small"
+                        app:fontId="3" />
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/item_hourly_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="1.0 AED"
+                        android:textColor="@color/app_bg"
+                        android:textSize="@dimen/ts_text_small"
+                        app:fontId="2" />
+
+                </LinearLayout>
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
                     android:id="@+id/item_drive_now_button"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="5dp"
                     android:layout_marginEnd="25dp"
                     android:layout_marginStart="25dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/yellow_button_background"
                     android:gravity="center"
-                    android:textColor="@drawable/yellow_text_selector"
-                    android:layout_gravity="center_horizontal"
                     android:scrollbarSize="@android:color/black"
                     android:text="Drive Now"
                     android:textAllCaps="true"
-                    android:background="@drawable/yellow_button_background"
+                    android:textColor="@drawable/yellow_text_selector"
                     android:textSize="@dimen/ts_text_normal"
                     app:fontId="3" />
 

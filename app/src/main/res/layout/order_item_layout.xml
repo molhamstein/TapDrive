@@ -103,7 +103,7 @@
 
                 <com.brain_socket.tapdrive.customViews.RoundedImageView
                     android:id="@+id/item_image"
-                    android:layout_width="120dp"
+                    android:layout_width="match_parent"
                     android:layout_height="120dp"
                     android:layout_margin="5dp"
                     android:adjustViewBounds="true"

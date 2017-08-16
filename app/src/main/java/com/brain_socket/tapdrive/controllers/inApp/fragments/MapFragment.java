@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
@@ -211,9 +212,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 selectedPartner = null;
                 hidePreview();
 
+                slidingUpPanelLayout.setPanelHeight(0);
                 ((MainActivity) getActivity()).closeFiltersView();
             }
         });
+
+        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style);
+        this.googleMap.setMapStyle(style);
 
         // initial data load
         selectedPartner = null;
@@ -377,7 +382,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 vehiclesAdapter.notifyDataSetChanged();
             }
         } else {
-            slidingUpPanelLayout.setPanelHeight(Helpers.dpToPx(getActivity(), 0));
+            slidingUpPanelLayout.setPanelHeight(0);
             slidingUpPanelLayout.requestLayout();
 
             if (vehiclesAdapter == null) {
@@ -495,7 +500,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                     try {
                         this.googleMap.setMyLocationEnabled(true);
                         this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-                    } catch (Exception e) {
+                    } catch (SecurityException e) {
                         e.printStackTrace();
                     }
                 }

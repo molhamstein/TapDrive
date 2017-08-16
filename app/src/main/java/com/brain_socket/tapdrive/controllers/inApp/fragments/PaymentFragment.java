@@ -2,6 +2,7 @@ package com.brain_socket.tapdrive.controllers.inApp.fragments;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
@@ -11,14 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
+import com.brain_socket.tapdrive.data.DataStore;
+import com.brain_socket.tapdrive.data.ServerResult;
+import com.brain_socket.tapdrive.delegates.CarBookedEvent;
+import com.brain_socket.tapdrive.model.partner.Car;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
@@ -62,17 +72,25 @@ public class PaymentFragment extends Fragment {
     TextViewCustomFont totalCostValueTextView;
     @BindView(R.id.book_button)
     TextViewCustomFont bookButton;
+    @BindView(R.id.loader_view)
+    RelativeLayout loaderView;
     Unbinder unbinder;
 
     private HashMap<String, Pair<Integer, Float>> bookingDetailsHashMap;
+    private Car selectedCar;
+    private String bookingStartDate;
+    private String bookingEndDate;
 
     public PaymentFragment() {
         // Required empty public constructor
     }
 
-    public static PaymentFragment newInstance(HashMap<String, Pair<Integer, Float>> bookingDetailsHashMap) {
+    public static PaymentFragment newInstance(HashMap<String, Pair<Integer, Float>> bookingDetailsHashMap, Car car, String startDate, String endDate) {
         PaymentFragment fragment = new PaymentFragment();
         fragment.setBookingDetailsHashMap(bookingDetailsHashMap);
+        fragment.setSelectedCar(car);
+        fragment.setBookingStartDate(startDate);
+        fragment.setBookingEndDate(endDate);
         return fragment;
     }
 
@@ -111,6 +129,35 @@ public class PaymentFragment extends Fragment {
 
     }
 
+    @OnClick({R.id.book_button})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.book_button:
+                bookItem();
+                break;
+        }
+    }
+
+    private void bookItem() {
+
+        loaderView.setVisibility(View.VISIBLE);
+        DataStore.getInstance().bookItem(bookingStartDate, bookingEndDate,
+                selectedCar.getId(), selectedCar.getPartnerId(), new DataStore.DataRequestCallback() {
+                    @Override
+                    public void onDataReady(ServerResult result, boolean success) {
+
+                        loaderView.setVisibility(View.GONE);
+
+                        if (success) {
+                            Toast.makeText(getActivity(), "Your item has been booked successfully", Toast.LENGTH_LONG).show();
+                            EventBus.getDefault().post(new CarBookedEvent());
+                        }
+
+                    }
+                });
+
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -123,5 +170,29 @@ public class PaymentFragment extends Fragment {
 
     public void setBookingDetailsHashMap(HashMap<String, Pair<Integer, Float>> bookingDetailsHashMap) {
         this.bookingDetailsHashMap = bookingDetailsHashMap;
+    }
+
+    public Car getSelectedCar() {
+        return selectedCar;
+    }
+
+    public void setSelectedCar(Car selectedCar) {
+        this.selectedCar = selectedCar;
+    }
+
+    public String getBookingStartDate() {
+        return bookingStartDate;
+    }
+
+    public void setBookingStartDate(String bookingStartDate) {
+        this.bookingStartDate = bookingStartDate;
+    }
+
+    public String getBookingEndDate() {
+        return bookingEndDate;
+    }
+
+    public void setBookingEndDate(String bookingEndDate) {
+        this.bookingEndDate = bookingEndDate;
     }
 }

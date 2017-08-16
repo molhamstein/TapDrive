@@ -99,15 +99,18 @@
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
                     android:id="@+id/btnHelp"
-                    android:layout_width="80dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="left|start"
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/shape_frame_white"
                     android:gravity="center"
+                    android:paddingEnd="15dp"
+                    android:paddingStart="15dp"
                     android:text="@string/drawer_help"
                     android:textColor="@color/white"
+                    android:textSize="@dimen/ts_text_small"
                     app:fontId="1" />
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont

@@ -1,6 +1,7 @@
 package com.brain_socket.tapdrive.controllers.inApp;
 
 import android.animation.Animator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -41,6 +43,7 @@ import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
+import com.brain_socket.tapdrive.delegates.CarBookedEvent;
 import com.brain_socket.tapdrive.delegates.FilterSelectedEvent;
 import com.brain_socket.tapdrive.delegates.PermissionGrantedEvent;
 import com.brain_socket.tapdrive.model.filters.Category;
@@ -236,10 +239,28 @@ public class MainActivity extends AppCompatActivity
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataStore.getInstance().logoutUser();
-                Intent intent = new Intent(MainActivity.this, SplashScreen.class);
-                MainActivity.this.startActivity(intent);
-                MainActivity.this.finish();
+
+                AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Are you sure you want to logout?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                DataStore.getInstance().logoutUser();
+                                Intent intent = new Intent(MainActivity.this, SplashScreen.class);
+                                MainActivity.this.startActivity(intent);
+                                MainActivity.this.finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+
             }
         });
 
@@ -343,6 +364,7 @@ public class MainActivity extends AppCompatActivity
                         ArrayList<FilterTypeView> values = filterTypeViews.get(parentFilterTypeView);
                         for (FilterTypeView filterTypeView : values) {
                             filterTypeView.clearSelected();
+                            filterTypeView.setHidden(true);
                         }
                     }
 
@@ -554,6 +576,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCarBookedEvent(CarBookedEvent carBookedEvent) {
+
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+    }
+
     private void openBookingInformationScreen(Car car) {
 
         fragmentManager = getSupportFragmentManager();
@@ -582,10 +611,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void openPaymentScreen(HashMap<String, Pair<Integer, Float>> bookingDetailsHashMap) {
+    public void openPaymentScreen(HashMap<String, Pair<Integer, Float>> bookingDetailsHashMap, Car item, String startDate, String endDate) {
 
         fragmentManager = getSupportFragmentManager();
-        PaymentFragment paymentFragment = PaymentFragment.newInstance(bookingDetailsHashMap);
+        PaymentFragment paymentFragment = PaymentFragment.newInstance(bookingDetailsHashMap, item, startDate, endDate);
         fragment = paymentFragment;
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PAYMENT_FRAG)

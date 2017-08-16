@@ -39,6 +39,7 @@
             android:id="@+id/vehicles_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#e3e3e3"
             android:paddingEnd="15dp"
             android:paddingStart="15dp"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />

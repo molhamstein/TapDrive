@@ -1,14 +1,12 @@
 package com.brain_socket.tapdrive.controllers.inApp.fragments;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +16,6 @@ import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
 import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
-import com.brain_socket.tapdrive.data.DataStore;
-import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.model.partner.Car;
 import com.brain_socket.tapdrive.model.partner.Reservation;
 import com.brain_socket.tapdrive.utils.DayDisableDecorator;
@@ -36,7 +32,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Months;
 import org.joda.time.Weeks;
-import org.joda.time.Years;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -391,8 +386,8 @@ public class VehicleBookingInformation extends Fragment {
 
         Glide.with(getActivity()).load(car.getPhoto()).into(itemImage);
         itemName.setText(car.getEnglishName());
-        itemDailyPrice.setText("Daily Price: " + car.getDailyPrice() + " AED");
-        itemHourlyPrice.setText("Hourly Price: " + car.getHourlyPrice() + " AED");
+        itemDailyPrice.setText(car.getDailyPrice() + " AED");
+        itemHourlyPrice.setText(car.getHourlyPrice() + " AED");
 
     }
 
@@ -423,31 +418,16 @@ public class VehicleBookingInformation extends Fragment {
 
         if (bookingCostDetailsMap != null) {
 
-            ((MainActivity) getActivity()).openPaymentScreen(bookingCostDetailsMap);
+            Calendar bookingStartDate = startDayDate.getCalendar();
+            Calendar bookingEndDate = endDayDate.getCalendar();
 
-//            Calendar bookingStartDate = startDayDate.getCalendar();
-//            Calendar bookingEndDate = endDayDate.getCalendar();
-//
-//            bookingStartDate.set(Calendar.HOUR_OF_DAY, fromHourOfDay);
-//            bookingStartDate.set(Calendar.MINUTE, fromMinute);
-//
-//            bookingEndDate.set(Calendar.HOUR_OF_DAY, toHourOfDay);
-//            bookingEndDate.set(Calendar.MINUTE, toMinute);
-//
-//
-//            DataStore.getInstance().bookItem(Helpers.getFormattedDateString(bookingStartDate), Helpers.getFormattedDateString(bookingEndDate),
-//                    car.getId(), car.getPartnerId(), new DataStore.DataRequestCallback() {
-//                        @Override
-//                        public void onDataReady(ServerResult result, boolean success) {
-//
-//                            if (success) {
-//
-//                                ((MainActivity) getActivity()).openPaymentScreen(bookingCostDetailsMap);
-//
-//                            }
-//
-//                        }
-//                    });
+            bookingStartDate.set(Calendar.HOUR_OF_DAY, fromHourOfDay);
+            bookingStartDate.set(Calendar.MINUTE, fromMinute);
+
+            bookingEndDate.set(Calendar.HOUR_OF_DAY, toHourOfDay);
+            bookingEndDate.set(Calendar.MINUTE, toMinute);
+
+            ((MainActivity) getActivity()).openPaymentScreen(bookingCostDetailsMap, car, Helpers.getFormattedDateString(bookingStartDate), Helpers.getFormattedDateString(bookingEndDate));
 
         } else {
 

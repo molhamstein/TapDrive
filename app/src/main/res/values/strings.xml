@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Tap&amp;Drive</string>
+    <!--<string name="app_name">Tap&amp;Drive</string>-->
+    <string name="app_name">Cannan</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -24,7 +25,7 @@
     <string name="filters_select_all">Select all</string>
     <string name="filters_select_car_type">Select Car Type</string>
 
-    <string name="drawer_help">Help</string>
+    <string name="drawer_help">are you a partner</string>
     <string name="drawer_logout">logout</string>
     <string name="drawer_profile">PROFILE</string>
     <string name="drawer_payment">PAYMENT</string>
