@@ -25,7 +25,7 @@
     <string name="filters_select_all">Select all</string>
     <string name="filters_select_car_type">Select Car Type</string>
 
-    <string name="drawer_help">are you a partner</string>
+    <string name="drawer_help">Are you a partner</string>
     <string name="drawer_logout">logout</string>
     <string name="drawer_profile">PROFILE</string>
     <string name="drawer_payment">PAYMENT</string>
@@ -111,5 +111,6 @@
     <string name="panel_vehicles">Vehicles</string>
     <string name="settings_language">Language</string>
     <string name="settings_terms_of_service">Terms of service</string>
+    <string name="logout_confirmation">Are you sure you want to logout?</string>
 
 </resources>

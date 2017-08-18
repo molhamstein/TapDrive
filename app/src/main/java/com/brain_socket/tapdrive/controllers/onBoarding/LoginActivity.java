@@ -117,9 +117,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void animateLoginPageUiElements(View v, int delay) {
 
-        ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(1000)
+        ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(500)
                 .interpolator(new OvershootInterpolator())
                 .start();
+    }
+
+    private void forgetPassword() {
+        Intent i = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+        startActivity(i);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+
+        switch (viewId) {
+            case R.id.btnForgetPassword:
+                forgetPassword();
+                break;
+            case R.id.btnLogin:
+                login();
+                break;
+            case R.id.btnFacebookLogin:
+                break;
+            case R.id.btnTwitterLogin:
+                break;
+            case R.id.btnNewUser:
+                createNewUser();
+                break;
+            case R.id.btnSkipLogin:
+                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(i);
+                break;
+        }
     }
 
     private void login() {
@@ -160,33 +190,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void forgetPassword() {
-        Intent i = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
-        startActivity(i);
-    }
-
-    @Override
-    public void onClick(View v) {
-        int viewId = v.getId();
-
-        switch (viewId) {
-            case R.id.btnForgetPassword:
-                forgetPassword();
-                break;
-            case R.id.btnLogin:
-                login();
-                break;
-            case R.id.btnFacebookLogin:
-                break;
-            case R.id.btnTwitterLogin:
-                break;
-            case R.id.btnNewUser:
-                createNewUser();
-                break;
-            case R.id.btnSkipLogin:
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(i);
-                break;
-        }
-    }
 }

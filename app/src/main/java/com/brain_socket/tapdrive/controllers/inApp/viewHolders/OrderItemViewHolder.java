@@ -12,8 +12,7 @@ import com.brain_socket.tapdrive.model.orders.Order;
 import com.brain_socket.tapdrive.utils.Helpers;
 import com.bumptech.glide.Glide;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by EYADOOS-PC on 8/5/2017.
@@ -31,16 +30,18 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
     private TextViewCustomFont timeToTextView;
     private RoundedImageView itemImage;
     private TextViewCustomFont itemStatus;
+    private CircleImageView userImageView;
 
     private void findViews(View rootView) {
-        itemCardView = (CardView)rootView.findViewById( R.id.item_card_view );
-        userName = (TextViewCustomFont)rootView.findViewById( R.id.user_name );
-        itemName = (TextViewCustomFont)rootView.findViewById( R.id.item_name );
-        totalCostTextView = (TextViewCustomFont)rootView.findViewById( R.id.total_cost_text_view );
-        timeFromTextView = (TextViewCustomFont)rootView.findViewById( R.id.time_from_text_view );
-        timeToTextView = (TextViewCustomFont)rootView.findViewById( R.id.time_to_text_view );
-        itemImage = (RoundedImageView)rootView.findViewById( R.id.item_image );
-        itemStatus = (TextViewCustomFont)rootView.findViewById( R.id.item_status );
+        itemCardView = (CardView) rootView.findViewById(R.id.item_card_view);
+        userName = (TextViewCustomFont) rootView.findViewById(R.id.user_name);
+        itemName = (TextViewCustomFont) rootView.findViewById(R.id.item_name);
+        totalCostTextView = (TextViewCustomFont) rootView.findViewById(R.id.total_cost_text_view);
+        timeFromTextView = (TextViewCustomFont) rootView.findViewById(R.id.time_from_text_view);
+        timeToTextView = (TextViewCustomFont) rootView.findViewById(R.id.time_to_text_view);
+        itemImage = (RoundedImageView) rootView.findViewById(R.id.item_image);
+        itemStatus = (TextViewCustomFont) rootView.findViewById(R.id.item_status);
+        userImageView = (CircleImageView) rootView.findViewById(R.id.user_profile_image);
     }
 
 
@@ -63,6 +64,7 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
 
         timeFromTextView.setText("From: " + Helpers.getFormattedDateString(order.getStartDate()));
         timeToTextView.setText("To: " + Helpers.getFormattedDateString(order.getEndDate()));
+        Glide.with(context).load(order.getUser().getPhoto()).into(userImageView);
 
 
     }

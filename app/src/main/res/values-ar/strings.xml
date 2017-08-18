@@ -109,5 +109,6 @@
     <string name="panel_vehicles">السيارات</string>
     <string name="settings_language">اللغة</string>
     <string name="settings_terms_of_service">شروط الخدمة</string>
+    <string name="logout_confirmation">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
 
 </resources>

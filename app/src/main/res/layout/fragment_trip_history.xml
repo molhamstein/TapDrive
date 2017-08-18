@@ -31,6 +31,7 @@
         android:text="You have no orders yet"
         android:textColor="@color/app_bg"
         android:textSize="@dimen/ts_text_big"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:fontId="2" />
 
 </FrameLayout>

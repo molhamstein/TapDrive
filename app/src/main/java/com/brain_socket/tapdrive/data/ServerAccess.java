@@ -96,6 +96,41 @@ public class ServerAccess {
         return result;
     }
 
+    public ServerResult partnerLogin(String email, String password, String socialId, String socialToken) {
+        ServerResult result = new ServerResult();
+        UserModel me = null;
+        boolean isRegistered = false;
+        try {
+            // parameters
+            JSONObject jsonPairs = new JSONObject();
+            jsonPairs.put("email", email);
+            jsonPairs.put("password", password);
+            jsonPairs.put("social_id", socialId);
+            jsonPairs.put("social_platform", socialToken);
+
+            // url
+            String url = BASE_SERVICE_URL + "/partners/login";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONObject jsonResponse = apiResult.getResponseJsonObject(); //new JSONObject(apiResult.response);
+            if (jsonResponse != null && apiResult.statusCode == 200) { // check if response is empty
+                me = UserModel.fromJson(jsonResponse);
+                isRegistered = true;
+            }
+            if (apiResult.statusCode == 200 && result.getApiError().equals(MODEL_NOT_FOUND)) {
+                isRegistered = false;
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+        result.addPair("appUser", me);
+        result.addPair("isRegistered", isRegistered);
+        return result;
+    }
+
     /**
      * register a new user with UserName and phoneNumber
      */

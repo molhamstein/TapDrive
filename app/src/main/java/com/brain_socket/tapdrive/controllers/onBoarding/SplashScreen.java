@@ -58,10 +58,10 @@ public class SplashScreen extends AppCompatActivity implements DataStore.DataReq
 
         vLogo.setAlpha(0);
         vName.setAlpha(0);
-        ViewAnimator.animate(vLogo).startDelay(700).dp().translationY(100, 0).alpha(0,1).duration(1000)
+        ViewAnimator.animate(vLogo).startDelay(700).dp().translationY(100, 0).alpha(0,1).duration(500)
                 .interpolator(new OvershootInterpolator())
                 .start();
-        ViewAnimator.animate(vName).startDelay(900).dp().translationY(90, 0).alpha(0,1).duration(1000)
+        ViewAnimator.animate(vName).startDelay(900).dp().translationY(90, 0).alpha(0,1).duration(500)
                 .interpolator(new OvershootInterpolator())
                 .start();
 

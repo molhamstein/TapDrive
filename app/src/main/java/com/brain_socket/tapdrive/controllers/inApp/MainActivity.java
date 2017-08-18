@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.appyvet.rangebar.RangeBar;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerLoginFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PaymentFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
@@ -65,7 +66,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, DataStore.DataStoreUpdateListener {
 
     private static String TAG_MAIN_MAP_FRAG = "mainMapFrag";
     private static String TAG_BOOKING_INFORMATION_FRAG = "bookingInformationFrag";
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG_PROFILE_FRAG = "profileFrag";
     private static String TAG_PAYMENT_FRAG = "paymentFrag";
     private static String TAG_NOTIFICATIONS_FRAG = "notificationsFrag";
+    private static String TAG_PARTNER_LOGIN_FRAG = "partnerLoginFrag";
 
     Fragment fragment;
     FragmentManager fragmentManager;
@@ -92,6 +94,8 @@ public class MainActivity extends AppCompatActivity
     TextViewCustomFont toolbarTitle;
     ImageView toolbarLogo;
     TextViewCustomFont logoutButton;
+
+    UserModel me;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,9 +220,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        Menu m = navigationView.getMenu();
-        for (int i = 0; i < m.size(); i++) {
-            MenuItem mi = m.getItem(i);
+        Menu navigationViewMenu = navigationView.getMenu();
+        for (int i = 0; i < navigationViewMenu.size(); i++) {
+            MenuItem mi = navigationViewMenu.getItem(i);
             applyFontToMenuItem(mi);
         }
 
@@ -230,19 +234,28 @@ public class MainActivity extends AppCompatActivity
         View headerLayout = navigationView.getHeaderView(0);
         RoundedImageView profilePicture = (RoundedImageView) headerLayout.findViewById(R.id.ivProfilePic);
         TextView userName = (TextView) headerLayout.findViewById(R.id.tvUserName);
-
-        UserModel me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
-        userName.setText(me.getUsername());
-        Glide.with(this).load(me.getPhoto()).into(profilePicture);
-
+        TextView userType = (TextView) headerLayout.findViewById(R.id.user_type_text_view);
         logoutButton = (TextViewCustomFont) findViewById(R.id.btnLogout);
+
+        me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
+
+        if (me != null) {
+            userName.setText(me.getUsername());
+            Glide.with(this).load(me.getPhoto()).into(profilePicture);
+        } else {
+            profilePicture.setImageResource(R.drawable.logo_login);
+            userName.setVisibility(View.GONE);
+            userType.setVisibility(View.GONE);
+            logoutButton.setVisibility(View.GONE);
+        }
+
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 AlertDialog.Builder builder;
                 builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("Are you sure you want to logout?")
+                builder.setMessage(R.string.logout_confirmation)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 DataStore.getInstance().logoutUser();
@@ -263,6 +276,19 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        if (me != null) {
+            if (me.getType().equalsIgnoreCase("PARTNER")) {
+                MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
+                menuItem.setTitle("ORDERS");
+            }
+        } else {
+            MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_profile);
+            menuItem.setTitle("LOGIN");
+
+            MenuItem tripsMenuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
+            tripsMenuItem.setTitle("TRIPS");
+        }
 
         initFiltersView();
 
@@ -535,7 +561,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            openProfileFragment();
+            if (me != null) {
+                openProfileFragment();
+            } else {
+                openPartnerLoginFragment();
+            }
         } else if (id == R.id.nav_notifications) {
             openNotificationsScreen();
         } else if (id == R.id.nav_trip_history) {
@@ -552,7 +582,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return false;
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSelectedFilterValueEvent(FilterSelectedEvent filterSelectedEvent) {
@@ -591,6 +620,22 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_BOOKING_INFORMATION_FRAG)
                 .addToBackStack(TAG_BOOKING_INFORMATION_FRAG)
+                .commit();
+
+    }
+
+    private void openPartnerLoginFragment() {
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText("PARTNER LOGIN");
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        PartnerLoginFragment partnerLoginFragment = new PartnerLoginFragment();
+        fragment = partnerLoginFragment;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_PARTNER_LOGIN_FRAG)
+                .addToBackStack(TAG_PARTNER_LOGIN_FRAG)
                 .commit();
 
     }
@@ -744,5 +789,37 @@ public class MainActivity extends AppCompatActivity
 
     public void setMapFilters(MapFilters mapFilters) {
         this.mapFilters = mapFilters;
+    }
+
+    @Override
+    public void onDataStoreUpdate() {
+
+    }
+
+    @Override
+    public void onUserLocationUpdate() {
+
+    }
+
+    @Override
+    public void onNewEventNotificationsAvailable() {
+
+    }
+
+    @Override
+    public void onLoginStateChange() {
+
+        me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
+
+//        if (me != null) {
+//            userName.setText(me.getUsername());
+//            Glide.with(this).load(me.getPhoto()).into(profilePicture);
+//        } else {
+//            profilePicture.setImageResource(R.drawable.logo_login);
+//            userName.setVisibility(View.GONE);
+//            userType.setVisibility(View.GONE);
+//            logoutButton.setVisibility(View.GONE);
+//        }
+
     }
 }

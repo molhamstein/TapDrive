@@ -21,6 +21,7 @@ public class UserModel extends AppBaseModel {
     private String phone;
     private String gender;
     private String birthdate;
+    private String type;
     private double longitude;
     private double latitude;
     private String socialId;
@@ -128,5 +129,13 @@ public class UserModel extends AppBaseModel {
 
     public void setSocialToken(String socialToken) {
         this.socialToken = socialToken;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

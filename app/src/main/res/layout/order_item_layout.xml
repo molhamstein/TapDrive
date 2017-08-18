@@ -20,10 +20,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
             android:background="#FFFFFF"
+            android:orientation="horizontal"
             android:weightSum="2">
 
             <LinearLayout
@@ -33,31 +33,54 @@
                 android:orientation="vertical"
                 android:padding="10dp">
 
-                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
-                    android:id="@+id/user_name"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Molham Stein"
-                    android:textColor="@color/app_bg"
-                    android:textSize="@dimen/ts_text_normal"
-                    app:fontId="2" />
+                    android:orientation="horizontal">
 
-                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
-                    android:id="@+id/item_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Infiniti QX60"
-                    android:textColor="@color/app_bg"
-                    android:textSize="@dimen/ts_title_small"
-                    app:fontId="3" />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/user_profile_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/temp_pic"
+                        android:scaleType="centerCrop"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp">
+
+                        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                            android:id="@+id/user_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Molham Stein"
+                            android:textColor="@color/app_bg"
+                            android:textSize="@dimen/ts_text_normal"
+                            app:fontId="2" />
+
+                        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                            android:id="@+id/item_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Infiniti QX60"
+                            android:textColor="@color/app_bg"
+                            android:textSize="@dimen/ts_title_small"
+                            app:fontId="3" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <com.brain_socket.tapdrive.customViews.TextViewCustomFont
                         android:id="@+id/total_cost_text_view"
@@ -73,9 +96,9 @@
                         android:id="@+id/time_from_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:gravity="left|start"
                         android:text="From: 11.07.2017 00:45"
-                        android:layout_marginTop="5dp"
                         android:textColor="@color/app_bg"
                         android:textSize="@dimen/ts_text_normal"
                         app:fontId="2" />

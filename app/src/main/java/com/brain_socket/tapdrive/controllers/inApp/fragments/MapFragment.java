@@ -498,8 +498,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     TapApp.checkAndPromptForLocationServices(getActivity());
                     try {
-                        this.googleMap.setMyLocationEnabled(true);
-                        this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                        if (this.googleMap != null) {
+                            this.googleMap.setMyLocationEnabled(true);
+                            this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                        }
                     } catch (SecurityException e) {
                         e.printStackTrace();
                     }

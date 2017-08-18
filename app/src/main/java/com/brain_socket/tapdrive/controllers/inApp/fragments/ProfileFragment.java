@@ -218,7 +218,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     }
 
     private void animatePageUiElements(View v, int delay) {
-        com.github.florent37.viewanimator.ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(1000)
+        com.github.florent37.viewanimator.ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(500)
                 .interpolator(new OvershootInterpolator())
                 .start();
     }

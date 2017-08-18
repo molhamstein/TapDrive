@@ -327,6 +327,28 @@ public class DataStore {
         }).start();
     }
 
+    public void attemptPartnerLogin(final String email,final String password,final String socialId,final String socialPlatform, final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.partnerLogin(email,password,socialId,socialPlatform);
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+                    if (result.isValid()) {
+                        me = (UserModel) result.getPairs().get("appUser");
+                        apiAccessToken = me.getToken();
+                        setApiAccessToken(apiAccessToken);
+                        setMe(me);
+                        broadcastloginStateChange();
+                    }
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     public void logoutUser() {
         try {
             stopScheduledUpdates();
