@@ -10,23 +10,29 @@
 
     <FrameLayout
         android:id="@+id/flPhotoContainer"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="visible"
-        android:background="@drawable/shape_oval_primary">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible">
 
-        <com.brain_socket.tapdrive.customViews.RoundedImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivProfilePic"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="2dp"
-            android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:src="@drawable/temp_pic"
-            app:corner_radius="40dp" />
+            app:civ_border_color="@color/app_theme"
+            app:civ_border_width="2dp"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/header_logo_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:src="@drawable/logo_login_white"/>
 
     </FrameLayout>
 
@@ -72,6 +78,7 @@
         android:layout_marginEnd="15dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
+        android:layout_gravity="bottom"
         android:background="#ededed" />
 
 </LinearLayout>

@@ -115,8 +115,8 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
 
         if (uiElements == null) uiElements = new ArrayList<View>();
-        uiElements.add(editIcon);
         uiElements.add(userProfileImage);
+        uiElements.add(editIcon);
         uiElements.add(userNameEditText);
         uiElements.add(userEmailEditText);
         uiElements.add(phoneLayout);

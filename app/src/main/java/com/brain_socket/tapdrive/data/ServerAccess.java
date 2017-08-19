@@ -238,6 +238,31 @@ public class ServerAccess {
         return result;
     }
 
+    public ServerResult forgetPartnerPassword(String email) {
+        ServerResult result = new ServerResult();
+        try {
+            // parameters
+            JSONObject jsonPairs = new JSONObject();
+            jsonPairs.put("email", email);
+
+            // url
+            String url = BASE_SERVICE_URL + "/partners/forget_password";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONObject jsonResponse = apiResult.getResponseJsonObject();
+            if (jsonResponse != null) { // check if response is empty
+
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+
+        return result;
+    }
+
     public ServerResult bookItem(String startDate, String endDate, String itemId, String partnerId) {
         ServerResult result = new ServerResult();
         try {

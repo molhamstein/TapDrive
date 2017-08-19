@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.appyvet.rangebar.RangeBar;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerForgetPassword;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerLoginFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PaymentFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
@@ -65,6 +66,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, DataStore.DataStoreUpdateListener {
 
@@ -94,6 +97,8 @@ public class MainActivity extends AppCompatActivity
     TextViewCustomFont toolbarTitle;
     ImageView toolbarLogo;
     TextViewCustomFont logoutButton;
+    TextViewCustomFont partnerQuestionButton;
+    ImageView headerLogoImageView;
 
     UserModel me;
 
@@ -232,10 +237,12 @@ public class MainActivity extends AppCompatActivity
         ab.setDisplayShowTitleEnabled(false); // disable the default title element here (for centered title)
 
         View headerLayout = navigationView.getHeaderView(0);
-        RoundedImageView profilePicture = (RoundedImageView) headerLayout.findViewById(R.id.ivProfilePic);
+        CircleImageView profilePicture = (CircleImageView) headerLayout.findViewById(R.id.ivProfilePic);
         TextView userName = (TextView) headerLayout.findViewById(R.id.tvUserName);
         TextView userType = (TextView) headerLayout.findViewById(R.id.user_type_text_view);
+        headerLogoImageView = (ImageView) headerLayout.findViewById(R.id.header_logo_image_view);
         logoutButton = (TextViewCustomFont) findViewById(R.id.btnLogout);
+        partnerQuestionButton = (TextViewCustomFont) findViewById(R.id.partner_question_button);
 
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
 
@@ -243,7 +250,8 @@ public class MainActivity extends AppCompatActivity
             userName.setText(me.getUsername());
             Glide.with(this).load(me.getPhoto()).into(profilePicture);
         } else {
-            profilePicture.setImageResource(R.drawable.logo_login);
+            profilePicture.setVisibility(View.GONE);
+            headerLogoImageView.setVisibility(View.VISIBLE);
             userName.setVisibility(View.GONE);
             userType.setVisibility(View.GONE);
             logoutButton.setVisibility(View.GONE);
@@ -277,17 +285,29 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        partnerQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPartnerLoginFragment();
+            }
+        });
+
         if (me != null) {
             if (me.getType().equalsIgnoreCase("PARTNER")) {
                 MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
                 menuItem.setTitle("ORDERS");
+                applyFontToMenuItem(menuItem);
+
+                partnerQuestionButton.setVisibility(View.GONE);
             }
         } else {
             MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_profile);
             menuItem.setTitle("LOGIN");
+            applyFontToMenuItem(menuItem);
 
             MenuItem tripsMenuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
             tripsMenuItem.setTitle("TRIPS");
+            applyFontToMenuItem(tripsMenuItem);
         }
 
         initFiltersView();
@@ -626,6 +646,8 @@ public class MainActivity extends AppCompatActivity
 
     private void openPartnerLoginFragment() {
 
+        drawer.closeDrawer(GravityCompat.START);
+
         toolbarLogo.setVisibility(View.GONE);
         toolbarTitle.setText("PARTNER LOGIN");
         toolbarTitle.setVisibility(View.VISIBLE);
@@ -636,6 +658,22 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PARTNER_LOGIN_FRAG)
                 .addToBackStack(TAG_PARTNER_LOGIN_FRAG)
+                .commit();
+
+    }
+
+    public void openPartnerForgetPasswordScreen() {
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText("Forget Password");
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        PartnerForgetPassword partnerForgetPassword = PartnerForgetPassword.newInstance();
+        fragment = partnerForgetPassword;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_PAYMENT_FRAG)
+                .addToBackStack(TAG_PAYMENT_FRAG)
                 .commit();
 
     }
@@ -811,15 +849,7 @@ public class MainActivity extends AppCompatActivity
 
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
 
-//        if (me != null) {
-//            userName.setText(me.getUsername());
-//            Glide.with(this).load(me.getPhoto()).into(profilePicture);
-//        } else {
-//            profilePicture.setImageResource(R.drawable.logo_login);
-//            userName.setVisibility(View.GONE);
-//            userType.setVisibility(View.GONE);
-//            logoutButton.setVisibility(View.GONE);
-//        }
+        init();
 
     }
 }

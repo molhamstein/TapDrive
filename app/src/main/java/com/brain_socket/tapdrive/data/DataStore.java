@@ -300,6 +300,22 @@ public class DataStore {
         }).start();
     }
 
+    public void attemptForgetPartnerPassword(final String email, final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.forgetPartnerPassword(email);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     /**
      * attempting login using phone number
      *

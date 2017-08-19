@@ -98,7 +98,7 @@
                 android:padding="8dp">
 
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
-                    android:id="@+id/btnHelp"
+                    android:id="@+id/partner_question_button"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="left|start"

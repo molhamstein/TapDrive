@@ -13,12 +13,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.brain_socket.tapdrive.R;
-import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
 import com.brain_socket.tapdrive.customViews.EditTextCustomFont;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.data.DataStore;
+import com.brain_socket.tapdrive.data.ServerAccess;
 import com.brain_socket.tapdrive.data.ServerResult;
-import com.brain_socket.tapdrive.model.user.UserModel;
 import com.brain_socket.tapdrive.utils.Helpers;
 import com.brain_socket.tapdrive.utils.TapApp;
 
@@ -29,51 +28,47 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class PartnerLoginFragment extends Fragment {
+public class PartnerForgetPassword extends Fragment {
 
-
-    @BindView(R.id.etEmail)
-    EditTextCustomFont etEmail;
-    @BindView(R.id.etPassword)
-    EditTextCustomFont etPassword;
-    @BindView(R.id.btnForgetPassword)
-    TextViewCustomFont btnForgetPassword;
-    @BindView(R.id.btnLogin)
-    TextViewCustomFont btnLogin;
+    @BindView(R.id.ivLogo)
+    ImageView ivLogo;
     @BindView(R.id.hint_text)
     TextViewCustomFont hintText;
-    @BindView(R.id.app_logo)
-    ImageView appLogo;
+    @BindView(R.id.etEmail)
+    EditTextCustomFont etEmail;
+    @BindView(R.id.btnSubmit)
+    TextViewCustomFont btnSubmit;
     Unbinder unbinder;
 
     private Dialog loadingDialog;
 
     private ArrayList<View> uiElements;
 
-    public PartnerLoginFragment() {
-        // Required empty public constructor
+    public static PartnerForgetPassword newInstance() {
+        PartnerForgetPassword fragment = new PartnerForgetPassword();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflatedView = inflater.inflate(R.layout.fragment_partner_login, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_partner_login_forget, container, false);
         unbinder = ButterKnife.bind(this, inflatedView);
 
         if (uiElements == null) uiElements = new ArrayList<View>();
-        uiElements.add(appLogo);
+        uiElements.add(ivLogo);
         uiElements.add(hintText);
         uiElements.add(etEmail);
-        uiElements.add(etPassword);
-        uiElements.add(btnForgetPassword);
-        uiElements.add(btnLogin);
+        uiElements.add(btnSubmit);
 
         hideUiElements();
 
@@ -85,6 +80,7 @@ public class PartnerLoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         loadingDialog = TapApp.getNewLoadingDilaog(getActivity());
+
     }
 
     private void hideUiElements() {
@@ -121,42 +117,27 @@ public class PartnerLoginFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.btnForgetPassword, R.id.btnLogin})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.btnForgetPassword:
-                ((MainActivity) getActivity()).openPartnerForgetPasswordScreen();
-                break;
-            case R.id.btnLogin:
-                login();
-                break;
-        }
+    @OnClick(R.id.btnSubmit)
+    public void onViewClicked() {
+        forgetPassword();
     }
 
-    private void login() {
+    private void forgetPassword() {
         try {
             boolean cancel = false;
             View focusView = null;
 
             String email = etEmail.getText().toString();
-            String password = etPassword.getText().toString();
-
             if (email.isEmpty()) {
                 cancel = true;
-                etEmail.setError(getString(R.string.activity_login_field_required));
+                etEmail.setError(getString(R.string.activity_register_field_required));
                 focusView = etEmail;
             } else {
                 if (!Helpers.isValidEmail(email)) {
                     cancel = true;
-                    etEmail.setError(getString(R.string.activity_login_email_invalid));
                     focusView = etEmail;
+                    etEmail.setError(getString(R.string.activity_register_email_invalid));
                 }
-            }
-
-            if (password.isEmpty()) {
-                cancel = true;
-                etPassword.setError(getString(R.string.activity_login_field_required));
-                focusView = etPassword;
             }
 
             if (cancel) {
@@ -165,23 +146,26 @@ public class PartnerLoginFragment extends Fragment {
             }
 
             loadingDialog.show();
-            DataStore.getInstance().attemptPartnerLogin(email, password, "", "", loginCallback);
+            DataStore.getInstance().attemptForgetUserPassword(email, forgetPasswordCallback);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    DataStore.DataRequestCallback loginCallback = new DataStore.DataRequestCallback() {
+    DataStore.DataRequestCallback forgetPasswordCallback = new DataStore.DataRequestCallback() {
         @Override
         public void onDataReady(ServerResult result, boolean success) {
             loadingDialog.dismiss();
             if (success) {
-                UserModel me = (UserModel) result.getValue("appUser");
-                if (me != null) {
-                    getActivity().onBackPressed();
+                if (result.getApiError().equals("")) {
+                    Toast.makeText(getActivity(), "Your request was sent successfully, please check your email", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), getString(R.string.activity_login_email_or_pass_is_wrong), Toast.LENGTH_LONG).show();
+                    if (result.getApiError().equals(ServerAccess.USER_NOT_EXIST)) {
+                        Toast.makeText(getActivity(), getString(R.string.activity_forget_password_user_not_found), Toast.LENGTH_LONG).show();
+                    }
                 }
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.activity_forget_password_request_failed), Toast.LENGTH_LONG).show();
             }
         }
     };
