@@ -2,10 +2,14 @@ package com.brain_socket.tapdrive.data;
 
 import android.location.Location;
 import android.os.Handler;
+import android.util.Log;
 
-import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
+import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.AppUser;
+import com.brain_socket.tapdrive.model.filters.MapFilters;
+import com.brain_socket.tapdrive.model.partner.Country;
+import com.brain_socket.tapdrive.model.user.UserModel;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -25,14 +29,13 @@ public class DataStore {
 
     public enum App_ACCESS_MODE {NOT_LOGGED_IN, NOT_VERIFIED, VERIFIED}
 
-    ;
     private static DataStore instance = null;
 
     private Handler handler;
     private ArrayList<DataStoreUpdateListener> updateListeners;
     private ServerAccess serverHandler;
 
-    private AppUser me;
+    private UserModel me;
     private String apiAccessToken;
     private App_ACCESS_MODE accessMode;
 
@@ -193,25 +196,30 @@ public class DataStore {
     //-------------------------------------------
 
     /**
-     * @param FBID     : pass null if signing-up without facebook
+     * @param email
      * @param callback
      */
-    public void attemptSignUp(final String phoneNum, final String firstName, final String lastName, final String countryCode, final String versionId, final String FBID, final DataRequestCallback callback) {
+    public void attemptSignUp(final String email,final String password,final String fullName,
+                              final String phone,final String gender,final String birthday,
+                              final String countryId,final String socialId,final String socialPlatform,
+                              final DataRequestCallback callback) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.registerUser(firstName, lastName, phoneNum, countryCode, versionId, FBID);
+                ServerResult result = serverHandler.registerUser(email,password,fullName,phone,gender,birthday,countryId,socialId,socialPlatform);
                 if (result.connectionFailed()) {
                     success = false;
                 } else {
                     try {
-                        AppUser me = (AppUser) result.getPairs().get("appUser");
-                        apiAccessToken = me.getAccessToken();
-                        setApiAccessToken(apiAccessToken);
-                        setMe(me);
-                        broadcastloginStateChange();
+                        if(result.isValid()){
+                            UserModel me = (UserModel) result.getPairs().get("appUser");
+                            apiAccessToken = me.getToken();
+                            setApiAccessToken(apiAccessToken);
+                            setMe(me);
+                            broadcastloginStateChange();
+                        }
                     } catch (Exception e) {
                         success = false;
                     }
@@ -221,23 +229,116 @@ public class DataStore {
         }).start();
     }
 
-    /**
-     * attempting login using phone number
-     *
-     * @param phoneNumfinal if the phone number was found in the DB the user will be logged in otherwise error code will be returned
-     */
-    public void attemptLogin(final String phoneNumfinal, final DataRequestCallback callback) {
+    public void updateUserInfo(final String email, final String fullName,
+                              final String phone,final String gender,final String birthday,
+                              final String countryId,final String filePath,
+                              final DataRequestCallback callback) {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.login(phoneNumfinal);
-                if (result.getRequestStatusCode() >= 600) {
+                ServerResult result = serverHandler.updateUser(email,fullName,phone,gender,birthday,countryId,filePath);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                    try {
+                        if(result.isValid()){
+                            UserModel me = (UserModel) result.getPairs().get("appUser");
+                            apiAccessToken = me.getToken();
+                            setApiAccessToken(apiAccessToken);
+                            setMe(me);
+                            broadcastloginStateChange();
+                        }
+                    } catch (Exception e) {
+                        success = false;
+                    }
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void bookItem(final String startDate, final String endDate,
+                              final String itemId, final String partnerId,
+                              final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.bookItem(startDate,endDate,itemId,partnerId);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                    try {
+                        if(result.isValid()){
+
+                        }
+                    } catch (Exception e) {
+                        success = false;
+                    }
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void attemptForgetUserPassword(final String email, final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.forgetUserPassword(email);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    /**
+     * attempting login using phone number
+     *
+     * @param email
+     */
+    public void attemptLogin(final String email,final String password,final String socialId,final String socialPlatform, final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.login(email,password,socialId,socialPlatform);
+                if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {
                     if (result.isValid()) {
-                        me = (AppUser) result.getPairs().get("appUser");
-                        apiAccessToken = me.getAccessToken();
+                        me = (UserModel) result.getPairs().get("appUser");
+                        apiAccessToken = me.getToken();
+                        setApiAccessToken(apiAccessToken);
+                        setMe(me);
+                        broadcastloginStateChange();
+                    }
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void attemptPartnerLogin(final String email,final String password,final String socialId,final String socialPlatform, final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.partnerLogin(email,password,socialId,socialPlatform);
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+                    if (result.isValid()) {
+                        me = (UserModel) result.getPairs().get("appUser");
+                        apiAccessToken = me.getToken();
                         setApiAccessToken(apiAccessToken);
                         setMe(me);
                         broadcastloginStateChange();
@@ -252,7 +353,9 @@ public class DataStore {
         try {
             stopScheduledUpdates();
             clearLocalData();
+            broadcastloginStateChange();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -293,58 +396,90 @@ public class DataStore {
         }).start();
     }
 
-    public void requestNearbyWorkshops(final float centerLat, final float centerLng, final float radius, final ArrayList<AppCarBrand> brands, final DataRequestCallback callback) {
+
+
+    //--------------------
+    // Getters
+    //----------------------------------------------
+
+    public void getCountries(final DataRequestCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.getNearbyWorkshops(centerLat, centerLng, radius, brands);
-                if (result.connectionFailed()) {
+                ServerResult result = serverHandler.getCountries();
+                if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {
-//                    if (result.isValid()) {
-//                        ArrayList<AppCar> arrayRecieved = (ArrayList<AppCar>) result.get("workshops");
-//                        if (arrayRecieved != null && !arrayRecieved.isEmpty()) {
-//                            workshops = arrayRecieved;
-//                        }
-//                    }
+                    ArrayList<Country> countries = (ArrayList<Country>) result.getPairs().get("countries");
+                    setCountries(countries);
                 }
                 invokeCallback(callback, success, result); // invoking the callback
             }
         }).start();
     }
 
-//    //--------------------
-//    // Brands
-//    //----------------------------------------------
-//    public void requestBrands(final String keyWord, final DataRequestCallback callback) {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                boolean success = true;
-//                ServerResult result = serverHandler.getBrands(keyWord);
-//                if (result.connectionFailed()) {
-//                    success = false;
-//                } else {
-//                    if (result.isValid()) {
-//                        ArrayList<BrandModel> arrayRecieved = (ArrayList<BrandModel>) result.get("brands");
-//                        if (arrayRecieved != null && !arrayRecieved.isEmpty()) {
-//                            brands = arrayRecieved;
-//                            DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_ARRAY_BRANDS, arrayRecieved);
-//                        }
-//                    }
-//                }
-//                broadcastDataStoreUpdate();
-//                invokeCallback(callback, success, result); // invoking the callback
-//            }
-//        }).start();
-//    }
+    public void getCategories(final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getCategories();
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+                    ArrayList<Category> categories = (ArrayList<Category>) result.getPairs().get("categories");
+                    setCategories(categories);
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
 
+    public void getNearbyPartners(final float latitude, final float longitude, final int radius, final MapFilters mapFilters, final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getNearbyPartners(latitude, longitude, radius, mapFilters);
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
 
+    public void getOrders(final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getOrders();
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
 
-    //--------------------
-    // Getters
-    //----------------------------------------------
+    public void getServerNotifications(final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getServerNotifications();
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
 
     public ArrayList<AppCarBrand> getBrands() {
         return brands;
@@ -373,17 +508,25 @@ public class DataStore {
         return me != null;
     }
 
-    public AppUser getMe() {
+    public UserModel getMe() {
         if (me == null)
             me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, new TypeToken<AppUser>() {
             }.getType());
         return me;
     }
 
-    public void setMe(AppUser newUser) {
+    public void setMe(UserModel newUser) {
         if (isUserLoggedIn())
             this.me = newUser;
         DataCacheProvider.getInstance().storeObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, newUser);
+    }
+
+    public void setCategories(ArrayList<Category> categories) {
+        DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_CATEGORIES, categories);
+    }
+
+    public void setCountries(ArrayList<Country> countries) {
+        DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_COUNTRIES, countries);
     }
 
     public void setApiAccessToken(String apiAccessToken) {

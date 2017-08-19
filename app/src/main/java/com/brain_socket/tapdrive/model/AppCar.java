@@ -1,7 +1,7 @@
 package com.brain_socket.tapdrive.model;
 
 import com.brain_socket.tapdrive.R;
-import com.brain_socket.tapdrive.TapApp;
+import com.brain_socket.tapdrive.utils.TapApp;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONObject;

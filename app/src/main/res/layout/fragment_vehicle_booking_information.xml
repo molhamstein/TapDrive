@@ -1,0 +1,280 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:clickable="true"
+    tools:context="com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation">
+
+    <LinearLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:orientation="vertical">
+
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Booking Information"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_title_normal"
+            app:fontId="2" />
+
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Vehicle Details"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_text_normal"
+            app:fontId="2" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.brain_socket.tapdrive.customViews.RoundedImageView
+                android:id="@+id/item_image"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_margin="5dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/temp_pic"
+                app:corner_radius="5dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                    android:id="@+id/item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="BMX 6"
+                    android:textColor="@color/app_bg"
+                    android:textSize="@dimen/ts_text_big"
+                    app:fontId="3" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Daily Price: "
+                        android:textColor="@color/app_bg"
+                        android:textSize="@dimen/ts_text_small"
+                        app:fontId="3" />
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/item_daily_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text=" 20.0 AED"
+                        android:textColor="@color/app_bg"
+                        android:textSize="@dimen/ts_text_small"
+                        app:fontId="2" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Hourly Price: "
+                        android:textColor="@color/app_bg"
+                        android:textSize="@dimen/ts_text_small"
+                        app:fontId="3" />
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/item_hourly_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="1.0 AED"
+                        android:textColor="@color/app_bg"
+                        android:textSize="@dimen/ts_text_small"
+                        app:fontId="2" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginTop="10dp"
+            android:background="#ededed" />
+
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
+            android:text="Trip Details"
+            android:textColor="@color/black"
+            android:textSize="@dimen/ts_text_normal"
+            app:fontId="2" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginTop="2dp"
+            android:background="#ededed" />
+
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            app:mcv_selectionColor="@color/app_theme"
+            app:mcv_showOtherDates="all"
+            app:mcv_tileHeight="30dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginTop="2dp"
+            android:background="#ededed" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="From"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="3" />
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/selected_from_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:text="-"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="3" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="To"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="3" />
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/selected_to_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:text="-"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="3" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginTop="5dp"
+            android:background="#ededed" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:orientation="vertical">
+
+                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Price"
+                    android:textSize="@dimen/ts_text_normal"
+                    app:fontId="3" />
+
+                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                    android:id="@+id/book_price_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textSize="@dimen/ts_text_normal"
+                    app:fontId="3" />
+
+            </LinearLayout>
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/item_drive_now_button"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/yellow_button_background"
+                android:gravity="center"
+                android:scrollbarSize="@android:color/black"
+                android:text="LET'S DRIVE"
+                android:textAllCaps="true"
+                android:textColor="@drawable/yellow_text_selector"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="3" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

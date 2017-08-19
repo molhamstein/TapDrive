@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tap&amp;Drive</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">الإعدادات</string>
+
+    <!-- about pager -->
+    <string name="about_pager_title_1">اهلا بك في اول تطبيق لتأجير السيارات في المنطقة</string>
+    <string name="about_pager_desc_1">Lorem ipsum dolor sit amet, consectetur adipiscing</string>
+    <string name="about_pager_title_2">لا مزيد من البحث جد السيارة التي تناسبك بسهولة</string>
+    <string name="about_pager_desc_2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien elit, sodales vel lectus quis, semper.</string>
+    <string name="about_pager_title_3">سرعة و سهولة في الاستخدام</string>
+    <string name="about_pager_desc_3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien elit, sodales vel lectus quis, semper scelerisque ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et</string>
+    <string name="about_pager_btn_next">التالي</string>
+
+    <!--filters -->
+    <string name="filters_title">Car types</string>
+    <string name="menu_action_done">موافق</string>
+    <string name="filters_cancel">إلغاء</string>
+    <string name="filters_ok">موافق</string>
+    <string name="filters_group_types">Choose Car Type</string>
+    <string name="filters_select_all">Select all</string>
+    <string name="filters_select_car_type">Select Car Type</string>
+
+    <string name="drawer_help">المساعدة</string>
+    <string name="drawer_logout">الخروج</string>
+    <string name="drawer_profile">الصفحة الشخصية</string>
+    <string name="drawer_payment">المدفوعات</string>
+    <string name="drawer_trips">الحجوزات السابقة</string>
+    <string name="drawer_wish">المفضلة</string>
+    <string name="drawer_settings">الإعدادات</string>
+    <string name="drawer_notifications">التنبيهات</string>
+
+    <string name="location_not_enabled_msg">Please, Enable Locations services for better results</string>
+    <string name="location_not_enabled_ok">Enable</string>
+    <string name="location_not_enabled_cancel">إلغاء</string>
+
+    <!-- LoginActivity -->
+    <string name="activity_login_hint_email">البريد الاكتروني</string>
+    <string name="activity_login_password_hint">كلمة السر</string>
+    <string name="activity_login_forgot_password_hint">هل نسيت كلمة السر؟</string>
+    <string name="activity_login_btn_login">تسجيل الدخول</string>
+    <string name="activity_login_btn_new_user">مستخدم جديد? تسجيل حساب جديد !</string>
+    <string name="activity_login_or_connect_with">أو سجل معنا عن طريق</string>
+    <string name="activity_login_btn_facebook">فيسبوك</string>
+    <string name="activity_login_btn_twitter">Twitter</string>
+    <string name="activity_login_email_invalid">Invalid email address</string>
+    <string name="activity_login_email_or_pass_is_wrong">Email or password is wrong</string>
+    <string name="activity_login_field_required">required</string>
+
+    <!-- RegisterActivity -->
+    <string name="activity_register_account_info">Account Info</string>
+    <string name="activity_register_hint_email">البريد الاكتروني</string>
+    <string name="activity_register_hint_phone">رقم الهاتف</string>
+    <string name="activity_register_hint_birth_day">المولد</string>
+    <string name="activity_register_hint_password">كلمة السر</string>
+    <string name="activity_register_already_have_account">لديك حساب سابقا؟</string>
+    <string name="activity_register_btn_login">تسجيل الدخول</string>
+    <string name="activity_register_add_your_photo">Add your photo</string>
+    <string name="activity_register_hint_full_name">الاسم الكامل</string>
+    <string name="activity_register_hint_address">Address</string>
+    <string name="activity_register_congrats">تهانينا!</string>
+    <string name="activity_register_congrats_msg">يمكتك الان استعراض افضل عروض السيارات واسئجار السيارة الانسب لك</string>
+    <string name="activity_register_get_started">الدخول</string>
+    <string name="activity_register_field_required">required</string>
+    <string name="activity_register_login_skip">Skip</string>
+    <string name="activity_register_next">التالي</string>
+    <string name="activity_register_finish">تم</string>
+    <string name="activity_register_male">ذكر</string>
+    <string name="activity_register_female">أنثى</string>
+    <string name="activity_register_step2_title">المعلومات الشخصية</string>
+    <string name="activity_register_birthdate">المولد</string>
+    <string name="activity_register_email_invalid">Invalid email address</string>
+
+    <!-- MainActivity -->
+    <string name="activity_main_toolbar_car">Cars</string>
+    <string name="activity_main_toolbar_yachts">Yachts</string>
+    <string name="activity_main_toolbar_helicopter">Helicopter</string>
+
+    <string name="activity_request_failed">Request fail, retry again please.</string>
+
+    <string name="activity_forget_password_desc">Enter Your Email to receive a password reset code</string>
+    <string name="activity_forget_password_email_hint">البريد الاكتروني</string>
+    <string name="activity_forget_password_btn_submit">Submit</string>
+    <string name="activity_forget_password_request_sent">Forget password request sent, check your mailbox.</string>
+    <string name="activity_forget_password_request_failed">Forget password request failed</string>
+    <string name="activity_forget_password_user_not_found">User not found</string>
+    <string name="loading">جاري التحميل</string>
+    <string name="history_screen_title">الحجوزات السابقة</string>
+    <string name="settings_screen_title">الإعدادات</string>
+    <string name="notifications_screen_title">التنبيهات</string>
+    <string name="payment_method">Payment method</string>
+    <string name="cash_on_delivery">Cash on Delivery</string>
+    <string name="pay_to_the_driver_when_you_get_your_car">Pay to the driver when you get your car</string>
+    <string name="months">Months</string>
+    <string name="weeks">Weeks</string>
+    <string name="days">Days</string>
+    <string name="hours">Hours</string>
+    <string name="total">Total</string>
+    <string name="book">Book</string>
+    <string name="filters_vehicle">الالية</string>
+    <string name="filters_price">التكلفة</string>
+    <string name="filters_apply">تطبيق</string>
+    <string name="filters_reset">اعادة التعيين</string>
+    <string name="panel_vehicles">السيارات</string>
+    <string name="settings_language">اللغة</string>
+    <string name="settings_terms_of_service">شروط الخدمة</string>
+    <string name="logout_confirmation">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
+
+</resources>

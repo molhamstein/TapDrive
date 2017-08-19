@@ -13,7 +13,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:src="@drawable/ic_email"/>
-    <com.brain_socket.tapdrive.view.TextViewCustomFont
+    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
         android:id="@+id/tvVehicleLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/vSeperator"
         android:src="@drawable/ic_profile"/>
-    <com.brain_socket.tapdrive.view.TextViewCustomFont
+    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
         android:id="@+id/tvPriceLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         android:layout_marginRight="16dp"/>
 
 
-    <com.brain_socket.tapdrive.view.TextViewCustomFont
+    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
         android:id="@+id/btnCancel"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
         android:textColor="@color/white"
         android:text="Cancel"
         app:fontId="1"/>
-    <com.brain_socket.tapdrive.view.TextViewCustomFont
+    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
         android:id="@+id/btnApply"
         android:layout_width="100dp"
         android:layout_height="wrap_content"

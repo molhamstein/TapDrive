@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "880304831125",
+    "firebase_url": "https://smartcity-1473241855226.firebaseio.com",
+    "project_id": "smartcity-1473241855226",
+    "storage_bucket": "smartcity-1473241855226.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880304831125:android:4e399c30e7c85ac8",
+        "android_client_info": {
+          "package_name": "com.brain_socket.tapdrive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "880304831125-t4ans11gip9ebi788unkgb6i3u8hfk0v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBC011NBZWTMq4Ddn2WltKqSkmoE2q9jaE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

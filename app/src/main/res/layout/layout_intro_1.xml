@@ -32,7 +32,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="40dp"
         android:gravity="bottom"
@@ -41,7 +41,7 @@
         android:paddingRight="16dp">
 
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -55,7 +55,7 @@
             app:x_in="0.3"
             app:x_out="0.5"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/tvDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             app:x_in="0.01"
             app:x_out="0.01"/>
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/btnNext1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -1,6 +1,6 @@
 package com.brain_socket.tapdrive.model;
 
-import com.brain_socket.tapdrive.TapApp;
+import com.brain_socket.tapdrive.utils.TapApp;
 
 import org.json.JSONObject;
 

@@ -1,9 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="#0099cc"
-             tools:context="com.brain_socket.tapdrive.SplashScreen">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#0099cc"
+    tools:context="com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen">
 
     <ImageView
         android:layout_width="match_parent"
@@ -41,13 +42,14 @@
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="70dp" />
 
-    <TextView
+    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="30dp"
-        android:textSize="@dimen/ts_title_normal"
-        android:text="LOADING"
-        android:textColor="@color/white"/>
+        android:textSize="@dimen/ts_text_big"
+        android:text="Turning Our Engine On"
+        android:textColor="@color/white"
+        app:fontId="2"/>
 
 </FrameLayout>

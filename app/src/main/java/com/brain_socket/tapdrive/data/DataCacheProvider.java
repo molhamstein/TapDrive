@@ -3,13 +3,15 @@ package com.brain_socket.tapdrive.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.brain_socket.tapdrive.TapApp;
+import com.brain_socket.tapdrive.model.filters.Category;
+import com.brain_socket.tapdrive.utils.TapApp;
 import com.brain_socket.tapdrive.model.AppBaseModel;
 
 import org.json.JSONArray;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Molham on 12/02/16.
@@ -24,6 +26,9 @@ public class DataCacheProvider {
     public static final String KEY_APP_ARRAY_WORKSHOPS = "workshops";
     public static final String KEY_APP_ARRAY_BRANDS = "brands";
     public static final String KEY_APP_ACCESS_MODE = "accessMode";
+    public static final String KEY_APP_CATEGORIES = "categories";
+    public static final String KEY_APP_COUNTRIES = "countries";
+    public static final String KEY_APP_LOCALE = "locale";
 
 
     private static DataCacheProvider cacheProvider = null;
@@ -185,5 +190,21 @@ public class DataCacheProvider {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public ArrayList<Category> getStoredCategoriesArray() {
+
+        try {
+
+            String str = prefData.getString(KEY_APP_CATEGORIES, null);
+            Category[] categories = TapApp.getSharedGsonParser().fromJson(str, Category[].class);
+            return new ArrayList<>(Arrays.asList(categories));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
     }
 }

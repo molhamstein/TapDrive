@@ -1,10 +1,13 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="0dp"
+    sothree:umanoScrollableView="@+id/vehicles_recycler_view"
+    sothree:umanoShadowHeight="4dp">
 
     <FrameLayout
         android:id="@+id/flContentFrame"
@@ -14,145 +17,184 @@
     </FrameLayout>
 
     <LinearLayout
-        android:layout_width="250dp"
-        android:layout_height="35dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="72dp"
-        android:gravity="center"
-        android:background="@drawable/shape_rounded_white"
-        android:orientation="horizontal"
-        android:padding="2dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ededed"
+        android:gravity="center|top"
+        android:orientation="vertical">
 
-        <com.brain_socket.tapdrive.view.TextViewCustomFont
-            android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="Select Car Type"
-            android:textColor="@color/gray_dark"
-            android:textSize="@dimen/ts_text_normal"
-            app:fontId="1"
-            />
+        <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#e3e3e3"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingStart="15dp"
+            android:text="@string/panel_vehicles"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:fontId="2" />
 
-        <ImageView
-            android:id="@+id/btnFilter"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:padding="4dp"
-            android:src="@drawable/arrow_down"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/vehicles_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#e3e3e3"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
     </LinearLayout>
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="250dp"-->
+    <!--android:layout_height="35dp"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginTop="72dp"-->
+    <!--android:background="@drawable/shape_rounded_white"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:padding="2dp"-->
+    <!--android:visibility="gone">-->
+
+    <!--<com.brain_socket.tapdrive.customViews.TextViewCustomFont-->
+    <!--android:id="@+id/tvTitle"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center"-->
+    <!--android:padding="2dp"-->
+    <!--android:text="Select Car Type"-->
+    <!--android:textColor="@color/gray_dark"-->
+    <!--android:textSize="@dimen/ts_text_normal"-->
+    <!--app:fontId="1" />-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/btnFilter"-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_marginEnd="8dp"-->
+    <!--android:layout_marginRight="8dp"-->
+    <!--android:padding="4dp"-->
+    <!--android:src="@drawable/arrow_down" />-->
+
+    <!--</LinearLayout>-->
 
     <!-- vehicle type filter bar -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/app_theme"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom|center"
-        android:gravity="center">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="70dp"-->
+    <!--android:layout_gravity="bottom|center"-->
+    <!--android:background="@color/app_theme"-->
+    <!--android:gravity="center"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:visibility="gone">-->
 
-        <LinearLayout
-            android:id="@+id/llCarsFilter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_profile"/>
-            <com.brain_socket.tapdrive.view.TextViewCustomFont
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="Cars"
-                android:textColor="@color/white"
-                android:textSize="@dimen/ts_text_big"
-                app:fontId="3"/>
-        </LinearLayout>
+    <!--<LinearLayout-->
+    <!--android:id="@+id/llCarsFilter"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="0.3"-->
+    <!--android:background="?attr/selectableItemBackground"-->
+    <!--android:clickable="true"-->
+    <!--android:paddingBottom="8dp"-->
+    <!--android:paddingTop="8dp">-->
 
-        <LinearLayout
-            android:id="@+id/llYachtsFilter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-            <View
-                android:layout_width="1dp"
-                android:layout_height="20dp"
-                android:background="@color/white"
-                android:layout_gravity="center_vertical"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_profile"
-                android:layout_gravity="center_vertical"/>
-            <com.brain_socket.tapdrive.view.TextViewCustomFont
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="Yacht"
-                android:textColor="@color/white"
-                android:textSize="@dimen/ts_text_big"
-                app:fontId="3"/>
-        </LinearLayout>
+    <!--<ImageView-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:src="@drawable/ic_profile" />-->
+
+    <!--<com.brain_socket.tapdrive.customViews.TextViewCustomFont-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:text="Cars"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="@dimen/ts_text_big"-->
+    <!--app:fontId="3" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/llYachtsFilter"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="0.3"-->
+    <!--android:background="?attr/selectableItemBackground"-->
+    <!--android:clickable="true"-->
+    <!--android:paddingBottom="8dp"-->
+    <!--android:paddingTop="8dp">-->
+
+    <!--<View-->
+    <!--android:layout_width="1dp"-->
+    <!--android:layout_height="20dp"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:background="@color/white" />-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:src="@drawable/ic_profile" />-->
+
+    <!--<com.brain_socket.tapdrive.customViews.TextViewCustomFont-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:text="Yacht"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="@dimen/ts_text_big"-->
+    <!--app:fontId="3" />-->
+    <!--</LinearLayout>-->
 
 
+    <!--<LinearLayout-->
+    <!--android:id="@+id/llCoptersFilter"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="0.3"-->
+    <!--android:background="?attr/selectableItemBackground"-->
+    <!--android:clickable="true"-->
+    <!--android:paddingBottom="8dp"-->
+    <!--android:paddingTop="8dp">-->
 
-        <LinearLayout
-            android:id="@+id/llCoptersFilter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
-            <View
-                android:layout_width="1dp"
-                android:layout_height="20dp"
-                android:background="@color/white"
-                android:layout_gravity="center_vertical"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_profile"/>
-            <com.brain_socket.tapdrive.view.TextViewCustomFont
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="Copter"
-                android:textColor="@color/white"
-                android:textSize="@dimen/ts_text_big"
-                app:fontId="3"/>
-        </LinearLayout>
+    <!--<View-->
+    <!--android:layout_width="1dp"-->
+    <!--android:layout_height="20dp"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:background="@color/white" />-->
 
-    </LinearLayout>
+    <!--<ImageView-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:src="@drawable/ic_profile" />-->
+
+    <!--<com.brain_socket.tapdrive.customViews.TextViewCustomFont-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:text="Copter"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="@dimen/ts_text_big"-->
+    <!--app:fontId="3" />-->
+    <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
 
 
     <!--<com.brain_socket.thagheralrafedain.view.AppWorkshopCard-->
-        <!--android:id="@+id/vProviderPreview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom"-->
-        <!--android:clickable="true"-->
-        <!--/>-->
-</FrameLayout>
+    <!--android:id="@+id/vProviderPreview"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom"-->
+    <!--android:clickable="true"-->
+    <!--/>-->
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
