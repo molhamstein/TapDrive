@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        DataStore.getInstance().addUpdateBroadcastListener(this);
         init();
         showMap();
     }
@@ -247,14 +249,22 @@ public class MainActivity extends AppCompatActivity
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
 
         if (me != null) {
+            userName.setVisibility(View.VISIBLE);
+            profilePicture.setVisibility(View.VISIBLE);
+            userType.setVisibility(View.VISIBLE);
+            logoutButton.setVisibility(View.VISIBLE);
+
+            headerLogoImageView.setVisibility(View.GONE);
+
             userName.setText(me.getUsername());
-            Glide.with(this).load(me.getPhoto()).into(profilePicture);
+            Glide.with(getApplicationContext()).load(me.getPhoto()).into(profilePicture);
         } else {
             profilePicture.setVisibility(View.GONE);
-            headerLogoImageView.setVisibility(View.VISIBLE);
             userName.setVisibility(View.GONE);
             userType.setVisibility(View.GONE);
             logoutButton.setVisibility(View.GONE);
+
+            headerLogoImageView.setVisibility(View.VISIBLE);
         }
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -293,9 +303,16 @@ public class MainActivity extends AppCompatActivity
         });
 
         if (me != null) {
+            MenuItem profileMenuItem = navigationViewMenu.findItem(R.id.nav_profile);
+            if (profileMenuItem.getTitle().toString().equalsIgnoreCase("LOGIN")) {
+                profileMenuItem.setTitle("PROFILE");
+            }
+            applyFontToMenuItem(profileMenuItem);
+
             if (me.getType().equalsIgnoreCase("PARTNER")) {
                 MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
                 menuItem.setTitle("ORDERS");
+//                menuItem.setIcon(R.drawable.car)
                 applyFontToMenuItem(menuItem);
 
                 partnerQuestionButton.setVisibility(View.GONE);
@@ -333,43 +350,45 @@ public class MainActivity extends AppCompatActivity
         filterTypesHolder = (LinearLayout) findViewById(R.id.filter_types_layout);
         ArrayList<Category> categories = DataCacheProvider.getInstance().getStoredCategoriesArray();
 
-        for (Category category : categories) {
-            for (CategoryField categoryField : category.getFields()) {
+        if (categories != null) {
+            for (Category category : categories) {
+                for (CategoryField categoryField : category.getFields()) {
 
-                if (categoryField.getParentFieldId().equalsIgnoreCase("0")) {
+                    if (categoryField.getParentFieldId().equalsIgnoreCase("0")) {
 
-                    FilterTypeView filterTypeView = new FilterTypeView(this, categoryField);
-                    filterTypesHolder.addView(filterTypeView);
-                    filterTypesHolder.requestLayout();
+                        FilterTypeView filterTypeView = new FilterTypeView(this, categoryField);
+                        filterTypesHolder.addView(filterTypeView);
+                        filterTypesHolder.requestLayout();
 
-                    filterTypeViews.put(filterTypeView, null);
+                        filterTypeViews.put(filterTypeView, null);
 
-                } else {
+                    } else {
 
-                    FilterTypeView filterTypeView = new FilterTypeView(this, categoryField, true);
-                    filterTypesHolder.addView(filterTypeView);
-                    filterTypesHolder.requestLayout();
+                        FilterTypeView filterTypeView = new FilterTypeView(this, categoryField, true);
+                        filterTypesHolder.addView(filterTypeView);
+                        filterTypesHolder.requestLayout();
 
-                    Iterator it = filterTypeViews.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry) it.next();
+                        Iterator it = filterTypeViews.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry) it.next();
 
-                        FilterTypeView parentFilterTypeView = (FilterTypeView) pair.getKey();
-                        if (parentFilterTypeView.getCategoryField().getId().equalsIgnoreCase(filterTypeView.getCategoryField().getParentFieldId())) {
-                            if (pair.getValue() == null) {
-                                ArrayList<FilterTypeView> values = new ArrayList<>();
-                                values.add(filterTypeView);
-                                filterTypeViews.put(parentFilterTypeView, values);
-                            } else {
-                                ArrayList<FilterTypeView> values = filterTypeViews.get(parentFilterTypeView);
-                                values.add(filterTypeView);
-                                filterTypeViews.put(parentFilterTypeView, values);
+                            FilterTypeView parentFilterTypeView = (FilterTypeView) pair.getKey();
+                            if (parentFilterTypeView.getCategoryField().getId().equalsIgnoreCase(filterTypeView.getCategoryField().getParentFieldId())) {
+                                if (pair.getValue() == null) {
+                                    ArrayList<FilterTypeView> values = new ArrayList<>();
+                                    values.add(filterTypeView);
+                                    filterTypeViews.put(parentFilterTypeView, values);
+                                } else {
+                                    ArrayList<FilterTypeView> values = filterTypeViews.get(parentFilterTypeView);
+                                    values.add(filterTypeView);
+                                    filterTypeViews.put(parentFilterTypeView, values);
+                                }
                             }
                         }
+
                     }
 
                 }
-
             }
         }
 
@@ -847,8 +866,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoginStateChange() {
 
+        Log.d("EYAD", "onLoginStateChange: ");
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
-
         init();
 
     }

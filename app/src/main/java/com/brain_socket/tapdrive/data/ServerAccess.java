@@ -291,6 +291,38 @@ public class ServerAccess {
 
     }
 
+    public ServerResult changeItemStatus(int orderId, String status) {
+        ServerResult result = new ServerResult();
+        try {
+            // parametersn
+            JSONObject jsonPairs = new JSONObject();
+            jsonPairs.put("order_id", orderId);
+            jsonPairs.put("status", status);
+            jsonPairs.put("_method", "PUT");
+
+            JSONObject headers = new JSONObject();
+            headers.put("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN));
+
+
+            // url
+            String url = BASE_SERVICE_URL + "/orders/change_status";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", headers);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+
+            JSONObject jsonObject = apiResult.getResponseJsonObject();
+            Order order = Order.fromJson(jsonObject);
+            result.addPair("order", order);
+
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+        return result;
+
+    }
+
     public ServerResult requestVerificationMsg(String accessToken) {
         ServerResult result = new ServerResult();
 //        boolean msgSent = false ;

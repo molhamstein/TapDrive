@@ -2,11 +2,10 @@ package com.brain_socket.tapdrive.data;
 
 import android.location.Location;
 import android.os.Handler;
-import android.util.Log;
 
 import com.brain_socket.tapdrive.model.AppCarBrand;
-import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.AppUser;
+import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.partner.Country;
 import com.brain_socket.tapdrive.model.user.UserModel;
@@ -199,21 +198,21 @@ public class DataStore {
      * @param email
      * @param callback
      */
-    public void attemptSignUp(final String email,final String password,final String fullName,
-                              final String phone,final String gender,final String birthday,
-                              final String countryId,final String socialId,final String socialPlatform,
+    public void attemptSignUp(final String email, final String password, final String fullName,
+                              final String phone, final String gender, final String birthday,
+                              final String countryId, final String socialId, final String socialPlatform,
                               final DataRequestCallback callback) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.registerUser(email,password,fullName,phone,gender,birthday,countryId,socialId,socialPlatform);
+                ServerResult result = serverHandler.registerUser(email, password, fullName, phone, gender, birthday, countryId, socialId, socialPlatform);
                 if (result.connectionFailed()) {
                     success = false;
                 } else {
                     try {
-                        if(result.isValid()){
+                        if (result.isValid()) {
                             UserModel me = (UserModel) result.getPairs().get("appUser");
                             apiAccessToken = me.getToken();
                             setApiAccessToken(apiAccessToken);
@@ -230,20 +229,20 @@ public class DataStore {
     }
 
     public void updateUserInfo(final String email, final String fullName,
-                              final String phone,final String gender,final String birthday,
-                              final String countryId,final String filePath,
-                              final DataRequestCallback callback) {
+                               final String phone, final String gender, final String birthday,
+                               final String countryId, final String filePath,
+                               final DataRequestCallback callback) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.updateUser(email,fullName,phone,gender,birthday,countryId,filePath);
+                ServerResult result = serverHandler.updateUser(email, fullName, phone, gender, birthday, countryId, filePath);
                 if (result.connectionFailed()) {
                     success = false;
                 } else {
                     try {
-                        if(result.isValid()){
+                        if (result.isValid()) {
                             UserModel me = (UserModel) result.getPairs().get("appUser");
                             apiAccessToken = me.getToken();
                             setApiAccessToken(apiAccessToken);
@@ -260,19 +259,43 @@ public class DataStore {
     }
 
     public void bookItem(final String startDate, final String endDate,
-                              final String itemId, final String partnerId,
-                              final DataRequestCallback callback) {
+                         final String itemId, final String partnerId,
+                         final DataRequestCallback callback) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.bookItem(startDate,endDate,itemId,partnerId);
+                ServerResult result = serverHandler.bookItem(startDate, endDate, itemId, partnerId);
                 if (result.connectionFailed()) {
                     success = false;
                 } else {
                     try {
-                        if(result.isValid()){
+                        if (result.isValid()) {
+
+                        }
+                    } catch (Exception e) {
+                        success = false;
+                    }
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void changeItemStatus(final int orderId, final String status,
+                                 final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.changeItemStatus(orderId, status);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                    try {
+                        if (result.isValid()) {
 
                         }
                     } catch (Exception e) {
@@ -321,12 +344,12 @@ public class DataStore {
      *
      * @param email
      */
-    public void attemptLogin(final String email,final String password,final String socialId,final String socialPlatform, final DataRequestCallback callback) {
+    public void attemptLogin(final String email, final String password, final String socialId, final String socialPlatform, final DataRequestCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.login(email,password,socialId,socialPlatform);
+                ServerResult result = serverHandler.login(email, password, socialId, socialPlatform);
                 if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {
@@ -343,12 +366,12 @@ public class DataStore {
         }).start();
     }
 
-    public void attemptPartnerLogin(final String email,final String password,final String socialId,final String socialPlatform, final DataRequestCallback callback) {
+    public void attemptPartnerLogin(final String email, final String password, final String socialId, final String socialPlatform, final DataRequestCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.partnerLogin(email,password,socialId,socialPlatform);
+                ServerResult result = serverHandler.partnerLogin(email, password, socialId, socialPlatform);
                 if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {
@@ -411,7 +434,6 @@ public class DataStore {
             }
         }).start();
     }
-
 
 
     //--------------------
@@ -571,7 +593,9 @@ public class DataStore {
 
     public interface DataStoreUpdateListener {
         void onDataStoreUpdate();
+
         void onUserLocationUpdate();
+
         void onNewEventNotificationsAvailable();
 
         void onLoginStateChange();
