@@ -7,6 +7,11 @@
 
     <string name="action_settings">Settings</string>
 
+    <!--generic-->
+    <string name="err_connection">Connection Error!!</string>
+    <string name="retry">Retry</string>
+    <string name="exit">Exit</string>
+
     <!-- about pager -->
     <string name="about_pager_title_1">Welcome to the first app for Car rental in the region.</string>
     <string name="about_pager_desc_1">Lorem ipsum dolor sit amet, consectetur adipiscing</string>
@@ -39,6 +44,7 @@
     <string name="location_not_enabled_cancel">Cancel</string>
 
     <!-- LoginActivity -->
+    <string name="activity_login_title">Login</string>
     <string name="activity_login_hint_email">Email</string>
     <string name="activity_login_password_hint">Password</string>
     <string name="activity_login_forgot_password_hint">Forgot Password?</string>
@@ -46,7 +52,7 @@
     <string name="activity_login_btn_new_user">New User ? Register !</string>
     <string name="activity_login_or_connect_with">Or connect with</string>
     <string name="activity_login_btn_facebook">Facebook</string>
-    <string name="activity_login_btn_twitter">Twitter</string>
+    <string name="activity_login_btn_twitter">Google</string>
     <string name="activity_login_email_invalid">Invalid email address</string>
     <string name="activity_login_email_or_pass_is_wrong">Email or password is wrong</string>
     <string name="activity_login_field_required">required</string>
@@ -82,9 +88,10 @@
 
     <string name="activity_request_failed">Request fail, retry again please.</string>
 
+    <string name="activity_forget_password_title">FORGOT PASSWORD</string>
     <string name="activity_forget_password_desc">Enter Your Email to receive a password reset code</string>
     <string name="activity_forget_password_email_hint">Email</string>
-    <string name="activity_forget_password_btn_submit">Submit</string>
+    <string name="activity_forget_password_btn_submit">SUBMIT</string>
     <string name="activity_forget_password_request_sent">Forget password request sent, check your mailbox.</string>
     <string name="activity_forget_password_request_failed">Forget password request failed</string>
     <string name="activity_forget_password_user_not_found">User not found</string>

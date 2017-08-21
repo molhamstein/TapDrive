@@ -38,6 +38,7 @@ public class DataStore {
     private UserModel me;
     private String apiAccessToken;
     private App_ACCESS_MODE accessMode;
+    private boolean isFirstRun;
 
     // user location
     private float myLocationLatitude;
@@ -104,6 +105,7 @@ public class DataStore {
         //brands = cache.getStoredArrayWithKey(DataCacheProvider.KEY_APP_ARRAY_BRANDS, new TypeToken<ArrayList<BrandModel>>() {}.getType());
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, new TypeToken<AppUser>() {
         }.getType());
+        isFirstRun = DataCacheProvider.getInstance().getStoredIntWithKey(DataCacheProvider.KEY_APP_USER_ME) == 0;
     }
 
     //--------------------
@@ -479,6 +481,15 @@ public class DataStore {
                 invokeCallback(callback, success, result); // invoking the callback
             }
         }).start();
+    }
+
+    public boolean isFirstRun() {
+        return isFirstRun;
+    }
+
+    public void setFirstRun(boolean firstRun) {
+        isFirstRun = firstRun;
+        DataCacheProvider.getInstance().storeIntWithKey(DataCacheProvider.KEY_APP_IS_FIRST_RUNN, firstRun?0:1);
     }
 
     public ArrayList<AppCarBrand> getBrands() {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.data.DataStore;
 import com.prolificinteractive.parallaxpager.ParallaxContainer;
 import com.prolificinteractive.parallaxpager.ParallaxContextWrapper;
 

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
@@ -69,7 +70,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         View btnNewUser = findViewById(R.id.btnNewUser);
         View vSeperator = findViewById(R.id.vSeperator);
         View tvOrConnectWith = findViewById(R.id.tvOrConnectWith);
-        View btnSkipLogin = findViewById(R.id.btnSkipLogin);
+
+        // init toolbar
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_chevron_left);
+        mToolbar.setNavigationOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        finish();
+                    }
+                }
+        );
+        setSupportActionBar(mToolbar);
+        setTitle(R.string.activity_login_title);
 
         uiElements.add(ivLogo);
         uiElements.add(etEmail);
@@ -81,7 +95,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         uiElements.add(tvOrConnectWith);
         uiElements.add(btnFacebookLogin);
         uiElements.add(btnTwitterLogin);
-        uiElements.add(btnSkipLogin);
 
         // hide all ui elements
         hideUiElement();
@@ -91,7 +104,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnFacebookLogin.setOnClickListener(this);
         btnTwitterLogin.setOnClickListener(this);
         btnNewUser.setOnClickListener(this);
-        btnSkipLogin.setOnClickListener(this);
     }
 
     private void hideUiElement() {
@@ -144,10 +156,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btnNewUser:
                 createNewUser();
-                break;
-            case R.id.btnSkipLogin:
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(i);
                 break;
         }
     }

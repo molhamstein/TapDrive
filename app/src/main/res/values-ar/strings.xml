@@ -8,6 +8,11 @@
 
     <string name="action_settings">الإعدادات</string>
 
+    <!--generic-->
+    <string name="err_connection">لايوجد اتصال، يرجى التأكد من الإعدادات</string>
+    <string name="retry">اعادة المحاولة</string>
+    <string name="exit">الخروج</string>
+
     <!-- about pager -->
     <string name="about_pager_title_1">اهلا بك في اول تطبيق لتأجير السيارات في المنطقة</string>
     <string name="about_pager_desc_1">Lorem ipsum dolor sit amet, consectetur adipiscing</string>
@@ -40,6 +45,7 @@
     <string name="location_not_enabled_cancel">إلغاء</string>
 
     <!-- LoginActivity -->
+    <string name="activity_login_title">تسجيل الدخول</string>
     <string name="activity_login_hint_email">البريد الاكتروني</string>
     <string name="activity_login_password_hint">كلمة السر</string>
     <string name="activity_login_forgot_password_hint">هل نسيت كلمة السر؟</string>
