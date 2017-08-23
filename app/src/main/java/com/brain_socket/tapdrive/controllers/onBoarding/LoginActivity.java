@@ -3,6 +3,7 @@ package com.brain_socket.tapdrive.controllers.onBoarding;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.brain_socket.tapdrive.data.FacebookProvider;
+import com.brain_socket.tapdrive.data.FacebookProviderListener;
 import com.brain_socket.tapdrive.utils.Helpers;
 import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
 import com.brain_socket.tapdrive.R;
@@ -17,19 +20,33 @@ import com.brain_socket.tapdrive.utils.TapApp;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.model.user.UserModel;
+import com.facebook.Profile;
 import com.github.florent37.viewanimator.ViewAnimator;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+
+    private static final int RC_SIGN_IN = 7;
+
     private TextView etEmail;
     private TextView etPassword;
     private ArrayList<View> uiElements;
     private Dialog loadingDialog;
+
+    private GoogleApiClient mGoogleApiClient;
+
     DataStore.DataRequestCallback loginCallback = new DataStore.DataRequestCallback() {
         @Override
         public void onDataReady(ServerResult result, boolean success) {
-            loadingDialog.dismiss();
+            loadingDialog.hide();
             if (success) {
                 UserModel me = (UserModel) result.getValue("appUser");
                 if (me != null) {
@@ -57,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void init() {
-        if (uiElements == null) uiElements = new ArrayList<View>();
+        if (uiElements == null) uiElements = new ArrayList<>();
 
         loadingDialog = TapApp.getNewLoadingDilaog(this);
         View ivLogo = findViewById(R.id.ivLogo);
@@ -82,6 +99,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
         );
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
         setSupportActionBar(mToolbar);
         setTitle(R.string.activity_login_title);
 
@@ -151,8 +178,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 login();
                 break;
             case R.id.btnFacebookLogin:
+                attempFBtLogin();
                 break;
             case R.id.btnTwitterLogin:
+                googleSignin();
                 break;
             case R.id.btnNewUser:
                 createNewUser();
@@ -192,10 +221,108 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
             loadingDialog.show();
-            DataStore.getInstance().attemptLogin(email, password, "", "", loginCallback);
+            DataStore.getInstance().attemptLogin(email, password, null, "", "", loginCallback);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        FacebookProvider.getInstance().onActiviyResult(requestCode, resultCode, data);
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleGoogleSignInResult(result);
+        }
+    }
+
+    // facebook login
+    FacebookProviderListener facebookLoginListner = new FacebookProviderListener() {
+
+        @Override
+        public void onFacebookSessionOpened(String accessToken, String userId, HashMap<String, Object> map) {
+
+            //String FbToken = accessToken;
+            Profile profile = com.facebook.Profile.getCurrentProfile();
+            String fullName = profile.getFirstName()+" "+profile.getLastName();
+            String id = profile.getId();
+            String email = (String) map.get("email");
+
+            FacebookProvider.getInstance().unregisterListener();
+            DataStore.getInstance().attemptLogin(email, "", fullName, id, "Facebook", loginCallback);
+        }
+
+        @Override
+        public void onFacebookSessionClosed() {
+        }
+
+        @Override
+        public void onFacebookException(Exception exception) {
+
+        }
+    };
+
+    /**
+     * try login first using facebook if success then singning up to the API Server using the
+     * facebook Id and phone number entered in the previous stage
+     */
+    public void attempFBtLogin() {
+        //Session.openActiveSession(this, true, permissions, callback)
+        FacebookProvider.getInstance().registerListener(facebookLoginListner);
+        FacebookProvider.getInstance().requestFacebookLogin(this);
+        //Session.StatusCallback callback =  new LoginStatsCallback() ;
+        //Session.openActiveSession(LoginActivity.this, true, perm1, callback ) ;
+        loadingDialog.show();
+    }
+
+
+    // google signup
+    private void googleSignin(){
+        loadingDialog.show();
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+//    DataStore.DataRequestCallback attemptSocialLoginCallback = new DataStore.DataRequestCallback() {
+//        @Override
+//        public void onDataReady(ServerResult result, boolean success) {
+//            try{
+//                loadingDialog.hide();
+//                UserModel me = DataStore.getInstance().getMe();
+//
+//                // if user logged in successfully, close login activity
+//                if(me != null) {
+//                    setResult(RESULT_OK);
+//                    finish();
+//                }else{
+//                    TapApp.toast(getString(R.string.err_connection));
+//                }
+//            }catch (Exception ex){
+//                ex.printStackTrace();
+//            }
+//        }
+//    };
+
+    private void handleGoogleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            if (acct != null) {
+                String fullName = acct.getDisplayName();
+                //String personPhotoUrl = acct.getPhotoUrl().toString();
+                String email = acct.getEmail();
+                String id = acct.getId();
+                DataStore.getInstance().attemptLogin(email, "", fullName, id, "Google+", loginCallback);
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
 
 }

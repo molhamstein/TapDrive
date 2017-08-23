@@ -2,6 +2,10 @@
     <!--<string name="app_name">Tap&amp;Drive</string>-->
     <string name="app_name">Cannan</string>
 
+    <string translatable="false" name="facebook_app_id">274105243004091</string>
+    <string translatable="false" name="fb_login_protocol_scheme">fb274105243004091</string>
+
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -35,6 +39,7 @@
     <string name="drawer_profile">PROFILE</string>
     <string name="drawer_payment">PAYMENT</string>
     <string name="drawer_trips">TRIP HISTORY</string>
+    <string name="drawer_partner_cars">MY CARS</string>
     <string name="drawer_wish">WISH LIST</string>
     <string name="drawer_settings">SETTINGS</string>
     <string name="drawer_notifications">NOTIFICATIONS</string>
@@ -96,12 +101,17 @@
     <string name="activity_forget_password_request_failed">Forget password request failed</string>
     <string name="activity_forget_password_user_not_found">User not found</string>
 
+    <!-- partner cars-->
+    <string name="cars_list_title">My Cars</string>
+    <string name="cars_list_empty">You haven\'t added any cars</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading">LOADING</string>
     <string name="history_screen_title">History</string>
     <string name="settings_screen_title">Settings</string>
     <string name="notifications_screen_title">Notifications</string>
+    <string name="cars_screen_title">My Cars</string>
     <string name="payment_method">Payment method</string>
     <string name="cash_on_delivery">Cash on Delivery</string>
     <string name="pay_to_the_driver_when_you_get_your_car">Pay to the driver when you get your car</string>

@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.appyvet.rangebar.RangeBar;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerCarsFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerLoginFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PaymentFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG_SETTINGS_FRAG = "settingsFrag";
     private static String TAG_PROFILE_FRAG = "profileFrag";
     private static String TAG_PAYMENT_FRAG = "paymentFrag";
+    private static String TAG_CARS_FRAG = "carsFrag";
     private static String TAG_NOTIFICATIONS_FRAG = "notificationsFrag";
     private static String TAG_PARTNER_LOGIN_FRAG = "partnerLoginFrag";
 
@@ -393,7 +395,6 @@ public class MainActivity extends AppCompatActivity
                             filterTypeView.setHidden(true);
                         }
                     }
-
                 }
 
                 if (mapFilters != null) {
@@ -446,7 +447,6 @@ public class MainActivity extends AppCompatActivity
                             }
                         }
                     }
-
                 }
 
                 if (optionsIds.length() > 0) {
@@ -454,12 +454,9 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 EventBus.getDefault().post(mapFilters);
-
                 toggleFiltersView();
-
             }
         });
-
     }
 
     private void toggleFiltersView() {
@@ -570,6 +567,8 @@ public class MainActivity extends AppCompatActivity
             openNotificationsScreen();
         } else if (id == R.id.nav_trip_history) {
             openTripHistoryScreen();
+        } else if (id == R.id.nav_partner_cars) {
+            openPartnerCarsScreen();
         } else {
             openSettingsScreen();
         }
@@ -682,6 +681,21 @@ public class MainActivity extends AppCompatActivity
                 .addToBackStack(TAG_TRIP_HISTORY_FRAG)
                 .commit();
 
+    }
+
+    private void openPartnerCarsScreen() {
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText(R.string.notifications_screen_title);
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        PartnerCarsFragment carsFragment = PartnerCarsFragment.newInstance();
+        fragment = carsFragment;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_CARS_FRAG)
+                .addToBackStack(TAG_CARS_FRAG)
+                .commit();
     }
 
     private void openSettingsScreen() {

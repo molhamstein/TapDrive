@@ -20,10 +20,12 @@ public class VehiclesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private ArrayList<Car> data = new ArrayList<>();
     private Context context;
+    private Boolean enableItensActionButton;
 
-    public VehiclesAdapter(Context context, ArrayList<Car> data) {
+    public VehiclesAdapter(Context context, ArrayList<Car> data, boolean enableItemsClick) {
         this.context = context;
         this.setData(data);
+        this.enableItensActionButton = enableItemsClick;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class VehiclesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         View view = inflater.inflate(R.layout.vehicle_item_layout, parent, false);
-        viewHolder = new VehicleItemViewHolder(context, view);
+        viewHolder = new VehicleItemViewHolder(context, view, enableItensActionButton);
 
         return viewHolder;
     }
@@ -56,4 +58,5 @@ public class VehiclesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void setData(ArrayList<Car> data) {
         this.data = data;
     }
+
 }

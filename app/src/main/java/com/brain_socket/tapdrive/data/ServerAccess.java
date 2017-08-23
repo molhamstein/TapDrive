@@ -61,7 +61,7 @@ public class ServerAccess {
     }
     // API calls // ------------------------------------------------
 
-    public ServerResult login(String email, String password, String socialId, String socialToken) {
+    public ServerResult login(String email, String password, String name, String socialId, String socialPlatform) {
         ServerResult result = new ServerResult();
         UserModel me = null;
         boolean isRegistered = false;
@@ -71,7 +71,9 @@ public class ServerAccess {
             jsonPairs.put("email", email);
             jsonPairs.put("password", password);
             jsonPairs.put("social_id", socialId);
-            jsonPairs.put("social_platform", socialToken);
+            jsonPairs.put("social_platform", socialPlatform);
+            if(name != null && !name.isEmpty())
+                jsonPairs.put("username", name);
 
             // url
             String url = BASE_SERVICE_URL + "/auth/login";

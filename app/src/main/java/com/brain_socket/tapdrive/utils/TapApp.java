@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
@@ -127,6 +128,10 @@ public class TapApp extends Application implements GoogleApiClient.ConnectionCal
         if (strRes != 0) {
             displaySnackBar(appContext.getString(strRes));
         }
+    }
+
+    public static void toast(String msg){
+        Toast.makeText(getAppContext(),msg,Toast.LENGTH_LONG).show();
     }
 
     public static void displaySnackBar(String txt) {

@@ -2,11 +2,9 @@ package com.brain_socket.tapdrive.data;
 
 import android.location.Location;
 import android.os.Handler;
-import android.util.Log;
 
 import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;
-import com.brain_socket.tapdrive.model.AppUser;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.partner.Country;
 import com.brain_socket.tapdrive.model.user.UserModel;
@@ -103,7 +101,7 @@ public class DataStore {
         DataCacheProvider cache = DataCacheProvider.getInstance();
 
         //brands = cache.getStoredArrayWithKey(DataCacheProvider.KEY_APP_ARRAY_BRANDS, new TypeToken<ArrayList<BrandModel>>() {}.getType());
-        me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, new TypeToken<AppUser>() {
+        me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, new TypeToken<UserModel>() {
         }.getType());
         isFirstRun = DataCacheProvider.getInstance().getStoredIntWithKey(DataCacheProvider.KEY_APP_USER_ME) == 0;
     }
@@ -307,12 +305,12 @@ public class DataStore {
      *
      * @param email
      */
-    public void attemptLogin(final String email,final String password,final String socialId,final String socialPlatform, final DataRequestCallback callback) {
+    public void attemptLogin(final String email,final String password, final String name, final String socialId,final String socialPlatform, final DataRequestCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.login(email,password,socialId,socialPlatform);
+                ServerResult result = serverHandler.login(email, password, name, socialId, socialPlatform);
                 if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {
@@ -521,7 +519,7 @@ public class DataStore {
 
     public UserModel getMe() {
         if (me == null)
-            me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, new TypeToken<AppUser>() {
+            me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, new TypeToken<UserModel>() {
             }.getType());
         return me;
     }

@@ -1,6 +1,7 @@
 package com.brain_socket.tapdrive.controllers.inApp.fragments;
 
 import android.Manifest.permission;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
@@ -23,9 +25,7 @@ import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.DataStore.DataRequestCallback;
 import com.brain_socket.tapdrive.data.DataStore.DataStoreUpdateListener;
 import com.brain_socket.tapdrive.data.ServerResult;
-import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
 import com.brain_socket.tapdrive.model.AppBaseModel;
-import com.brain_socket.tapdrive.model.AppCar;
 import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.partner.Car;
@@ -41,8 +41,11 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -80,6 +83,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
     VehiclesAdapter vehiclesAdapter;
 
+    // pulse animation
+    private GroundOverlay lastUserCircle;
+    private long pulseDuration = 2500;
+    private ValueAnimator lastPulseAnimator;
+
     //    AppWorkshopCard vItemDetailsPreview;
     boolean focusMap;
     public DataRequestCallback searchResultCallback = new DataRequestCallback() {
@@ -95,7 +103,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                         updateView(brands, focusMap);
                         focusMap = false;
                     }
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
         }
@@ -250,7 +258,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 // Map
                 drawProvidersOnMap(this.providers, reFocusMap);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -264,6 +272,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         try {
             if (providers != null && googleMap != null) {
                 googleMap.clear();
+                lastUserCircle = null;
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 for (LocatableWorkshop provider : providers) {
@@ -275,15 +284,18 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                         builder.include(position);
                         if (selectedPartner != null && provider.partner.getId().equals(selectedPartner.partner.getId()))
                             marker.showInfoWindow();
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                 }
 
-                if (focusMap) {
-                    LatLngBounds bounds = builder.build();
-                    LatLng userLocation = new LatLng(DataStore.getInstance().getMyLocationLatitude(), DataStore.getInstance().getMyLocationLongitude());
-                    if (userLocation.latitude != 0 && userLocation.longitude != 0)
+                LatLng userLocation = new LatLng(DataStore.getInstance().getMyLocationLatitude(), DataStore.getInstance().getMyLocationLongitude());
+                if (userLocation.latitude != 0 && userLocation.longitude != 0) {
+                    // add a pulsing circle arround user location
+                    addPulsatingEffect(userLocation);
+
+                    if (focusMap) {
                         focusMapToCoords(userLocation);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -298,7 +310,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     }
 
     /**
-     * centers the ma pto the given coords with animation
+     * centers the map to the given coords with animation
      */
     private void focusMapToCoords(LatLng latLng) {
         try {
@@ -334,12 +346,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 //        }
     }
 
-    public void displayBrandPreview(AppCar workshop) {
-//        if (partner != null) {
-//            vItemDetailsPreview.updateUI(partner);
-//            vItemDetailsPreview.setVisibility(View.VISIBLE);
-//        }
-    }
 
     /**
      * hide details Preview
@@ -374,7 +380,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             slidingUpPanelLayout.setPanelHeight(Helpers.dpToPx(getActivity(), 200));
 
             if (vehiclesAdapter == null) {
-                vehiclesAdapter = new VehiclesAdapter(getActivity(), selectedPartner.partner.getCars());
+                vehiclesAdapter = new VehiclesAdapter(getActivity(), selectedPartner.partner.getCars(), true);
                 vehiclesRecyclerView.setAdapter(vehiclesAdapter);
                 vehiclesAdapter.notifyDataSetChanged();
             } else {
@@ -386,7 +392,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             slidingUpPanelLayout.requestLayout();
 
             if (vehiclesAdapter == null) {
-                vehiclesAdapter = new VehiclesAdapter(getActivity(), new ArrayList<Car>());
+                vehiclesAdapter = new VehiclesAdapter(getActivity(), new ArrayList<Car>(), true);
                 vehiclesRecyclerView.setAdapter(vehiclesAdapter);
                 vehiclesAdapter.notifyDataSetChanged();
             } else {
@@ -401,8 +407,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     // the marker to top onClick by showing an empty info window
     @Override
     public View getInfoWindow(Marker marker) {
-        View v = getActivity().getLayoutInflater().inflate(R.layout.layout_marker_info_window, null);
-        return v;
+        return getActivity().getLayoutInflater().inflate(R.layout.layout_marker_info_window, null);
     }
 
     @Override
@@ -442,6 +447,49 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         getNearbyPartners();
     }
 
+
+    /**
+     * adds a pulse animation arround the given coords
+     */
+    private void addPulsatingEffect(final LatLng userLatlng){
+        if(lastPulseAnimator != null){
+            lastPulseAnimator.cancel();
+        }
+        if(lastUserCircle != null)
+            lastUserCircle.setPosition(userLatlng);
+        lastPulseAnimator = valueAnimate(3000, pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if(lastUserCircle != null) {
+                    float zoomPrecent =  googleMap.getCameraPosition().zoom / googleMap.getMaxZoomLevel();
+                    // TODO do some caculations based on th zoom level to make sure the size of the pulse circle remains fixed regardless of zoom level
+                    lastUserCircle.setDimensions((Float) animation.getAnimatedValue());
+                    lastUserCircle.setTransparency(animation.getAnimatedFraction());
+                }else {
+                    BitmapDescriptor image = BitmapDescriptorFactory.fromResource(R.drawable.pulse);
+                    lastUserCircle = googleMap.addGroundOverlay(new GroundOverlayOptions()
+                            .position(userLatlng, (Float) animation.getAnimatedValue())
+                            .anchor(0.5f,0.5f)
+                            .transparency(0)
+                            .image(image));
+                }
+            }
+        });
+    }
+
+    protected ValueAnimator valueAnimate(float accuracy,long duration, ValueAnimator.AnimatorUpdateListener updateListener){
+        Log.d( "valueAnimate: ", "called");
+        ValueAnimator va = ValueAnimator.ofFloat(0,accuracy);
+        va.setDuration(duration);
+        va.addUpdateListener(updateListener);
+        va.setRepeatCount(ValueAnimator.INFINITE);
+        va.setRepeatMode(ValueAnimator.RESTART);
+        va.setInterpolator(new DecelerateInterpolator());
+
+        va.start();
+        return va;
+    }
+
     ///
     /// ------- DataStore Broadcasts -----
     //
@@ -464,7 +512,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     @Override
     public void onNewEventNotificationsAvailable() {
     }
-
 
     @Override
     public void onClick(View view) {
