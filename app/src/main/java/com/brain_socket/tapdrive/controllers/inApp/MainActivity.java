@@ -290,6 +290,9 @@ public class MainActivity extends AppCompatActivity
 
             MenuItem tripsMenuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
             tripsMenuItem.setTitle("TRIPS");
+
+            MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
+            carsMenuItem.setVisible(false);
         }
 
         initFiltersView();
@@ -686,7 +689,7 @@ public class MainActivity extends AppCompatActivity
     private void openPartnerCarsScreen() {
 
         toolbarLogo.setVisibility(View.GONE);
-        toolbarTitle.setText(R.string.notifications_screen_title);
+        toolbarTitle.setText(R.string.cars_screen_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();

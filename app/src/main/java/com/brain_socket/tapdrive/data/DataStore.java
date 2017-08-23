@@ -481,6 +481,21 @@ public class DataStore {
         }).start();
     }
 
+    public void getPartnerCars(final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getPartnerCars();
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     public boolean isFirstRun() {
         return isFirstRun;
     }

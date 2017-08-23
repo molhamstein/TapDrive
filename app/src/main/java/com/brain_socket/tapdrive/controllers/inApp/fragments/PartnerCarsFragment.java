@@ -62,7 +62,7 @@ public class PartnerCarsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        DataStore.getInstance().getOrders(ordersDataRequestCallback);
+        DataStore.getInstance().getPartnerCars(carssDataRequestCallback);
 
         carsAdapter = new VehiclesAdapter(getActivity(), new ArrayList<Car>(), false);
         carsAdapter.notifyDataSetChanged();
@@ -76,7 +76,7 @@ public class PartnerCarsFragment extends Fragment {
         unbinder.unbind();
     }
 
-    public DataStore.DataRequestCallback ordersDataRequestCallback = new DataStore.DataRequestCallback() {
+    public DataStore.DataRequestCallback carssDataRequestCallback = new DataStore.DataRequestCallback() {
         @Override
         public void onDataReady(ServerResult result, boolean success) {
             if (success) {
@@ -85,6 +85,7 @@ public class PartnerCarsFragment extends Fragment {
 
                     if (result.getPairs().containsKey("cars")) {
                         orders = new ArrayList<>();
+                        @SuppressWarnings("unchecked")
                         ArrayList<Car> receivedOrders = (ArrayList<Car>) result.get("cars");
                         orders.addAll(receivedOrders);
 

@@ -46,13 +46,13 @@ public class VehicleItemViewHolder extends RecyclerView.ViewHolder {
         itemName.setText(car.getEnglishName());
         itemDailyPrice.setText(car.getDailyPrice() + " AED");
         itemHourlyPrice.setText(car.getHourlyPrice() + " AED");
+
         itemDriveNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EventBus.getDefault().post(new BookVehicleButtonClicked(car));
             }
         });
-
         itemDriveNowButton.setVisibility(enableClickButton ? View.VISIBLE : View.GONE);
     }
 
