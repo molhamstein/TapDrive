@@ -32,17 +32,20 @@
 
             </FrameLayout>
 
-            <android.support.design.widget.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AppBarOverlay">
+            <!--<android.support.design.widget.AppBarLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:elevation="0dp"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:theme="@style/AppTheme.AppBarOverlay">-->
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:background="@color/app_bg"
-                    app:popupTheme="@style/AppTheme.PopupOverlay">
+                    android:background="@drawable/translucent_toolbar_background"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:theme="@style/ThemeOverlay.AppCompat.Dark">
 
                     <com.brain_socket.tapdrive.customViews.TextViewCustomFont
                         android:id="@+id/toolbar_title"
@@ -60,6 +63,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:padding="12dp"
+                        android:visibility="gone"
                         android:src="@drawable/ic_nav_logo" />
 
                     <ImageView
@@ -72,7 +76,7 @@
 
                 </android.support.v7.widget.Toolbar>
 
-            </android.support.design.widget.AppBarLayout>
+            <!--</android.support.design.widget.AppBarLayout>-->
 
 
         </RelativeLayout>

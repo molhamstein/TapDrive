@@ -21,19 +21,23 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appyvet.rangebar.RangeBar;
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.InnerForgetPasswordFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.InnerLoginFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
-import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerForgetPassword;
-import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerLoginFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PaymentFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
@@ -41,7 +45,6 @@ import com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment
 import com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation;
 import com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen;
 import com.brain_socket.tapdrive.customViews.FilterTypeView;
-import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.data.DataStore;
@@ -86,6 +89,8 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     View rlMainContent;
     Toolbar toolbar;
+    FrameLayout mainFragmentContainer;
+    RelativeLayout.LayoutParams fragmentMainContainerLayoutParams;
 
     View filtersView;
     ImageView toggleFiltersButton;
@@ -147,6 +152,11 @@ public class MainActivity extends AppCompatActivity
         toolbarLogo = (ImageView) findViewById(R.id.toolbar_logo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         rlMainContent = findViewById(R.id.rlMainContent);
+        mainFragmentContainer = (FrameLayout) findViewById(R.id.flMainFragmentContainer);
+
+        fragmentMainContainerLayoutParams = (RelativeLayout.LayoutParams) mainFragmentContainer.getLayoutParams();
+        removeMainFragmentContainerMargins();
+
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -210,8 +220,8 @@ public class MainActivity extends AppCompatActivity
                     });
                 } else {
                     //show hamburger
+                    removeMainFragmentContainerMargins();
                     toolbarTitle.setVisibility(View.GONE);
-                    toolbarLogo.setVisibility(View.VISIBLE);
                     toggleFiltersButton.setVisibility(View.VISIBLE);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     toggle.syncState();
@@ -298,7 +308,7 @@ public class MainActivity extends AppCompatActivity
         partnerQuestionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openPartnerLoginFragment();
+                openInnerLoginFragment(InnerLoginFragment.PARTNER_LOGIN);
             }
         });
 
@@ -328,6 +338,27 @@ public class MainActivity extends AppCompatActivity
         }
 
         initFiltersView();
+
+    }
+
+    private void removeMainFragmentContainerMargins() {
+
+        toolbar.setBackgroundResource(R.drawable.translucent_toolbar_background);
+        fragmentMainContainerLayoutParams.setMargins(0, 0, 0, 0);
+
+    }
+
+    private void applyMainFragmentContainerMargins() {
+
+        toolbar.setBackgroundResource(R.drawable.black_toolbar_background);
+
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+        }
+
+        fragmentMainContainerLayoutParams.setMargins(0, actionBarHeight, 0, 0);
 
     }
 
@@ -586,7 +617,7 @@ public class MainActivity extends AppCompatActivity
             });
             animator.start();
 
-            toggleFiltersButton.setBackgroundColor(Color.parseColor("#2b2b2b"));
+            toggleFiltersButton.setBackgroundColor(Color.TRANSPARENT);
             toggleFiltersButton.setColorFilter(Color.parseColor("#ededed"));
             isFiltersOpen = false;
         }
@@ -603,12 +634,20 @@ public class MainActivity extends AppCompatActivity
             if (me != null) {
                 openProfileFragment();
             } else {
-                openPartnerLoginFragment();
+                openInnerLoginFragment(InnerLoginFragment.USER_LOGIN);
             }
         } else if (id == R.id.nav_notifications) {
-            openNotificationsScreen();
+            if (me != null) {
+                openNotificationsScreen();
+            } else {
+                Toast.makeText(this, R.string.please_login_hint, Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.nav_trip_history) {
-            openTripHistoryScreen();
+            if (me != null) {
+                openTripHistoryScreen();
+            } else {
+                Toast.makeText(this, R.string.please_login_hint, Toast.LENGTH_SHORT).show();
+            }
         } else {
             openSettingsScreen();
         }
@@ -653,6 +692,8 @@ public class MainActivity extends AppCompatActivity
 
     private void openBookingInformationScreen(Car car) {
 
+        applyMainFragmentContainerMargins();
+
         fragmentManager = getSupportFragmentManager();
         VehicleBookingInformation vehicleBookingInformation = VehicleBookingInformation.newInstance(car);
         fragment = vehicleBookingInformation;
@@ -663,17 +704,18 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void openPartnerLoginFragment() {
+    private void openInnerLoginFragment(int screenType) {
+
+        applyMainFragmentContainerMargins();
 
         drawer.closeDrawer(GravityCompat.START);
 
-        toolbarLogo.setVisibility(View.GONE);
         toolbarTitle.setText("PARTNER LOGIN");
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
-        PartnerLoginFragment partnerLoginFragment = new PartnerLoginFragment();
-        fragment = partnerLoginFragment;
+        InnerLoginFragment innerLoginFragment = InnerLoginFragment.newInstance(screenType);
+        fragment = innerLoginFragment;
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PARTNER_LOGIN_FRAG)
                 .addToBackStack(TAG_PARTNER_LOGIN_FRAG)
@@ -681,15 +723,16 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void openPartnerForgetPasswordScreen() {
+    public void openInnerForgetPasswordScreen(int screenType) {
 
-        toolbarLogo.setVisibility(View.GONE);
+        applyMainFragmentContainerMargins();
+
         toolbarTitle.setText("Forget Password");
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
-        PartnerForgetPassword partnerForgetPassword = PartnerForgetPassword.newInstance();
-        fragment = partnerForgetPassword;
+        InnerForgetPasswordFragment innerForgetPasswordFragment = InnerForgetPasswordFragment.newInstance(screenType);
+        fragment = innerForgetPasswordFragment;
         fragmentManager.beginTransaction()
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PAYMENT_FRAG)
                 .addToBackStack(TAG_PAYMENT_FRAG)
@@ -699,7 +742,8 @@ public class MainActivity extends AppCompatActivity
 
     private void openNotificationsScreen() {
 
-        toolbarLogo.setVisibility(View.GONE);
+        applyMainFragmentContainerMargins();
+
         toolbarTitle.setText(R.string.notifications_screen_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
@@ -715,6 +759,8 @@ public class MainActivity extends AppCompatActivity
 
     public void openPaymentScreen(HashMap<String, Pair<Integer, Float>> bookingDetailsHashMap, Car item, String startDate, String endDate) {
 
+        applyMainFragmentContainerMargins();
+
         fragmentManager = getSupportFragmentManager();
         PaymentFragment paymentFragment = PaymentFragment.newInstance(bookingDetailsHashMap, item, startDate, endDate);
         fragment = paymentFragment;
@@ -727,7 +773,8 @@ public class MainActivity extends AppCompatActivity
 
     private void openTripHistoryScreen() {
 
-        toolbarLogo.setVisibility(View.GONE);
+        applyMainFragmentContainerMargins();
+
         toolbarTitle.setText(R.string.history_screen_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
@@ -743,7 +790,8 @@ public class MainActivity extends AppCompatActivity
 
     private void openSettingsScreen() {
 
-        toolbarLogo.setVisibility(View.GONE);
+        applyMainFragmentContainerMargins();
+
         toolbarTitle.setText(R.string.settings_screen_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
@@ -759,7 +807,8 @@ public class MainActivity extends AppCompatActivity
 
     private void openProfileFragment() {
 
-        toolbarLogo.setVisibility(View.GONE);
+        applyMainFragmentContainerMargins();
+
         toolbarTitle.setText("Profile");
         toolbarTitle.setVisibility(View.VISIBLE);
 
