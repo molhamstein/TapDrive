@@ -23,6 +23,7 @@ import com.brain_socket.tapdrive.model.orders.ServerNotification;
 import com.brain_socket.tapdrive.model.user.UserModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -149,6 +150,8 @@ public class TripHistoryFragment extends Fragment {
         loaderView.setVisibility(View.GONE);
 
         if (serverNotifications.size() > 0) {
+            Collections.reverse(serverNotifications);
+
             serverNotificationsAdapter.setData(serverNotifications);
             serverNotificationsAdapter.notifyDataSetChanged();
         } else {

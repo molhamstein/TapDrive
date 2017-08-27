@@ -6,6 +6,7 @@ import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.orders.Order;
 import com.brain_socket.tapdrive.model.orders.ServerNotification;
+import com.brain_socket.tapdrive.model.partner.Car;
 import com.brain_socket.tapdrive.model.partner.Country;
 import com.brain_socket.tapdrive.model.partner.Partner;
 import com.brain_socket.tapdrive.model.user.UserModel;
@@ -61,7 +62,7 @@ public class ServerAccess {
     }
     // API calls // ------------------------------------------------
 
-    public ServerResult login(String email, String password, String socialId, String socialToken) {
+    public ServerResult login(String email, String password, String name, String socialId, String socialPlatform) {
         ServerResult result = new ServerResult();
         UserModel me = null;
         boolean isRegistered = false;
@@ -71,7 +72,9 @@ public class ServerAccess {
             jsonPairs.put("email", email);
             jsonPairs.put("password", password);
             jsonPairs.put("social_id", socialId);
-            jsonPairs.put("social_platform", socialToken);
+            jsonPairs.put("social_platform", socialPlatform);
+            if(name != null && !name.isEmpty())
+                jsonPairs.put("username", name);
 
             // url
             String url = BASE_SERVICE_URL + "/auth/login";
@@ -494,6 +497,35 @@ public class ServerAccess {
                     serverNotifications.add(ServerNotification.fromJson(jsonResponse.getJSONObject(i)));
                 }
                 result.addPair("server_notifications", serverNotifications);
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public ServerResult getPartnerCars() {
+        ServerResult result = new ServerResult();
+        try {
+            // parameters
+            JSONObject headers = new JSONObject();
+            headers.put("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN));
+
+            // url
+            String url = BASE_SERVICE_URL + "/items";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, null, "get", headers);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONArray jsonResponse = apiResult.getResponseJsonArray();
+            if (jsonResponse != null) { // check if response is empty
+                ArrayList<Car> orders = new ArrayList<>();
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    orders.add(Car.fromJson(jsonResponse.getJSONObject(i)));
+                }
+                result.addPair("cars", orders);
             }
         } catch (Exception e) {
             //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);

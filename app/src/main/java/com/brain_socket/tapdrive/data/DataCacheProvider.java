@@ -21,6 +21,7 @@ public class DataCacheProvider {
     //public storage keys
     public static final String KEY_ACCESS_TOKEN = "access_token";
     public static final String KEY_APP_USER_ME = "UserMe";
+    public static final String KEY_APP_IS_FIRST_RUNN = "isFirstRun";
     public static final String KEY_APP_LAST_KNOWN_LAT = "lastKnownLat";
     public static final String KEY_APP_LAST_KNOWN_LON = "lastKnownLon";
     public static final String KEY_APP_ARRAY_WORKSHOPS = "workshops";

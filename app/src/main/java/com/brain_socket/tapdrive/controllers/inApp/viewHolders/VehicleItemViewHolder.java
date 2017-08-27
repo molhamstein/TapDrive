@@ -29,6 +29,8 @@ public class VehicleItemViewHolder extends RecyclerView.ViewHolder {
     private TextViewCustomFont itemHourlyPrice;
     private TextViewCustomFont itemDriveNowButton;
 
+    private Boolean enableClickButton;
+
     private void findViews(View rootView) {
         itemCardView = (CardView) rootView.findViewById(R.id.item_card_view);
         itemImage = (RoundedImageView) rootView.findViewById(R.id.item_image);
@@ -44,19 +46,27 @@ public class VehicleItemViewHolder extends RecyclerView.ViewHolder {
         itemName.setText(car.getEnglishName());
         itemDailyPrice.setText(car.getDailyPrice() + " AED");
         itemHourlyPrice.setText(car.getHourlyPrice() + " AED");
+
         itemDriveNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EventBus.getDefault().post(new BookVehicleButtonClicked(car));
             }
         });
-
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new BookVehicleButtonClicked(car));
+            }
+        });
+        itemDriveNowButton.setVisibility(enableClickButton ? View.VISIBLE : View.GONE);
     }
 
-    public VehicleItemViewHolder(Context context, View itemView) {
+    public VehicleItemViewHolder(Context context, View itemView, Boolean enableButton) {
         super(itemView);
         findViews(itemView);
         this.context = context;
+        this.enableClickButton = enableButton;
     }
 
     public CardView getItemCardView() {

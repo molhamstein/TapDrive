@@ -17,6 +17,11 @@
             android:icon="@drawable/ic_drawer_wallet"
             android:title="@string/drawer_trips"/>
 
+        <item
+            android:id="@+id/nav_partner_cars"
+            android:icon="@drawable/ic_drawer_my_cars"
+            android:title="@string/drawer_partner_cars"/>
+
         <!--<item-->
             <!--android:id="@+id/nav_manage"-->
             <!--android:icon="@drawable/ic_drawer_wishlist"-->

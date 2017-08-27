@@ -69,7 +69,9 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
 
         timeFromTextView.setText("From: " + Helpers.getFormattedDateString(order.getStartDate()));
         timeToTextView.setText("To: " + Helpers.getFormattedDateString(order.getEndDate()));
+
         Glide.with(context).load(order.getUser().getPhoto()).into(userImageView);
+        userName.setText(order.getUser().getUsername());
 
         if (isPartner) {
             itemStatus.setOnClickListener(new View.OnClickListener() {

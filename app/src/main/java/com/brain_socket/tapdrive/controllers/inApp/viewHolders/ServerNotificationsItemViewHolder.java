@@ -8,10 +8,11 @@ import android.view.View;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
-import com.brain_socket.tapdrive.model.orders.Order;
 import com.brain_socket.tapdrive.model.orders.ServerNotification;
 import com.brain_socket.tapdrive.utils.Helpers;
 import com.bumptech.glide.Glide;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by EYADOOS-PC on 8/8/2017.
@@ -29,16 +30,18 @@ public class ServerNotificationsItemViewHolder extends RecyclerView.ViewHolder {
     private TextViewCustomFont timeToTextView;
     private RoundedImageView itemImage;
     private TextViewCustomFont itemStatus;
+    private CircleImageView userImageView;
 
     private void findViews(View rootView) {
-        itemCardView = (CardView)rootView.findViewById( R.id.item_card_view );
-        userName = (TextViewCustomFont)rootView.findViewById( R.id.user_name );
-        itemName = (TextViewCustomFont)rootView.findViewById( R.id.item_name );
-        totalCostTextView = (TextViewCustomFont)rootView.findViewById( R.id.total_cost_text_view );
-        timeFromTextView = (TextViewCustomFont)rootView.findViewById( R.id.time_from_text_view );
-        timeToTextView = (TextViewCustomFont)rootView.findViewById( R.id.time_to_text_view );
-        itemImage = (RoundedImageView)rootView.findViewById( R.id.item_image );
-        itemStatus = (TextViewCustomFont)rootView.findViewById( R.id.item_status );
+        itemCardView = (CardView) rootView.findViewById(R.id.item_card_view);
+        userName = (TextViewCustomFont) rootView.findViewById(R.id.user_name);
+        itemName = (TextViewCustomFont) rootView.findViewById(R.id.item_name);
+        totalCostTextView = (TextViewCustomFont) rootView.findViewById(R.id.total_cost_text_view);
+        timeFromTextView = (TextViewCustomFont) rootView.findViewById(R.id.time_from_text_view);
+        timeToTextView = (TextViewCustomFont) rootView.findViewById(R.id.time_to_text_view);
+        itemImage = (RoundedImageView) rootView.findViewById(R.id.item_image);
+        itemStatus = (TextViewCustomFont) rootView.findViewById(R.id.item_status);
+        userImageView = (CircleImageView) rootView.findViewById(R.id.user_profile_image);
     }
 
 
@@ -54,10 +57,13 @@ public class ServerNotificationsItemViewHolder extends RecyclerView.ViewHolder {
         itemName.setText(serverNotification.getObject().getItem().getEnglishName());
         itemStatus.setText(serverNotification.getObject().getStatus());
         if (!serverNotification.getObject().getTotal().equalsIgnoreCase("")) {
-            totalCostTextView.setText("Total Cost: " + serverNotification.getObject() + " AED");
+            totalCostTextView.setText("Total Cost: " + serverNotification.getObject().getTotal() + " AED");
         } else {
             totalCostTextView.setText("Total Cost: 0 AED");
         }
+
+        Glide.with(context).load(serverNotification.getObject().getUser().getPhoto()).into(userImageView);
+        userName.setText(serverNotification.getObject().getUser().getUsername());
 
         timeFromTextView.setText("From: " + Helpers.getFormattedDateString(serverNotification.getObject().getStartDate()));
         timeToTextView.setText("To: " + Helpers.getFormattedDateString(serverNotification.getObject().getEndDate()));

@@ -177,7 +177,7 @@ public class InnerLoginFragment extends Fragment {
             if (screenType == PARTNER_LOGIN) {
                 DataStore.getInstance().attemptPartnerLogin(email, password, "", "", loginCallback);
             } else {
-                DataStore.getInstance().attemptLogin(email, password, "", "", loginCallback);
+                DataStore.getInstance().attemptLogin(email, password, "", "", "", loginCallback);
             }
         } catch (Exception ex) {
             ex.printStackTrace();

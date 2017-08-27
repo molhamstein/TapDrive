@@ -22,6 +22,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,7 @@ import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.InnerForgetPasswordFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.InnerLoginFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerCarsFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PaymentFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG_SETTINGS_FRAG = "settingsFrag";
     private static String TAG_PROFILE_FRAG = "profileFrag";
     private static String TAG_PAYMENT_FRAG = "paymentFrag";
+    private static String TAG_CARS_FRAG = "carsFrag";
     private static String TAG_NOTIFICATIONS_FRAG = "notificationsFrag";
     private static String TAG_PARTNER_LOGIN_FRAG = "partnerLoginFrag";
 
@@ -251,7 +254,6 @@ public class MainActivity extends AppCompatActivity
         View headerLayout = navigationView.getHeaderView(0);
         CircleImageView profilePicture = (CircleImageView) headerLayout.findViewById(R.id.ivProfilePic);
         TextView userName = (TextView) headerLayout.findViewById(R.id.tvUserName);
-        TextView userType = (TextView) headerLayout.findViewById(R.id.user_type_text_view);
         headerLogoImageView = (ImageView) headerLayout.findViewById(R.id.header_logo_image_view);
         logoutButton = (TextViewCustomFont) findViewById(R.id.btnLogout);
         partnerQuestionButton = (TextViewCustomFont) findViewById(R.id.partner_question_button);
@@ -261,17 +263,26 @@ public class MainActivity extends AppCompatActivity
         if (me != null) {
             userName.setVisibility(View.VISIBLE);
             profilePicture.setVisibility(View.VISIBLE);
-            userType.setVisibility(View.VISIBLE);
             logoutButton.setVisibility(View.VISIBLE);
 
             headerLogoImageView.setVisibility(View.GONE);
 
             userName.setText(me.getUsername());
             Glide.with(getApplicationContext()).load(me.getPhoto()).into(profilePicture);
+
+            profilePicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!me.getType().equalsIgnoreCase("PARTNER")) {
+                        drawer.closeDrawer(Gravity.START);
+                        openProfileFragment();
+                    }
+                }
+            });
+
         } else {
             profilePicture.setVisibility(View.GONE);
             userName.setVisibility(View.GONE);
-            userType.setVisibility(View.GONE);
             logoutButton.setVisibility(View.GONE);
 
             headerLogoImageView.setVisibility(View.VISIBLE);
@@ -313,20 +324,21 @@ public class MainActivity extends AppCompatActivity
         });
 
         if (me != null) {
-            MenuItem profileMenuItem = navigationViewMenu.findItem(R.id.nav_profile);
-            if (profileMenuItem.getTitle().toString().equalsIgnoreCase("LOGIN")) {
-                profileMenuItem.setTitle("PROFILE");
-            }
-            applyFontToMenuItem(profileMenuItem);
 
             if (me.getType().equalsIgnoreCase("PARTNER")) {
                 MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
                 menuItem.setTitle("ORDERS");
-//                menuItem.setIcon(R.drawable.car)
                 applyFontToMenuItem(menuItem);
 
+                MenuItem profileMenuItem = navigationViewMenu.findItem(R.id.nav_profile);
+                profileMenuItem.setVisible(false);
+
                 partnerQuestionButton.setVisibility(View.GONE);
+            } else {
+                MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
+                carsMenuItem.setVisible(false);
             }
+
         } else {
             MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_profile);
             menuItem.setTitle("LOGIN");
@@ -335,6 +347,9 @@ public class MainActivity extends AppCompatActivity
             MenuItem tripsMenuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
             tripsMenuItem.setTitle("TRIPS");
             applyFontToMenuItem(tripsMenuItem);
+
+            MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
+            carsMenuItem.setVisible(false);
         }
 
         initFiltersView();
@@ -355,7 +370,7 @@ public class MainActivity extends AppCompatActivity
         int actionBarHeight = 0;
         TypedValue tv = new TypedValue();
         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
 
         fragmentMainContainerLayoutParams.setMargins(0, actionBarHeight, 0, 0);
@@ -463,7 +478,6 @@ public class MainActivity extends AppCompatActivity
                             filterTypeView.setHidden(true);
                         }
                     }
-
                 }
 
                 if (mapFilters != null) {
@@ -516,7 +530,6 @@ public class MainActivity extends AppCompatActivity
                             }
                         }
                     }
-
                 }
 
                 if (optionsIds.length() > 0) {
@@ -524,12 +537,9 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 EventBus.getDefault().post(mapFilters);
-
                 toggleFiltersView();
-
             }
         });
-
     }
 
     private void toggleFiltersView() {
@@ -643,11 +653,14 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, R.string.please_login_hint, Toast.LENGTH_SHORT).show();
             }
         } else if (id == R.id.nav_trip_history) {
+
             if (me != null) {
                 openTripHistoryScreen();
             } else {
                 Toast.makeText(this, R.string.please_login_hint, Toast.LENGTH_SHORT).show();
             }
+        } else if (id == R.id.nav_partner_cars) {
+            openPartnerCarsScreen();
         } else {
             openSettingsScreen();
         }
@@ -698,6 +711,10 @@ public class MainActivity extends AppCompatActivity
         VehicleBookingInformation vehicleBookingInformation = VehicleBookingInformation.newInstance(car);
         fragment = vehicleBookingInformation;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_BOOKING_INFORMATION_FRAG)
                 .addToBackStack(TAG_BOOKING_INFORMATION_FRAG)
                 .commit();
@@ -717,6 +734,10 @@ public class MainActivity extends AppCompatActivity
         InnerLoginFragment innerLoginFragment = InnerLoginFragment.newInstance(screenType);
         fragment = innerLoginFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PARTNER_LOGIN_FRAG)
                 .addToBackStack(TAG_PARTNER_LOGIN_FRAG)
                 .commit();
@@ -734,6 +755,10 @@ public class MainActivity extends AppCompatActivity
         InnerForgetPasswordFragment innerForgetPasswordFragment = InnerForgetPasswordFragment.newInstance(screenType);
         fragment = innerForgetPasswordFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PAYMENT_FRAG)
                 .addToBackStack(TAG_PAYMENT_FRAG)
                 .commit();
@@ -751,6 +776,10 @@ public class MainActivity extends AppCompatActivity
         TripHistoryFragment tripHistoryFragment = TripHistoryFragment.newInstance(TripHistoryFragment.NOTIFICATIONS_SCREEN_TYPE);
         fragment = tripHistoryFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_NOTIFICATIONS_FRAG)
                 .addToBackStack(TAG_NOTIFICATIONS_FRAG)
                 .commit();
@@ -765,6 +794,10 @@ public class MainActivity extends AppCompatActivity
         PaymentFragment paymentFragment = PaymentFragment.newInstance(bookingDetailsHashMap, item, startDate, endDate);
         fragment = paymentFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PAYMENT_FRAG)
                 .addToBackStack(TAG_PAYMENT_FRAG)
                 .commit();
@@ -775,17 +808,46 @@ public class MainActivity extends AppCompatActivity
 
         applyMainFragmentContainerMargins();
 
-        toolbarTitle.setText(R.string.history_screen_title);
+        if (!me.getType().equalsIgnoreCase("PARTNER")) {
+            toolbarTitle.setText(R.string.history_screen_title);
+        } else {
+            toolbarTitle.setText("Orders");
+        }
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
         TripHistoryFragment tripHistoryFragment = TripHistoryFragment.newInstance(TripHistoryFragment.ORDERS_SCREEN_TYPE);
         fragment = tripHistoryFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_TRIP_HISTORY_FRAG)
                 .addToBackStack(TAG_TRIP_HISTORY_FRAG)
                 .commit();
 
+    }
+
+    private void openPartnerCarsScreen() {
+
+        applyMainFragmentContainerMargins();
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText(R.string.cars_screen_title);
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        PartnerCarsFragment carsFragment = PartnerCarsFragment.newInstance();
+        fragment = carsFragment;
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
+                .add(R.id.flMainFragmentContainer, fragment, TAG_CARS_FRAG)
+                .addToBackStack(TAG_CARS_FRAG)
+                .commit();
     }
 
     private void openSettingsScreen() {
@@ -799,6 +861,10 @@ public class MainActivity extends AppCompatActivity
         SettingsFragment settingsFragment = new SettingsFragment();
         fragment = settingsFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_SETTINGS_FRAG)
                 .addToBackStack(TAG_SETTINGS_FRAG)
                 .commit();
@@ -816,6 +882,10 @@ public class MainActivity extends AppCompatActivity
         ProfileFragment profileFragment = new ProfileFragment();
         fragment = profileFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PROFILE_FRAG)
                 .addToBackStack(TAG_PROFILE_FRAG)
                 .commit();
@@ -828,6 +898,10 @@ public class MainActivity extends AppCompatActivity
         MapFragment mapFragment = MapFragment.newInstance();
         fragment = mapFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_MAIN_MAP_FRAG)
                 .commit();
 
@@ -915,7 +989,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoginStateChange() {
 
-        Log.d("EYAD", "onLoginStateChange: ");
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
         init();
 

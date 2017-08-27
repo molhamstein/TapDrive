@@ -3,6 +3,7 @@ package com.brain_socket.tapdrive.controllers.onBoarding;
 import android.app.Dialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,6 +31,20 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
             loadingDialog = TapApp.getNewLoadingDilaog(this);
             etEmail = (EditText)findViewById(R.id.etEmail);
             View btnSubmit = findViewById(R.id.btnSubmit);
+
+            // init toolbar
+            Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+            mToolbar.setNavigationIcon(R.drawable.ic_chevron_left);
+            mToolbar.setNavigationOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            finish();
+                        }
+                    }
+            );
+            setSupportActionBar(mToolbar);
+
             btnSubmit.setOnClickListener(this);
         }catch (Exception ex){
             ex.printStackTrace();

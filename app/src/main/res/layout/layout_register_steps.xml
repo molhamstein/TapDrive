@@ -2,22 +2,25 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/app_theme">
 
-    <View
-        android:layout_width="250dp"
-        android:layout_height="15dp"
-        android:layout_gravity="center"
-        android:background="#50ffffff"/>
 
     <FrameLayout
         android:layout_width="270dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:alpha="0.1">
+
+        <View
+            android:layout_width="250dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:background="#000000"/>
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_gravity="left"
             android:gravity="center"
             android:background="@drawable/shape_step_gray_circle"
@@ -27,8 +30,8 @@
             app:fontId="1"/>
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:background="@drawable/shape_step_gray_circle"
@@ -38,8 +41,8 @@
             app:fontId="1"/>
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_gravity="right"
             android:gravity="center"
             android:background="@drawable/shape_step_gray_circle"
@@ -59,15 +62,15 @@
         android:layout_marginLeft="10dp"/>
 
     <FrameLayout
-        android:layout_width="255dp"
+        android:layout_width="258dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="7dp">
+        android:layout_marginTop="6dp">
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/tvStep1"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="left"
             android:gravity="center"
             android:background="@drawable/shape_step_black_circle"
@@ -78,8 +81,8 @@
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/tvStep2"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:background="@drawable/shape_step_black_circle"
@@ -90,8 +93,8 @@
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
             android:id="@+id/tvStep3"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="right"
             android:gravity="center"
             android:background="@drawable/shape_step_black_circle"

@@ -8,6 +8,11 @@
 
     <string name="action_settings">الإعدادات</string>
 
+    <!--generic-->
+    <string name="err_connection">لايوجد اتصال، يرجى التأكد من الإعدادات</string>
+    <string name="retry">اعادة المحاولة</string>
+    <string name="exit">الخروج</string>
+
     <!-- about pager -->
     <string name="about_pager_title_1">اهلا بك في اول تطبيق لتأجير السيارات في المنطقة</string>
     <string name="about_pager_desc_1">Lorem ipsum dolor sit amet, consectetur adipiscing</string>
@@ -31,6 +36,7 @@
     <string name="drawer_profile">الصفحة الشخصية</string>
     <string name="drawer_payment">المدفوعات</string>
     <string name="drawer_trips">الحجوزات السابقة</string>
+    <string name="drawer_partner_cars">سياراتي</string>
     <string name="drawer_wish">المفضلة</string>
     <string name="drawer_settings">الإعدادات</string>
     <string name="drawer_notifications">التنبيهات</string>
@@ -40,6 +46,7 @@
     <string name="location_not_enabled_cancel">إلغاء</string>
 
     <!-- LoginActivity -->
+    <string name="activity_login_title">تسجيل الدخول</string>
     <string name="activity_login_hint_email">البريد الاكتروني</string>
     <string name="activity_login_password_hint">كلمة السر</string>
     <string name="activity_login_forgot_password_hint">هل نسيت كلمة السر؟</string>
@@ -81,6 +88,10 @@
     <string name="activity_main_toolbar_yachts">Yachts</string>
     <string name="activity_main_toolbar_helicopter">Helicopter</string>
 
+    <!-- partner cars-->
+    <string name="cars_list_title">سياراتي</string>
+    <string name="cars_list_empty">لم تقم باضافة اي سيارات بعد</string>
+
     <string name="activity_request_failed">Request fail, retry again please.</string>
 
     <string name="activity_forget_password_desc">Enter Your Email to receive a password reset code</string>
@@ -93,6 +104,7 @@
     <string name="history_screen_title">الحجوزات السابقة</string>
     <string name="settings_screen_title">الإعدادات</string>
     <string name="notifications_screen_title">التنبيهات</string>
+    <string name="cars_screen_title">سياراتي</string>
     <string name="payment_method">Payment method</string>
     <string name="cash_on_delivery">Cash on Delivery</string>
     <string name="pay_to_the_driver_when_you_get_your_car">Pay to the driver when you get your car</string>

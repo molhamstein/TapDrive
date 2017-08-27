@@ -96,52 +96,41 @@ public class SplashScreen extends AppCompatActivity implements DataStore.DataReq
     public void onDataReady(ServerResult result, boolean success) {
         boolean isLoggedInUser = !DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN).equalsIgnoreCase("");
         if (success) {
-            if (isLoggedInUser) {
-                handler.post(proceedToMainRunnable);
-            } else {
-                handler.post(proceedToIntroRunnable);
+            handler.post(proceedToMainRunnable);
+            if (!isLoggedInUser /*&& DataStore.getInstance().isFirstRun()*/) {
+                handler.postDelayed(proceedToIntroRunnable, 1500);
             }
         } else {
             ArrayList<Category> categories = DataCacheProvider.getInstance().getStoredArrayWithKey(DataCacheProvider.KEY_APP_CATEGORIES, new TypeToken<Category>(){}.getType());
             if (categories != null) {
 
                 if (categories.size() > 0) {
-
-                    if (isLoggedInUser) {
-
-                        handler.post(proceedToMainRunnable);
-
-                    } else {
-
-                        handler.post(proceedToIntroRunnable);
-
+                    handler.post(proceedToMainRunnable);
+                    if (!isLoggedInUser && DataStore.getInstance().isFirstRun()) {
+                        handler.postDelayed(proceedToIntroRunnable,1500);
                     }
-
                 } else {
-
                     showConnectionErrorDialog();
-
                 }
 
             } else {
-
                 showConnectionErrorDialog();
-
             }
         }
+        DataStore.getInstance().setFirstRun(false);
     }
 
     private void showConnectionErrorDialog() {
 
         new AlertDialog.Builder(this)
-                .setMessage("There was a connection error, please check your internet connection then try again")
-                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                .setMessage(R.string.err_connection)
+                .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         DataStore.getInstance().getCategories(SplashScreen.this);
                     }
                 })
-                .setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         SplashScreen.this.finish();
