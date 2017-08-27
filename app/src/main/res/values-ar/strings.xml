@@ -37,6 +37,7 @@
     <string name="drawer_payment">المدفوعات</string>
     <string name="drawer_trips">الحجوزات السابقة</string>
     <string name="drawer_partner_cars">سياراتي</string>
+    <string name="drawer_partner_invoices">الوصولات</string>
     <string name="drawer_wish">المفضلة</string>
     <string name="drawer_settings">الإعدادات</string>
     <string name="drawer_notifications">التنبيهات</string>
@@ -92,6 +93,28 @@
     <string name="cars_list_title">سياراتي</string>
     <string name="cars_list_empty">لم تقم باضافة اي سيارات بعد</string>
 
+    <!-- Add Car -->
+    <string name="add_car_title">اضافة سيارة</string>
+    <string name="add_car_title1">معلومات السيارة</string>
+    <string name="add_car_title2">تسعيرة السيارة</string>
+    <string name="add_car_title3">المنطقة</string>
+    <string name="add_car_country">البلد</string>
+    <string name="add_car_city">"المدينة</string>
+    <string name="add_car_title4">معلومات اضافية</string>
+    <string name="add_car_en_name_placeholder">الاسم بالانكليزية</string>
+    <string name="add_car_ar_name_placeholder">الاسم بالعربي</string>
+    <string name="add_car_monthly">شهرياً</string>
+    <string name="add_car_weekly">اسبوعياً</string>
+    <string name="add_car_daily">يومياً</string>
+    <string name="add_car_hourly">بالساعة</string>
+    <string name="add_car_next">التالي</string>
+    <string name="add_car_finish">تم</string>
+    <string name="add_car_price_not_set">الرجاء تحديد السعر</string>
+    <string name="add_car_name_not_set">الرجاء تحديد اسم السيارة</string>
+    <string name="add_car_image_not_set">الرجاء تحديد صورة السيارة</string>
+    <string name="add_car_info_not_set">الرجاء تحديد معلومات السيارة</string>
+    <string name="add_car_success">تم اضافة السيارة بنجاح</string>
+
     <string name="activity_request_failed">Request fail, retry again please.</string>
 
     <string name="activity_forget_password_desc">Enter Your Email to receive a password reset code</string>
@@ -105,6 +128,7 @@
     <string name="settings_screen_title">الإعدادات</string>
     <string name="notifications_screen_title">التنبيهات</string>
     <string name="cars_screen_title">سياراتي</string>
+    <string name="invoices_screen_title">الوصولات</string>
     <string name="payment_method">Payment method</string>
     <string name="cash_on_delivery">Cash on Delivery</string>
     <string name="pay_to_the_driver_when_you_get_your_car">Pay to the driver when you get your car</string>

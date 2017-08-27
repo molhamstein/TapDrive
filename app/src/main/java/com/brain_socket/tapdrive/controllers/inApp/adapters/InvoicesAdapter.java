@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.brain_socket.tapdrive.R;
-import com.brain_socket.tapdrive.controllers.inApp.viewHolders.VehicleItemViewHolder;
-import com.brain_socket.tapdrive.model.partner.Car;
+import com.brain_socket.tapdrive.controllers.inApp.viewHolders.InvoicetemViewHolder;
+import com.brain_socket.tapdrive.model.partner.Invoice;
 
 import java.util.ArrayList;
 
@@ -17,16 +17,14 @@ import java.util.ArrayList;
  *
  */
 
-public class VehiclesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class InvoicesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<Car> data = new ArrayList<>();
+    private ArrayList<Invoice> data = new ArrayList<>();
     private Context context;
-    private Boolean enableItensActionButton;
 
-    public VehiclesAdapter(Context context, ArrayList<Car> data, boolean enableItemsClick) {
+    public InvoicesAdapter(Context context, ArrayList<Invoice> data) {
         this.context = context;
         this.setData(data);
-        this.enableItensActionButton = enableItemsClick;
     }
 
     @Override
@@ -34,8 +32,8 @@ public class VehiclesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        View view = inflater.inflate(R.layout.vehicle_item_layout, parent, false);
-        viewHolder = new VehicleItemViewHolder(context, view, enableItensActionButton);
+        View view = inflater.inflate(R.layout.invoice_item_layout, parent, false);
+        viewHolder = new InvoicetemViewHolder(context, view);
 
         return viewHolder;
     }
@@ -43,7 +41,7 @@ public class VehiclesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        ((VehicleItemViewHolder) holder).bindData(getData().get(position));
+        ((InvoicetemViewHolder) holder).bind(getData().get(position));
 
     }
 
@@ -52,11 +50,11 @@ public class VehiclesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return getData().size();
     }
 
-    public ArrayList<Car> getData() {
+    public ArrayList<Invoice> getData() {
         return data;
     }
 
-    public void setData(ArrayList<Car> data) {
+    public void setData(ArrayList<Invoice> data) {
         this.data = data;
     }
 
