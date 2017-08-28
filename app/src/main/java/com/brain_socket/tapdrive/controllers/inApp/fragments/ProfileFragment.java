@@ -2,6 +2,7 @@ package com.brain_socket.tapdrive.controllers.inApp.fragments;
 
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,6 +31,7 @@ import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.delegates.PermissionGrantedEvent;
 import com.brain_socket.tapdrive.model.user.UserModel;
+import com.brain_socket.tapdrive.utils.TapApp;
 import com.bumptech.glide.Glide;
 import com.hbb20.CountryCodePicker;
 import com.kbeanie.multipicker.api.CameraImagePicker;
@@ -100,6 +102,9 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     private boolean requiredPermissionGranted = false;
 
     private boolean didAnimateViews = false;
+    private boolean clicked = false;
+
+    private Dialog loadingDialog;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -107,7 +112,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        userBirthdayEditText.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
+        userBirthdayEditText.setText(year + "/" + (monthOfYear + 1) + "/" + dayOfMonth);
     }
 
     @Override
@@ -116,6 +121,8 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, inflatedView);
+
+        loadingDialog = TapApp.getNewLoadingDilaog(getActivity());
 
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
 
@@ -155,10 +162,18 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                                                @Override
                                                public void onImagesChosen(List<ChosenImage> images) {
                                                    // Display images
-                                                   if (images != null
-                                                           && images.size() > 0) {
-                                                       selectedProfileImagePath = images.get(0).getThumbnailSmallPath();
-                                                       Glide.with(getActivity()).load(Uri.fromFile(new File(selectedProfileImagePath))).into(userProfileImage);
+                                                   try {
+
+                                                       if (images != null
+                                                               && images.size() > 0) {
+                                                           selectedProfileImagePath = images.get(0).getThumbnailSmallPath();
+                                                           if (selectedProfileImagePath != null) {
+                                                               Glide.with(getActivity()).load(Uri.fromFile(new File(selectedProfileImagePath))).into(userProfileImage);
+                                                           }
+                                                       }
+
+                                                   } catch (Exception e) {
+                                                       e.printStackTrace();
                                                    }
                                                }
 
@@ -219,7 +234,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
         requiredPermissionGranted = permissionGrantedEvent.isPermissionGranted();
 
-        if (requiredPermissionGranted) {
+        if (requiredPermissionGranted && clicked) {
             openImagePicker();
         }
 
@@ -253,7 +268,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         userNameEditText.setText(me.getUsername());
         userEmailEditText.setText(me.getEmail());
         userPhoneEditText.setText(me.getPhone());
-        userBirthdayEditText.setText(me.getBirthdate());
+        userBirthdayEditText.setText(me.getBirthday());
         userPhoneEditText.setText(me.getPhone().substring(4));
 
     }
@@ -268,6 +283,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.edit_icon:
+                clicked = true;
                 if (requiredPermissionGranted) {
                     openImagePicker();
                 } else {
@@ -291,18 +307,21 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
     private void updateProfile() {
 
+        loadingDialog.show();
+
         DataStore.getInstance().updateUserInfo(userEmailEditText.getText().toString(),
                 userNameEditText.getText().toString(),
-                me.getPhone(),
+                "+961" + userPhoneEditText.getText().toString(),
                 gender == Gender.Male ? "male" : "female",
-                "2017-07-19 21:16:04.000000",
+                userBirthdayEditText.getText().toString(),
                 "1",
                 selectedProfileImagePath,
                 new DataStore.DataRequestCallback() {
                     @Override
                     public void onDataReady(ServerResult result, boolean success) {
 
-                        Log.d("EYAD", "onDataReady: " + success);
+                        loadingDialog.hide();
+                        getActivity().onBackPressed();
 
                     }
                 });

@@ -156,7 +156,7 @@
             android:layout_marginTop="15dp"
             app:mcv_selectionColor="@color/app_theme"
             app:mcv_showOtherDates="all"
-            app:mcv_tileHeight="30dp"/>
+            app:mcv_headerTextAppearance="@style/CalendarHeaderTextAppearance"/>
 
         <View
             android:layout_width="match_parent"

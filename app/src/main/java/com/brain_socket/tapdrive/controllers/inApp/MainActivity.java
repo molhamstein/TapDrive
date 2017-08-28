@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity
     TextViewCustomFont logoutButton;
     TextViewCustomFont partnerQuestionButton;
     ImageView headerLogoImageView;
+    View dimmingView;
 
     UserModel me;
 
@@ -151,6 +152,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void init() {
+        dimmingView = (View) findViewById(R.id.dimming_view);
+        dimmingView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFiltersView();
+            }
+        });
+
         toolbarTitle = (TextViewCustomFont) findViewById(R.id.toolbar_title);
         toolbarLogo = (ImageView) findViewById(R.id.toolbar_logo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -162,8 +171,9 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
+        toolbar.setNavigationIcon(R.drawable.ic_menu);
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.setScrimColor(Color.TRANSPARENT);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerClosed(View view) {
                 supportInvalidateOptionsMenu();
@@ -209,6 +219,20 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+//        toggle.setDrawerIndicatorEnabled(false);
+//        toggle.setHomeAsUpIndicator(R.drawable.ic_menu);
+//
+//        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (drawer.isDrawerOpen(GravityCompat.START)) {
+//                    drawer.closeDrawer(GravityCompat.START);
+//                } else {
+//                    drawer.openDrawer(GravityCompat.START);
+//                }
+//            }
+//        });
+
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
@@ -225,6 +249,7 @@ public class MainActivity extends AppCompatActivity
                     //show hamburger
                     removeMainFragmentContainerMargins();
                     toolbarTitle.setVisibility(View.GONE);
+                    toolbarLogo.setVisibility(View.GONE);
                     toggleFiltersButton.setVisibility(View.VISIBLE);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     toggle.syncState();
@@ -268,7 +293,7 @@ public class MainActivity extends AppCompatActivity
             headerLogoImageView.setVisibility(View.GONE);
 
             userName.setText(me.getUsername());
-            Glide.with(getApplicationContext()).load(me.getPhoto()).into(profilePicture);
+            Glide.with(getApplicationContext()).load(me.getPhoto()).placeholder(R.drawable.nobody).dontAnimate().into(profilePicture);
 
             profilePicture.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -329,6 +354,10 @@ public class MainActivity extends AppCompatActivity
                 MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
                 menuItem.setTitle("ORDERS");
                 applyFontToMenuItem(menuItem);
+
+                MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
+                carsMenuItem.setVisible(true);
+                applyFontToMenuItem(carsMenuItem);
 
                 MenuItem profileMenuItem = navigationViewMenu.findItem(R.id.nav_profile);
                 profileMenuItem.setVisible(false);
@@ -599,6 +628,8 @@ public class MainActivity extends AppCompatActivity
             toggleFiltersButton.setBackgroundColor(Color.parseColor("#ededed"));
             toggleFiltersButton.setColorFilter(Color.parseColor("#2b2b2b"));
             isFiltersOpen = true;
+
+            dimmingView.setVisibility(View.VISIBLE);
         } else {
             Animator animator =
                     io.codetail.animation.ViewAnimationUtils.createCircularReveal(filtersView, cx, cy, finalRadius, 0);
@@ -630,6 +661,8 @@ public class MainActivity extends AppCompatActivity
             toggleFiltersButton.setBackgroundColor(Color.TRANSPARENT);
             toggleFiltersButton.setColorFilter(Color.parseColor("#ededed"));
             isFiltersOpen = false;
+
+            dimmingView.setVisibility(View.GONE);
         }
 
     }
@@ -706,6 +739,8 @@ public class MainActivity extends AppCompatActivity
     private void openBookingInformationScreen(Car car) {
 
         applyMainFragmentContainerMargins();
+
+        toolbarLogo.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
         VehicleBookingInformation vehicleBookingInformation = VehicleBookingInformation.newInstance(car);
@@ -988,6 +1023,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoginStateChange() {
+
+        me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
+        init();
+
+    }
+
+    @Override
+    public void onUserInfoUpdated() {
 
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
         init();

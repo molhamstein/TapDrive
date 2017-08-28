@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.RelativeLayout;
 
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
@@ -66,7 +67,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MapFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, OnMarkerClickListener, GoogleMap.InfoWindowAdapter, FiltersPickerCallback, DataStoreUpdateListener {
+public class MapFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, OnMarkerClickListener,
+        GoogleMap.InfoWindowAdapter, FiltersPickerCallback, DataStoreUpdateListener {
 
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout slidingUpPanelLayout;
@@ -193,6 +195,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
         // this block is needed on some devices that throw a
         // "java.lang.NullPointerException: IBitmapDescriptorFactory is not initialized" exception
+
+
         try {
             MapsInitializer.initialize(getActivity());
         } catch (Exception e) {
@@ -205,11 +209,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 this.googleMap.setMyLocationEnabled(true);
-                this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                this.googleMap.getUiSettings().setMyLocationButtonEnabled(true);
             }
         } else {
             this.googleMap.setMyLocationEnabled(true);
-            this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            this.googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
         // used to force Google maps bring
         // the marker to top onClick by showing an empty info window
@@ -510,6 +514,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     }
 
     @Override
+    public void onUserInfoUpdated() {
+
+    }
+
+    @Override
     public void onNewEventNotificationsAvailable() {
     }
 
@@ -547,7 +556,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                     try {
                         if (this.googleMap != null) {
                             this.googleMap.setMyLocationEnabled(true);
-                            this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            this.googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+
+
                         }
                     } catch (SecurityException e) {
                         e.printStackTrace();
@@ -581,6 +593,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     public void onFiltersUpdated(MapFilters mapFilters) {
 
         getNearbyPartners();
+        slidingUpPanelLayout.setPanelHeight(0);
 
     }
 

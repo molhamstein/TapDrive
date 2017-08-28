@@ -20,7 +20,7 @@ public class UserModel extends AppBaseModel {
     private String photo;
     private String phone;
     private String gender;
-    private String birthdate;
+    private String birthday;
     private String type;
     private double longitude;
     private double latitude;
@@ -91,14 +91,6 @@ public class UserModel extends AppBaseModel {
         this.gender = gender;
     }
 
-    public String getBirthdate() {
-        return birthdate;
-    }
-
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
-    }
-
     public double getLongitude() {
         return longitude;
     }
@@ -137,5 +129,13 @@ public class UserModel extends AppBaseModel {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 }
