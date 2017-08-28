@@ -1,9 +1,16 @@
 package com.brain_socket.tapdrive.controllers.inApp.fragments;
 
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,27 +20,38 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.adapters.VehiclesAdapter;
 import com.brain_socket.tapdrive.customViews.FilterTypeView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.data.DataStore;
-import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.delegates.FilterSelectedEvent;
 import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.filters.CategoryField;
-import com.brain_socket.tapdrive.model.partner.Car;
+import com.brain_socket.tapdrive.model.partner.City;
+import com.brain_socket.tapdrive.model.partner.Country;
+import com.brain_socket.tapdrive.utils.TapApp;
+import com.bumptech.glide.Glide;
 import com.github.florent37.viewanimator.ViewAnimator;
+import com.kbeanie.multipicker.api.CameraImagePicker;
+import com.kbeanie.multipicker.api.ImagePicker;
+import com.kbeanie.multipicker.api.Picker;
+import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
+import com.kbeanie.multipicker.api.entity.ChosenImage;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Handler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +62,8 @@ import butterknife.Unbinder;
 public class PartnerِAddCarFragment extends Fragment {
 
     private enum PRICING_TYPE{MONTHLY, WEEKLY, DAILY, HOURLY}
+
+    private static final int MAX_PRICE = 1000;
 
     @BindView(R.id.stage1_layout)
     LinearLayout stage1Contentlayout;
@@ -64,13 +84,13 @@ public class PartnerِAddCarFragment extends Fragment {
     @BindView(R.id.vPricing)
     View vPricing;
     @BindView(R.id.tvPriceMonthly)
-    View tvPriceMonthly;
+    TextView tvPriceMonthly;
     @BindView(R.id.tvPriceWeekly)
-    View tvPriceWeekly;
+    TextView tvPriceWeekly;
     @BindView(R.id.tvPriceDaily)
-    View tvPriceDaily;
+    TextView tvPriceDaily;
     @BindView(R.id.tvPriceHourly)
-    View tvPriceHourly;
+    TextView tvPriceHourly;
     @BindView(R.id.vSep2)
     View sep2;
     @BindView(R.id.title3)
@@ -102,24 +122,26 @@ public class PartnerِAddCarFragment extends Fragment {
     // filters
     HashMap<FilterTypeView, ArrayList<FilterTypeView>> filterTypeViews = new HashMap<>();
 
+    private ImagePicker imagePicker;
+    private CameraImagePicker cameraImagePicker;
+
+    private String selectedProfileImagePath;
+    private String categoryOptionsIds;
+    private ArrayList<String> arrayOptionsIds;
+    private float monthlyPrice;
+    private float weeklyPrice;
+    private float dailyPrice;
+    private float hourlyPrice;
+    private Country selectedCountry;
+    private City selectedCity;
+
+    private ArrayList<Country> arrayCountries;
+
+    private boolean requiredPermissionGranted = false;
 
     private ArrayList<View> uiElementsToAnimateInS1;
     private ArrayList<View> uiElementsToAnimateInS2;
 
-    public DataStore.DataRequestCallback carssDataRequestCallback = new DataStore.DataRequestCallback() {
-        @Override
-        public void onDataReady(ServerResult result, boolean success) {
-            if (success) {
-                ArrayList<Car> orders;
-                try {
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    };
 
     public PartnerِAddCarFragment() {
         // Required empty public constructor
@@ -146,7 +168,7 @@ public class PartnerِAddCarFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init();
-        DataStore.getInstance().getPartnerCars(carssDataRequestCallback);
+        updateViews();
         moveToStage(0);
     }
 
@@ -218,10 +240,118 @@ public class PartnerِAddCarFragment extends Fragment {
 
             }
         }
+
+        // image pickers
+        imagePicker = new ImagePicker(this);
+        imagePicker.setImagePickerCallback(new ImagePickerCallback() {
+                                               @Override
+                                               public void onImagesChosen(List<ChosenImage> images) {
+                                                   // Display images
+                                                   if (images != null
+                                                           && images.size() > 0) {
+                                                       selectedProfileImagePath = images.get(0).getThumbnailSmallPath();
+                                                       Glide.with(getActivity()).load(Uri.fromFile(new File(selectedProfileImagePath))).into(itemImage);
+                                                   }
+                                               }
+
+                                               @Override
+                                               public void onError(String message) {
+                                                   // Do error handling
+                                               }
+                                           }
+        );
+
+        cameraImagePicker = new CameraImagePicker(this);
+        cameraImagePicker.setImagePickerCallback(new ImagePickerCallback(){
+                                                     @Override
+                                                     public void onImagesChosen(List<ChosenImage> images) {
+                                                         // Display images
+                                                         if (images != null
+                                                                 && images.size() > 0) {
+                                                             selectedProfileImagePath = images.get(0).getThumbnailSmallPath();
+                                                             Glide.with(getActivity()).load(Uri.fromFile(new File(selectedProfileImagePath))).into(itemImage);
+                                                         }
+                                                     }
+
+                                                     @Override
+                                                     public void onError(String message) {
+                                                         // Do error handling
+                                                     }
+                                                 }
+        );
+
+        checkForPermission();
+
+        arrayCountries = DataStore.getInstance().getCountries();
     }
+
+    private void updateViews() {
+        if(monthlyPrice > 0)
+            tvPriceMonthly.setText(String.valueOf(monthlyPrice));
+        else
+            tvPriceMonthly.setText("-");
+
+        if(weeklyPrice > 0)
+            tvPriceWeekly.setText(String.valueOf(weeklyPrice));
+        else
+            tvPriceWeekly.setText("-");
+
+        if(dailyPrice > 0)
+            tvPriceDaily.setText(String.valueOf(dailyPrice));
+        else
+            tvPriceDaily.setText("-");
+
+        if(hourlyPrice > 0)
+            tvPriceHourly.setText(String.valueOf(hourlyPrice));
+        else
+            tvPriceHourly.setText("-");
+
+        if(selectedCountry != null)
+            tvSelectedCountry.setText(selectedCountry.getEnglishName());
+
+        if(selectedCity != null)
+            tvSelectedCity.setText(selectedCity.getEnglishName());
+    }
+
     private void attempMoveToStage2(){
         //validate data has been collected
+        String arName = etArabicName.getText().toString();
+        String enName = etEnglishName.getText().toString();
+        collectCarOptions();
+
+        if (monthlyPrice <= 0 || weeklyPrice <= 0 || dailyPrice <= 0 || hourlyPrice<= 0){
+            TapApp.toast(getString(R.string.add_car_price_not_set));
+            return;
+        }
+
+        if (arName == null || arName.isEmpty() || enName == null || enName.isEmpty()){
+            TapApp.toast(getString(R.string.add_car_name_not_set));
+            return;
+        }
+
+        if (selectedCountry == null) {
+            TapApp.toast(getString(R.string.add_car_info_not_set));
+            return;
+        }
+
+        if (selectedCity == null) {
+            TapApp.toast(getString(R.string.add_car_info_not_set));
+            return;
+        }
+
         moveToStage(1);
+    }
+
+    private void attempCreateCar(){
+        ArrayList<Category> categories = DataCacheProvider.getInstance().getStoredCategoriesArray();
+        if(categories != null && categories.size() > 0){
+            Category carsCategory = categories.get(0);
+            if(carsCategory.getFields().size() != arrayOptionsIds.size()) {
+                TapApp.toast(getString(R.string.add_car_info_not_set));
+                return;
+            }
+        }
+
     }
 
     private void moveToStage(int index){
@@ -230,14 +360,14 @@ public class PartnerِAddCarFragment extends Fragment {
             stage2Contentlayout.setVisibility(View.GONE);
             if (uiElementsToAnimateInS1 != null) {
                 for (int i = 0; i < uiElementsToAnimateInS1.size(); i++) {
-                    animateViewIn(uiElementsToAnimateInS1.get(i), ((i + 1) * 90));
+                    animateViewIn(uiElementsToAnimateInS1.get(i), ((i + 1) * 60));
                 }
             }
         } else {
             // hide views of stage 1
             if (uiElementsToAnimateInS1 != null) {
                 for (int i = uiElementsToAnimateInS1.size()-1; i >= 0; i--) {
-                    animateViewOut(uiElementsToAnimateInS1.get(i), ((i + 1) * 90));
+                    animateViewOut(uiElementsToAnimateInS1.get(i), ((i + 1) * 60));
                 }
             }
             // show views of stage 2 after a delay
@@ -254,8 +384,38 @@ public class PartnerِAddCarFragment extends Fragment {
                     }
                 }
             },1500);
-
         }
+    }
+
+    private void openImagePicker() {
+
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
+                .title("Edit Your Profile Image")
+                .content("Where do you want to get your new profile picture from?")
+                .positiveText("Gallery")
+                .negativeText("Camera")
+                .neutralText(android.R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        imagePicker.pickImage();
+                    }
+                })
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        cameraImagePicker.pickImage();
+                    }
+                });
+
+        MaterialDialog dialog = builder.build();
+        dialog.show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -272,6 +432,47 @@ public class PartnerِAddCarFragment extends Fragment {
         }
     }
 
+    private void collectCarOptions() {
+        categoryOptionsIds = "";
+        arrayOptionsIds = new ArrayList<>();
+
+        StringBuilder optionsIds = new StringBuilder();
+        Iterator it = filterTypeViews.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+
+            FilterTypeView parentFilterTypeView = (FilterTypeView) pair.getKey();
+
+            if (pair.getValue() == null) {
+                if (parentFilterTypeView.getSelectedItem() != null) {
+                    optionsIds.append(parentFilterTypeView.getSelectedItem().second);
+                    optionsIds.append(",");
+                    arrayOptionsIds.add(parentFilterTypeView.getSelectedItem().second);
+                }
+            } else {
+                if (parentFilterTypeView.getSelectedItem() != null) {
+                    optionsIds.append(parentFilterTypeView.getSelectedItem().second);
+                    optionsIds.append(",");
+                    arrayOptionsIds.add(parentFilterTypeView.getSelectedItem().second);
+                }
+
+                ArrayList<FilterTypeView> values = filterTypeViews.get(parentFilterTypeView);
+                for (FilterTypeView filterTypeView : values) {
+                    if (filterTypeView.getSelectedItem() != null) {
+                        optionsIds.append(filterTypeView.getSelectedItem().second);
+                        optionsIds.append(",");
+                        arrayOptionsIds.add(parentFilterTypeView.getSelectedItem().second);
+                    }
+                }
+            }
+        }
+
+        if (optionsIds.length() > 0) {
+            categoryOptionsIds = optionsIds.toString().substring(0, optionsIds.toString().length() - 1);
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -281,30 +482,136 @@ public class PartnerِAddCarFragment extends Fragment {
     // animate views
     private void animateViewIn(View v, int delay) {
         v.setAlpha(0);
-        ViewAnimator.animate(v).startDelay(delay).dp().translationY(60, 0).alpha(0, 1).duration(400)
-                .interpolator(new OvershootInterpolator(0.9f))
+        ViewAnimator.animate(v).startDelay(delay).dp().translationY(50, 0).alpha(0, 1).duration(350)
+                .interpolator(new OvershootInterpolator(4f))
                 .start();
     }
 
     private void animateViewOut(View v, int delay) {
-        ViewAnimator.animate(v).startDelay(delay).dp().translationY(0, 60).alpha(1, 0).duration(400)
-                .interpolator(new OvershootInterpolator(0.9f))
+        ViewAnimator.animate(v).startDelay(delay).dp().translationY(0, 50).alpha(1, 0).duration(300)
+                .interpolator(new OvershootInterpolator(4f))
                 .start();
     }
 
     private void pickCity() {
+        if (selectedCountry == null) {
+            pickCountry();
+            return;
+        }
 
+        String diagTitle = getString(R.string.add_car_city);
+
+        ArrayList<String> data = new ArrayList<>();
+        for (int i = 0; i < selectedCountry.getCities().size(); i++) {
+            data.add(selectedCountry.getCities().get(i).getEnglishName());
+        }
+
+        new MaterialDialog.Builder(getContext())
+                .title(diagTitle)
+                .items(data)
+                .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        selectedCity = selectedCountry.getCities().get(which);
+                        updateViews();
+                        return true;
+                    }
+                })
+                .positiveText("Choose")
+                .show();
     }
 
     private void pickCountry() {
+        String diagTitle = getString(R.string.add_car_country);
+
+        ArrayList<String> data = new ArrayList<>();
+        for (int i = 0; i < arrayCountries.size(); i++) {
+            data.add(arrayCountries.get(i).getEnglishName());
+        }
+
+        new MaterialDialog.Builder(getContext())
+                .title(diagTitle)
+                .items(data)
+                .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        selectedCountry = arrayCountries.get(which);
+                        updateViews();
+                        return true;
+                    }
+                })
+                .positiveText("Choose")
+                .show();
+    }
+
+    private void pickPricing(final PRICING_TYPE pricingType) {
+
+        String diagTitle = "";
+
+        ArrayList<String> data = new ArrayList<String>();
+        int maxPrice = MAX_PRICE;
+        for (int i = 1; i < maxPrice; i++) {
+            data.add(Integer.toString(i));
+        }
+
+        new MaterialDialog.Builder(getContext())
+                .title(diagTitle)
+                .items(data)
+                .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+
+                        if (text != null) {
+                            float value = Float.valueOf(String.valueOf(text));
+                            switch (pricingType){
+                                case MONTHLY:
+                                    monthlyPrice = value;
+                                    break;
+                                case WEEKLY:
+                                    weeklyPrice = value;
+                                    break;
+                                case DAILY:
+                                    dailyPrice = value;
+                                    break;
+                                case HOURLY:
+                                    hourlyPrice = value;
+                                    break;
+                            }
+                        }
+                        updateViews();
+                        return true;
+                    }
+                })
+                .positiveText("Choose")
+                .show();
+    }
+
+    private void checkForPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                //File write logic here
+                requiredPermissionGranted = true;
+                return;
+            } else {
+                getActivity().requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+        } else {
+            requiredPermissionGranted = true;
+        }
 
     }
 
-    private void pickPricing(PRICING_TYPE pricingType) {
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Picker.PICK_IMAGE_DEVICE) {
+            imagePicker.submit(data);
+        } else if (requestCode == Picker.PICK_IMAGE_CAMERA) {
+            cameraImagePicker.submit(data);
+        }
     }
 
-    @OnClick({R.id.btnHourly,R.id.btnDaily,R.id.btnWeekly,R.id.btnMonthly,R.id.btnNext,R.id.btnFinish,R.id.vCityInfo,R.id.vCountryInfo})
+    @OnClick({R.id.btnHourly,R.id.btnDaily,R.id.btnWeekly,R.id.btnMonthly,R.id.btnNext,R.id.btnFinish,R.id.vCityInfo,R.id.vCountryInfo, R.id.item_image})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.vCityInfo:
@@ -329,6 +636,10 @@ public class PartnerِAddCarFragment extends Fragment {
                 attempMoveToStage2();
                 break;
             case R.id.btnFinish:
+                attempCreateCar();
+                break;
+            case R.id.item_image:
+                openImagePicker();
                 break;
         }
     }

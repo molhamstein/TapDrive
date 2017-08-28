@@ -199,21 +199,21 @@ public class DataStore {
      * @param email
      * @param callback
      */
-    public void attemptSignUp(final String email,final String password,final String fullName,
-                              final String phone,final String gender,final String birthday,
-                              final String countryId,final String socialId,final String socialPlatform,
+    public void attemptSignUp(final String email, final String password, final String fullName,
+                              final String phone, final String gender, final String birthday,
+                              final String countryId, final String socialId, final String socialPlatform,
                               final DataRequestCallback callback) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.registerUser(email,password,fullName,phone,gender,birthday,countryId,socialId,socialPlatform);
+                ServerResult result = serverHandler.registerUser(email, password, fullName, phone, gender, birthday, countryId, socialId, socialPlatform);
                 if (result.connectionFailed()) {
                     success = false;
                 } else {
                     try {
-                        if(result.isValid()){
+                        if (result.isValid()) {
                             UserModel me = (UserModel) result.getPairs().get("appUser");
                             apiAccessToken = me.getToken();
                             setApiAccessToken(apiAccessToken);
@@ -230,20 +230,20 @@ public class DataStore {
     }
 
     public void updateUserInfo(final String email, final String fullName,
-                              final String phone,final String gender,final String birthday,
-                              final String countryId,final String filePath,
-                              final DataRequestCallback callback) {
+                               final String phone, final String gender, final String birthday,
+                               final String countryId, final String filePath,
+                               final DataRequestCallback callback) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.updateUser(email,fullName,phone,gender,birthday,countryId,filePath);
+                ServerResult result = serverHandler.updateUser(email, fullName, phone, gender, birthday, countryId, filePath);
                 if (result.connectionFailed()) {
                     success = false;
                 } else {
                     try {
-                        if(result.isValid()){
+                        if (result.isValid()) {
                             UserModel me = (UserModel) result.getPairs().get("appUser");
                             apiAccessToken = me.getToken();
                             setApiAccessToken(apiAccessToken);
@@ -260,19 +260,43 @@ public class DataStore {
     }
 
     public void bookItem(final String startDate, final String endDate,
-                              final String itemId, final String partnerId,
-                              final DataRequestCallback callback) {
+                         final String itemId, final String partnerId,
+                         final DataRequestCallback callback) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.bookItem(startDate,endDate,itemId,partnerId);
+                ServerResult result = serverHandler.bookItem(startDate, endDate, itemId, partnerId);
                 if (result.connectionFailed()) {
                     success = false;
                 } else {
                     try {
-                        if(result.isValid()){
+                        if (result.isValid()) {
+
+                        }
+                    } catch (Exception e) {
+                        success = false;
+                    }
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void changeItemStatus(final int orderId, final String status,
+                                 final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.changeItemStatus(orderId, status);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                    try {
+                        if (result.isValid()) {
 
                         }
                     } catch (Exception e) {
@@ -300,12 +324,29 @@ public class DataStore {
         }).start();
     }
 
+    public void attemptForgetPartnerPassword(final String email, final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.forgetPartnerPassword(email);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     /**
      * attempting login using phone number
      *
      * @param email
      */
-    public void attemptLogin(final String email,final String password, final String name, final String socialId,final String socialPlatform, final DataRequestCallback callback) {
+
+    public void attemptLogin(final String email, final String password, final String name, final String socialId, final String socialPlatform, final DataRequestCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -327,12 +368,12 @@ public class DataStore {
         }).start();
     }
 
-    public void attemptPartnerLogin(final String email,final String password,final String socialId,final String socialPlatform, final DataRequestCallback callback) {
+    public void attemptPartnerLogin(final String email, final String password, final String socialId, final String socialPlatform, final DataRequestCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.partnerLogin(email,password,socialId,socialPlatform);
+                ServerResult result = serverHandler.partnerLogin(email, password, socialId, socialPlatform);
                 if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {
@@ -395,7 +436,6 @@ public class DataStore {
             }
         }).start();
     }
-
 
 
     //--------------------
@@ -517,7 +557,7 @@ public class DataStore {
 
     public void setFirstRun(boolean firstRun) {
         isFirstRun = firstRun;
-        DataCacheProvider.getInstance().storeIntWithKey(DataCacheProvider.KEY_APP_IS_FIRST_RUNN, firstRun?0:1);
+        DataCacheProvider.getInstance().storeIntWithKey(DataCacheProvider.KEY_APP_IS_FIRST_RUNN, firstRun ? 0 : 1);
     }
 
     public ArrayList<AppCarBrand> getBrands() {
@@ -568,6 +608,10 @@ public class DataStore {
         DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_COUNTRIES, countries);
     }
 
+    public ArrayList<Country> getCountries(){
+        return DataCacheProvider.getInstance().getStoredArrayWithKey(DataCacheProvider.KEY_APP_COUNTRIES, new TypeToken<ArrayList<Country>>() {}.getType());
+    }
+
     public void setApiAccessToken(String apiAccessToken) {
         this.apiAccessToken = apiAccessToken;
         DataCacheProvider.getInstance().storeStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN, apiAccessToken);
@@ -594,7 +638,9 @@ public class DataStore {
 
     public interface DataStoreUpdateListener {
         void onDataStoreUpdate();
+
         void onUserLocationUpdate();
+
         void onNewEventNotificationsAvailable();
 
         void onLoginStateChange();

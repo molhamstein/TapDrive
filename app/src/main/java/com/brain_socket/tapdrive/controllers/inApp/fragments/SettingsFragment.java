@@ -32,8 +32,6 @@ public class SettingsFragment extends Fragment {
     RelativeLayout termsOfServiceButton;
     @BindView(R.id.ivLogo)
     ImageView ivLogo;
-    @BindView(R.id.ivName)
-    ImageView ivName;
     Unbinder unbinder;
 
     public SettingsFragment() {

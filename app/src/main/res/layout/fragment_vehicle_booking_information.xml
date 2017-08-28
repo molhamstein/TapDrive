@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
@@ -50,7 +51,7 @@
                 android:layout_margin="5dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/temp_pic"
+                android:src="@drawable/default_item"
                 app:corner_radius="5dp" />
 
             <LinearLayout

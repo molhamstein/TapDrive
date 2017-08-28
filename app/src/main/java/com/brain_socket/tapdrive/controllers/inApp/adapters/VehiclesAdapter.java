@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.viewHolders.VehicleItemViewHolder;
+import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
 import com.brain_socket.tapdrive.model.partner.Car;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 

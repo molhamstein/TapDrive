@@ -53,6 +53,12 @@ public class VehicleItemViewHolder extends RecyclerView.ViewHolder {
                 EventBus.getDefault().post(new BookVehicleButtonClicked(car));
             }
         });
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new BookVehicleButtonClicked(car));
+            }
+        });
         itemDriveNowButton.setVisibility(enableClickButton ? View.VISIBLE : View.GONE);
     }
 

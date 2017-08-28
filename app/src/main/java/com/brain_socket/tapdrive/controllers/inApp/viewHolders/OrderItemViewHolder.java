@@ -8,9 +8,14 @@ import android.view.View;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
+import com.brain_socket.tapdrive.data.DataStore;
+import com.brain_socket.tapdrive.data.ServerResult;
+import com.brain_socket.tapdrive.delegates.OrderUpdatedEvent;
 import com.brain_socket.tapdrive.model.orders.Order;
 import com.brain_socket.tapdrive.utils.Helpers;
 import com.bumptech.glide.Glide;
+
+import org.greenrobot.eventbus.EventBus;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -51,7 +56,7 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
         this.context = context;
     }
 
-    public void bind(Order order) {
+    public void bind(final Order order, boolean isPartner, final int position) {
 
         Glide.with(context).load(order.getItem().getPhoto()).into(itemImage);
         itemName.setText(order.getItem().getEnglishName());
@@ -64,8 +69,26 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
 
         timeFromTextView.setText("From: " + Helpers.getFormattedDateString(order.getStartDate()));
         timeToTextView.setText("To: " + Helpers.getFormattedDateString(order.getEndDate()));
-        Glide.with(context).load(order.getUser().getPhoto()).into(userImageView);
 
+        Glide.with(context).load(order.getUser().getPhoto()).into(userImageView);
+        userName.setText(order.getUser().getUsername());
+
+        if (isPartner) {
+            itemStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DataStore.getInstance().changeItemStatus(Integer.parseInt(order.getId()), order.getStatus(), new DataStore.DataRequestCallback() {
+                        @Override
+                        public void onDataReady(ServerResult result, boolean success) {
+                            if (result.getPairs().containsKey("order")) {
+                                Order updatedOrder = (Order) result.get("order");
+                                EventBus.getDefault().post(new OrderUpdatedEvent(updatedOrder, position));
+                            }
+                        }
+                    });
+                }
+            });
+        }
 
     }
 

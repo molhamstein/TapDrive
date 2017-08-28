@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,8 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.customViews.EditTextCustomFont;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
@@ -29,6 +32,7 @@ import com.brain_socket.tapdrive.delegates.PermissionGrantedEvent;
 import com.brain_socket.tapdrive.model.user.UserModel;
 import com.bumptech.glide.Glide;
 import com.hbb20.CountryCodePicker;
+import com.kbeanie.multipicker.api.CameraImagePicker;
 import com.kbeanie.multipicker.api.ImagePicker;
 import com.kbeanie.multipicker.api.Picker;
 import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
@@ -90,6 +94,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     private UserModel me;
 
     private ImagePicker imagePicker;
+    private CameraImagePicker cameraImagePicker;
     private String selectedProfileImagePath;
 
     private boolean requiredPermissionGranted = false;
@@ -115,8 +120,8 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
 
         if (uiElements == null) uiElements = new ArrayList<View>();
-        uiElements.add(editIcon);
         uiElements.add(userProfileImage);
+        uiElements.add(editIcon);
         uiElements.add(userNameEditText);
         uiElements.add(userEmailEditText);
         uiElements.add(phoneLayout);
@@ -128,6 +133,25 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
         imagePicker = new ImagePicker(ProfileFragment.this);
         imagePicker.setImagePickerCallback(new ImagePickerCallback() {
+                                               @Override
+                                               public void onImagesChosen(List<ChosenImage> images) {
+                                                   // Display images
+                                                   if (images != null
+                                                           && images.size() > 0) {
+                                                       selectedProfileImagePath = images.get(0).getThumbnailSmallPath();
+                                                       Glide.with(getActivity()).load(Uri.fromFile(new File(selectedProfileImagePath))).into(userProfileImage);
+                                                   }
+                                               }
+
+                                               @Override
+                                               public void onError(String message) {
+                                                   // Do error handling
+                                               }
+                                           }
+        );
+
+        cameraImagePicker = new CameraImagePicker(ProfileFragment.this);
+        cameraImagePicker.setImagePickerCallback(new ImagePickerCallback(){
                                                @Override
                                                public void onImagesChosen(List<ChosenImage> images) {
                                                    // Display images
@@ -295,12 +319,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                         checkForPermission();
                     }
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-
-                    }
-                })
+                .setNegativeButton(android.R.string.no, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
 
@@ -308,8 +327,33 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
     private void openImagePicker() {
 
-        imagePicker.pickImage();
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
+                .title("Edit Your Profile Image")
+                .content("Where do you want to get your new profile picture from?")
+                .positiveText("Gallery")
+                .negativeText("Camera")
+                .neutralText(android.R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        imagePicker.pickImage();
+                    }
+                })
+                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        cameraImagePicker.pickImage();
+                    }
+                });
 
+        MaterialDialog dialog = builder.build();
+        dialog.show();
     }
 
     private void changeSelectedGender(Gender gen) {
@@ -346,6 +390,8 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Picker.PICK_IMAGE_DEVICE) {
             imagePicker.submit(data);
+        } else if (requestCode == Picker.PICK_IMAGE_CAMERA) {
+            cameraImagePicker.submit(data);
         }
     }
 

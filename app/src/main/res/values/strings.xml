@@ -153,5 +153,6 @@
     <string name="settings_language">Language</string>
     <string name="settings_terms_of_service">Terms of service</string>
     <string name="logout_confirmation">Are you sure you want to logout?</string>
+    <string name="please_login_hint">Please login first</string>
 
 </resources>

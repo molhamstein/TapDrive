@@ -20,20 +20,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appyvet.rangebar.RangeBar;
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.InnerForgetPasswordFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.InnerLoginFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerCarsFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerInvoicesFragment;
-import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerLoginFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerِAddCarFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PaymentFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
@@ -42,7 +49,6 @@ import com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment
 import com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation;
 import com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen;
 import com.brain_socket.tapdrive.customViews.FilterTypeView;
-import com.brain_socket.tapdrive.customViews.RoundedImageView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.data.DataStore;
@@ -68,6 +74,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, DataStore.DataStoreUpdateListener {
 
@@ -87,6 +95,8 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     View rlMainContent;
     Toolbar toolbar;
+    FrameLayout mainFragmentContainer;
+    RelativeLayout.LayoutParams fragmentMainContainerLayoutParams;
 
     View filtersView;
     ImageView toggleFiltersButton;
@@ -99,6 +109,8 @@ public class MainActivity extends AppCompatActivity
     TextViewCustomFont toolbarTitle;
     ImageView toolbarLogo;
     TextViewCustomFont logoutButton;
+    TextViewCustomFont partnerQuestionButton;
+    ImageView headerLogoImageView;
 
     UserModel me;
 
@@ -106,6 +118,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        DataStore.getInstance().addUpdateBroadcastListener(this);
         init();
         showMap();
     }
@@ -145,6 +158,11 @@ public class MainActivity extends AppCompatActivity
         toolbarLogo = (ImageView) findViewById(R.id.toolbar_logo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         rlMainContent = findViewById(R.id.rlMainContent);
+        mainFragmentContainer = (FrameLayout) findViewById(R.id.flMainFragmentContainer);
+
+        fragmentMainContainerLayoutParams = (RelativeLayout.LayoutParams) mainFragmentContainer.getLayoutParams();
+        removeMainFragmentContainerMargins();
+
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -208,8 +226,8 @@ public class MainActivity extends AppCompatActivity
                     });
                 } else {
                     //show hamburger
+                    removeMainFragmentContainerMargins();
                     toolbarTitle.setVisibility(View.GONE);
-                    toolbarLogo.setVisibility(View.VISIBLE);
                     toggleFiltersButton.setVisibility(View.VISIBLE);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                     toggle.syncState();
@@ -237,21 +255,40 @@ public class MainActivity extends AppCompatActivity
         ab.setDisplayShowTitleEnabled(false); // disable the default title element here (for centered title)
 
         View headerLayout = navigationView.getHeaderView(0);
-        RoundedImageView profilePicture = (RoundedImageView) headerLayout.findViewById(R.id.ivProfilePic);
+        CircleImageView profilePicture = (CircleImageView) headerLayout.findViewById(R.id.ivProfilePic);
         TextView userName = (TextView) headerLayout.findViewById(R.id.tvUserName);
-        TextView userType = (TextView) headerLayout.findViewById(R.id.user_type_text_view);
+        headerLogoImageView = (ImageView) headerLayout.findViewById(R.id.header_logo_image_view);
         logoutButton = (TextViewCustomFont) findViewById(R.id.btnLogout);
+        partnerQuestionButton = (TextViewCustomFont) findViewById(R.id.partner_question_button);
 
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
 
         if (me != null) {
+            userName.setVisibility(View.VISIBLE);
+            profilePicture.setVisibility(View.VISIBLE);
+            logoutButton.setVisibility(View.VISIBLE);
+
+            headerLogoImageView.setVisibility(View.GONE);
+
             userName.setText(me.getUsername());
-            Glide.with(this).load(me.getPhoto()).into(profilePicture);
+            Glide.with(getApplicationContext()).load(me.getPhoto()).into(profilePicture);
+
+            profilePicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!me.getType().equalsIgnoreCase("PARTNER")) {
+                        drawer.closeDrawer(Gravity.START);
+                        openProfileFragment();
+                    }
+                }
+            });
+
         } else {
-            profilePicture.setImageResource(R.drawable.logo_login);
+            profilePicture.setVisibility(View.GONE);
             userName.setVisibility(View.GONE);
-            userType.setVisibility(View.GONE);
             logoutButton.setVisibility(View.GONE);
+
+            headerLogoImageView.setVisibility(View.VISIBLE);
         }
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
@@ -282,17 +319,37 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        partnerQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openInnerLoginFragment(InnerLoginFragment.PARTNER_LOGIN);
+            }
+        });
+
         if (me != null) {
+
             if (me.getType().equalsIgnoreCase("PARTNER")) {
                 MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
                 menuItem.setTitle("ORDERS");
+                applyFontToMenuItem(menuItem);
+
+                MenuItem profileMenuItem = navigationViewMenu.findItem(R.id.nav_profile);
+                profileMenuItem.setVisible(false);
+
+                partnerQuestionButton.setVisibility(View.GONE);
+            } else {
+                MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
+                carsMenuItem.setVisible(false);
             }
+
         } else {
             MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_profile);
             menuItem.setTitle("LOGIN");
+            applyFontToMenuItem(menuItem);
 
             MenuItem tripsMenuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
             tripsMenuItem.setTitle("TRIPS");
+            applyFontToMenuItem(tripsMenuItem);
 
             MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
             carsMenuItem.setVisible(false);
@@ -302,6 +359,27 @@ public class MainActivity extends AppCompatActivity
         }
 
         initFiltersView();
+
+    }
+
+    private void removeMainFragmentContainerMargins() {
+
+        toolbar.setBackgroundResource(R.drawable.translucent_toolbar_background);
+        fragmentMainContainerLayoutParams.setMargins(0, 0, 0, 0);
+
+    }
+
+    private void applyMainFragmentContainerMargins() {
+
+        toolbar.setBackgroundResource(R.drawable.black_toolbar_background);
+
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+
+        fragmentMainContainerLayoutParams.setMargins(0, actionBarHeight, 0, 0);
 
     }
 
@@ -324,43 +402,45 @@ public class MainActivity extends AppCompatActivity
         filterTypesHolder = (LinearLayout) findViewById(R.id.filter_types_layout);
         ArrayList<Category> categories = DataCacheProvider.getInstance().getStoredCategoriesArray();
 
-        for (Category category : categories) {
-            for (CategoryField categoryField : category.getFields()) {
+        if (categories != null) {
+            for (Category category : categories) {
+                for (CategoryField categoryField : category.getFields()) {
 
-                if (categoryField.getParentFieldId().equalsIgnoreCase("0")) {
+                    if (categoryField.getParentFieldId().equalsIgnoreCase("0")) {
 
-                    FilterTypeView filterTypeView = new FilterTypeView(this, categoryField);
-                    filterTypesHolder.addView(filterTypeView);
-                    filterTypesHolder.requestLayout();
+                        FilterTypeView filterTypeView = new FilterTypeView(this, categoryField);
+                        filterTypesHolder.addView(filterTypeView);
+                        filterTypesHolder.requestLayout();
 
-                    filterTypeViews.put(filterTypeView, null);
+                        filterTypeViews.put(filterTypeView, null);
 
-                } else {
+                    } else {
 
-                    FilterTypeView filterTypeView = new FilterTypeView(this, categoryField, true);
-                    filterTypesHolder.addView(filterTypeView);
-                    filterTypesHolder.requestLayout();
+                        FilterTypeView filterTypeView = new FilterTypeView(this, categoryField, true);
+                        filterTypesHolder.addView(filterTypeView);
+                        filterTypesHolder.requestLayout();
 
-                    Iterator it = filterTypeViews.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry pair = (Map.Entry) it.next();
+                        Iterator it = filterTypeViews.entrySet().iterator();
+                        while (it.hasNext()) {
+                            Map.Entry pair = (Map.Entry) it.next();
 
-                        FilterTypeView parentFilterTypeView = (FilterTypeView) pair.getKey();
-                        if (parentFilterTypeView.getCategoryField().getId().equalsIgnoreCase(filterTypeView.getCategoryField().getParentFieldId())) {
-                            if (pair.getValue() == null) {
-                                ArrayList<FilterTypeView> values = new ArrayList<>();
-                                values.add(filterTypeView);
-                                filterTypeViews.put(parentFilterTypeView, values);
-                            } else {
-                                ArrayList<FilterTypeView> values = filterTypeViews.get(parentFilterTypeView);
-                                values.add(filterTypeView);
-                                filterTypeViews.put(parentFilterTypeView, values);
+                            FilterTypeView parentFilterTypeView = (FilterTypeView) pair.getKey();
+                            if (parentFilterTypeView.getCategoryField().getId().equalsIgnoreCase(filterTypeView.getCategoryField().getParentFieldId())) {
+                                if (pair.getValue() == null) {
+                                    ArrayList<FilterTypeView> values = new ArrayList<>();
+                                    values.add(filterTypeView);
+                                    filterTypeViews.put(parentFilterTypeView, values);
+                                } else {
+                                    ArrayList<FilterTypeView> values = filterTypeViews.get(parentFilterTypeView);
+                                    values.add(filterTypeView);
+                                    filterTypeViews.put(parentFilterTypeView, values);
+                                }
                             }
                         }
+
                     }
 
                 }
-
             }
         }
 
@@ -553,7 +633,7 @@ public class MainActivity extends AppCompatActivity
             });
             animator.start();
 
-            toggleFiltersButton.setBackgroundColor(Color.parseColor("#2b2b2b"));
+            toggleFiltersButton.setBackgroundColor(Color.TRANSPARENT);
             toggleFiltersButton.setColorFilter(Color.parseColor("#ededed"));
             isFiltersOpen = false;
         }
@@ -570,12 +650,21 @@ public class MainActivity extends AppCompatActivity
             if (me != null) {
                 openProfileFragment();
             } else {
-                openPartnerLoginFragment();
+                openInnerLoginFragment(InnerLoginFragment.USER_LOGIN);
             }
         } else if (id == R.id.nav_notifications) {
-            openNotificationsScreen();
+            if (me != null) {
+                openNotificationsScreen();
+            } else {
+                Toast.makeText(this, R.string.please_login_hint, Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.nav_trip_history) {
-            openTripHistoryScreen();
+
+            if (me != null) {
+                openTripHistoryScreen();
+            } else {
+                Toast.makeText(this, R.string.please_login_hint, Toast.LENGTH_SHORT).show();
+            }
         } else if (id == R.id.nav_partner_cars) {
             openPartnerCarsScreen();
         } else if (id == R.id.nav_partner_invoices) {
@@ -624,35 +713,70 @@ public class MainActivity extends AppCompatActivity
 
     private void openBookingInformationScreen(Car car) {
 
+        applyMainFragmentContainerMargins();
+
         fragmentManager = getSupportFragmentManager();
         VehicleBookingInformation vehicleBookingInformation = VehicleBookingInformation.newInstance(car);
         fragment = vehicleBookingInformation;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_BOOKING_INFORMATION_FRAG)
                 .addToBackStack(TAG_BOOKING_INFORMATION_FRAG)
                 .commit();
 
     }
 
-    private void openPartnerLoginFragment() {
+    private void openInnerLoginFragment(int screenType) {
 
-        toolbarLogo.setVisibility(View.GONE);
+        applyMainFragmentContainerMargins();
+
+        drawer.closeDrawer(GravityCompat.START);
+
         toolbarTitle.setText("PARTNER LOGIN");
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
-        PartnerLoginFragment partnerLoginFragment = new PartnerLoginFragment();
-        fragment = partnerLoginFragment;
+        InnerLoginFragment innerLoginFragment = InnerLoginFragment.newInstance(screenType);
+        fragment = innerLoginFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PARTNER_LOGIN_FRAG)
                 .addToBackStack(TAG_PARTNER_LOGIN_FRAG)
                 .commit();
 
     }
 
+    public void openInnerForgetPasswordScreen(int screenType) {
+
+        applyMainFragmentContainerMargins();
+
+        toolbarTitle.setText("Forget Password");
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        InnerForgetPasswordFragment innerForgetPasswordFragment = InnerForgetPasswordFragment.newInstance(screenType);
+        fragment = innerForgetPasswordFragment;
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
+                .add(R.id.flMainFragmentContainer, fragment, TAG_PAYMENT_FRAG)
+                .addToBackStack(TAG_PAYMENT_FRAG)
+                .commit();
+
+    }
+
     private void openNotificationsScreen() {
 
-        toolbarLogo.setVisibility(View.GONE);
+        applyMainFragmentContainerMargins();
+
         toolbarTitle.setText(R.string.notifications_screen_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
@@ -660,6 +784,10 @@ public class MainActivity extends AppCompatActivity
         TripHistoryFragment tripHistoryFragment = TripHistoryFragment.newInstance(TripHistoryFragment.NOTIFICATIONS_SCREEN_TYPE);
         fragment = tripHistoryFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_NOTIFICATIONS_FRAG)
                 .addToBackStack(TAG_NOTIFICATIONS_FRAG)
                 .commit();
@@ -668,10 +796,16 @@ public class MainActivity extends AppCompatActivity
 
     public void openPaymentScreen(HashMap<String, Pair<Integer, Float>> bookingDetailsHashMap, Car item, String startDate, String endDate) {
 
+        applyMainFragmentContainerMargins();
+
         fragmentManager = getSupportFragmentManager();
         PaymentFragment paymentFragment = PaymentFragment.newInstance(bookingDetailsHashMap, item, startDate, endDate);
         fragment = paymentFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PAYMENT_FRAG)
                 .addToBackStack(TAG_PAYMENT_FRAG)
                 .commit();
@@ -680,14 +814,23 @@ public class MainActivity extends AppCompatActivity
 
     private void openTripHistoryScreen() {
 
-        toolbarLogo.setVisibility(View.GONE);
-        toolbarTitle.setText(R.string.history_screen_title);
+        applyMainFragmentContainerMargins();
+
+        if (!me.getType().equalsIgnoreCase("PARTNER")) {
+            toolbarTitle.setText(R.string.history_screen_title);
+        } else {
+            toolbarTitle.setText("Orders");
+        }
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
         TripHistoryFragment tripHistoryFragment = TripHistoryFragment.newInstance(TripHistoryFragment.ORDERS_SCREEN_TYPE);
         fragment = tripHistoryFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_TRIP_HISTORY_FRAG)
                 .addToBackStack(TAG_TRIP_HISTORY_FRAG)
                 .commit();
@@ -695,6 +838,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void openPartnerCarsScreen() {
+
+        applyMainFragmentContainerMargins();
 
         toolbarLogo.setVisibility(View.GONE);
         toolbarTitle.setText(R.string.cars_screen_title);
@@ -704,6 +849,10 @@ public class MainActivity extends AppCompatActivity
         PartnerِAddCarFragment carsFragment = PartnerِAddCarFragment.newInstance();
         fragment = carsFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_CARS_FRAG)
                 .addToBackStack(TAG_CARS_FRAG)
                 .commit();
@@ -726,7 +875,8 @@ public class MainActivity extends AppCompatActivity
 
     private void openSettingsScreen() {
 
-        toolbarLogo.setVisibility(View.GONE);
+        applyMainFragmentContainerMargins();
+
         toolbarTitle.setText(R.string.settings_screen_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
@@ -734,6 +884,10 @@ public class MainActivity extends AppCompatActivity
         SettingsFragment settingsFragment = new SettingsFragment();
         fragment = settingsFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_SETTINGS_FRAG)
                 .addToBackStack(TAG_SETTINGS_FRAG)
                 .commit();
@@ -742,7 +896,8 @@ public class MainActivity extends AppCompatActivity
 
     private void openProfileFragment() {
 
-        toolbarLogo.setVisibility(View.GONE);
+        applyMainFragmentContainerMargins();
+
         toolbarTitle.setText("Profile");
         toolbarTitle.setVisibility(View.VISIBLE);
 
@@ -750,6 +905,10 @@ public class MainActivity extends AppCompatActivity
         ProfileFragment profileFragment = new ProfileFragment();
         fragment = profileFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_PROFILE_FRAG)
                 .addToBackStack(TAG_PROFILE_FRAG)
                 .commit();
@@ -762,6 +921,10 @@ public class MainActivity extends AppCompatActivity
         MapFragment mapFragment = MapFragment.newInstance();
         fragment = mapFragment;
         fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_MAIN_MAP_FRAG)
                 .commit();
 
@@ -850,16 +1013,7 @@ public class MainActivity extends AppCompatActivity
     public void onLoginStateChange() {
 
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
-
-//        if (me != null) {
-//            userName.setText(me.getUsername());
-//            Glide.with(this).load(me.getPhoto()).into(profilePicture);
-//        } else {
-//            profilePicture.setImageResource(R.drawable.logo_login);
-//            userName.setVisibility(View.GONE);
-//            userType.setVisibility(View.GONE);
-//            logoutButton.setVisibility(View.GONE);
-//        }
+        init();
 
     }
 }

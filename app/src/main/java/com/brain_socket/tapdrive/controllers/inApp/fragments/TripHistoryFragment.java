@@ -15,12 +15,15 @@ import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.adapters.OrdersAdapter;
 import com.brain_socket.tapdrive.controllers.inApp.adapters.ServerNotificationsAdapter;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
+import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.model.orders.Order;
 import com.brain_socket.tapdrive.model.orders.ServerNotification;
+import com.brain_socket.tapdrive.model.user.UserModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +47,8 @@ public class TripHistoryFragment extends Fragment {
     ServerNotificationsAdapter serverNotificationsAdapter;
     private int screenType;
 
+    private boolean isPartner = false;
+
     public TripHistoryFragment() {
         // Required empty public constructor
     }
@@ -64,6 +69,8 @@ public class TripHistoryFragment extends Fragment {
         View inflatedView = inflater.inflate(R.layout.fragment_trip_history, container, false);
         unbinder = ButterKnife.bind(this, inflatedView);
 
+        isPartner = ((UserModel) DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class)).getType().equalsIgnoreCase("PARTNER");
+
         return inflatedView;
     }
 
@@ -75,7 +82,7 @@ public class TripHistoryFragment extends Fragment {
 
             DataStore.getInstance().getOrders(ordersDataRequestCallback);
 
-            ordersAdapter = new OrdersAdapter(getActivity(), new ArrayList<Order>());
+            ordersAdapter = new OrdersAdapter(getActivity(), new ArrayList<Order>(), isPartner);
             ordersAdapter.notifyDataSetChanged();
             dataRecyclerView.setAdapter(ordersAdapter);
 
@@ -143,6 +150,8 @@ public class TripHistoryFragment extends Fragment {
         loaderView.setVisibility(View.GONE);
 
         if (serverNotifications.size() > 0) {
+            Collections.reverse(serverNotifications);
+
             serverNotificationsAdapter.setData(serverNotifications);
             serverNotificationsAdapter.notifyDataSetChanged();
         } else {

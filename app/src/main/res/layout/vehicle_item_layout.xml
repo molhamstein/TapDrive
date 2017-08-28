@@ -28,7 +28,7 @@
                 android:layout_margin="10dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/temp_pic"
+                android:src="@drawable/default_item"
                 app:corner_radius="5dp" />
 
             <LinearLayout

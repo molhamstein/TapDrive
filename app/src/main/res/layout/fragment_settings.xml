@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:orientation="vertical">
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
@@ -31,6 +32,10 @@
             android:layout_marginStart="20dp"
             android:orientation="horizontal">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
             <RadioButton
                 android:id="@+id/english_language_button"
                 android:layout_width="wrap_content"
@@ -49,9 +54,13 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginStart="15dp"
                 android:theme="@style/MyRadioButton"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:text="العربية"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_text_normal" />
+
+            </RelativeLayout>
 
         </RadioGroup>
 
@@ -99,20 +108,20 @@
         <ImageView
             android:id="@+id/ivLogo"
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerInside"
-            android:src="@drawable/splash_logo" />
+            android:src="@drawable/logo_login" />
 
-        <ImageView
-            android:id="@+id/ivName"
-            android:layout_width="wrap_content"
-            android:layout_height="55dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/splash_name"
-            android:tint="@color/app_bg" />
+        <!--<ImageView-->
+            <!--android:id="@+id/ivName"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="55dp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:scaleType="centerInside"-->
+            <!--android:src="@drawable/splash_name"-->
+            <!--android:tint="@color/app_bg" />-->
 
     </LinearLayout>
 
