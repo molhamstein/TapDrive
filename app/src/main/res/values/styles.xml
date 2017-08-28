@@ -33,4 +33,8 @@
         <item name="android:windowExitAnimation">@anim/slide_out_to_top</item>
     </style>
 
+    <style name="CalendarHeaderTextAppearance">
+        <item name="android:textColor">@color/app_theme</item>
+    </style>
+
 </resources>

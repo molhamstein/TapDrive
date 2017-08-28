@@ -11,7 +11,6 @@ import com.brain_socket.tapdrive.model.partner.Country;
 import com.brain_socket.tapdrive.model.partner.Invoice;
 import com.brain_socket.tapdrive.model.partner.Partner;
 import com.brain_socket.tapdrive.model.user.UserModel;
-import com.brain_socket.tapdrive.utils.MultipartUtility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +25,14 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class ServerAccess {
@@ -184,29 +191,55 @@ public class ServerAccess {
 
             // url
             String url = BASE_SERVICE_URL + "/users";
-            String charset = "UTF-8";
+            String results;
+            Response response;
 
-            MultipartUtility multipart = new MultipartUtility(url, charset);
-            multipart.addHeaderField("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN));
-            multipart.addFormField("email", "asdasd");
-            multipart.addFormField("full_name", fullName);
-            multipart.addFormField("phone", phone);
-            multipart.addFormField("gender", gender.toLowerCase());
-            multipart.addFormField("birthday", birthday);
-            multipart.addFormField("country_id", countryId);
-            Log.d("EYAD", "updateUser: " + filePath);
-            multipart.addFilePart("photo", new File(filePath));
-            multipart.addFormField("_method", "PUT");
-            String response = multipart.finish();
+            if (filePath != null) {
+                MediaType MEDIA_TYPE = MediaType.parse("image/jpg");
 
-            // send request
-//            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "put", null);
-//            result.setStatusCode(apiResult.getStatusCode());
-//            result.setApiError(apiResult.getApiError());
-//            JSONObject jsonResponse = apiResult.getResponseJsonObject();
-            JSONObject jsonResponse = new JSONObject(response);
+                String extension = filePath.substring(filePath.lastIndexOf(".") + 1);
+                if (extension.equalsIgnoreCase("png")) {
+                    MEDIA_TYPE = MediaType.parse("image/png");
+                }
+
+                Log.d("EYAD", "updateUser: " + filePath);
+                OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).writeTimeout(180, TimeUnit.SECONDS).readTimeout(180, TimeUnit.SECONDS).build();
+                RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart("photo", filePath, RequestBody.create(MEDIA_TYPE, new File(filePath)))
+                        .addFormDataPart("full_name", fullName)
+                        .addFormDataPart("phone", phone)
+                        .addFormDataPart("gender", gender.toLowerCase())
+                        .addFormDataPart("birthday", birthday)
+                        .addFormDataPart("country_id", countryId)
+                        .addFormDataPart("_method", "PUT")
+                        .build();
+                Request request = new Request.Builder().url(url).addHeader("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN)).post(body).build();
+                response = client.newCall(request).execute();
+                results = response.body().string();
+            } else {
+
+                Log.d("EYAD", "updateUser: " + filePath);
+                OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).writeTimeout(180, TimeUnit.SECONDS).readTimeout(180, TimeUnit.SECONDS).build();
+                RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                        .addFormDataPart("full_name", fullName)
+                        .addFormDataPart("phone", phone)
+                        .addFormDataPart("gender", gender.toLowerCase())
+                        .addFormDataPart("birthday", birthday)
+                        .addFormDataPart("country_id", countryId)
+                        .addFormDataPart("_method", "PUT")
+                        .build();
+                Request request = new Request.Builder().url(url).addHeader("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN)).post(body).build();
+                response = client.newCall(request).execute();
+                results = response.body().string();
+
+            }
+
+            result.setStatusCode(response.code());
+            result.setApiError("");
+            JSONObject jsonResponse = new JSONObject(results);
+            Log.d("EYAD", "updateUser: " + jsonResponse);
             if (jsonResponse != null) { // check if response is empty
-                me = UserModel.fromJson(jsonResponse);
+                me = UserModel.fromJson(jsonResponse.getJSONObject("data"));
             }
         } catch (Exception e) {
             //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
@@ -307,6 +340,8 @@ public class ServerAccess {
             JSONObject headers = new JSONObject();
             headers.put("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN));
 
+            Log.d("EYAD", "changeItemStatus: " + DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN));
+            Log.d("EYAD", "changeItemStatus: " + jsonPairs.toString());
 
             // url
             String url = BASE_SERVICE_URL + "/orders/change_status";
@@ -317,6 +352,8 @@ public class ServerAccess {
             result.setApiError(apiResult.getApiError());
 
             JSONObject jsonObject = apiResult.getResponseJsonObject();
+            Log.d("EYAD", "changeItemStatus: " + apiResult.getStatusCode());
+            Log.d("EYAD", "changeItemStatus: " + jsonObject);
             Order order = Order.fromJson(jsonObject);
             result.addPair("order", order);
 

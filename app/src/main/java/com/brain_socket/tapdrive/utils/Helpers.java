@@ -45,6 +45,13 @@ public class Helpers {
         return statusBarHeight;
     }
 
+    public static int getScreenHeight(Activity activity) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        return height;
+    }
+
     public static String getFormattedDateString(String unformattedDateString) {
 
         try {

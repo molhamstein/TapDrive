@@ -2,6 +2,7 @@ package com.brain_socket.tapdrive.data;
 
 import android.location.Location;
 import android.os.Handler;
+import android.util.Log;
 
 import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;
@@ -191,6 +192,17 @@ public class DataStore {
         });
     }
 
+    private void broadcastUserInfoUpdated() {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (DataStoreUpdateListener listener : updateListeners) {
+                    listener.onUserInfoUpdated();
+                }
+            }
+        });
+    }
+
     //--------------------
     // Login
     //-------------------------------------------
@@ -244,14 +256,16 @@ public class DataStore {
                 } else {
                     try {
                         if (result.isValid()) {
+                            Log.d("EYAD", "run: ");
                             UserModel me = (UserModel) result.getPairs().get("appUser");
                             apiAccessToken = me.getToken();
                             setApiAccessToken(apiAccessToken);
                             setMe(me);
-                            broadcastloginStateChange();
+                            broadcastUserInfoUpdated();
                         }
                     } catch (Exception e) {
                         success = false;
+                        e.printStackTrace();
                     }
                 }
                 invokeCallback(callback, success, result); // invoking the callback
@@ -644,6 +658,8 @@ public class DataStore {
         void onNewEventNotificationsAvailable();
 
         void onLoginStateChange();
+
+        void onUserInfoUpdated();
     }
 
     public interface DataStoreErrorListener {

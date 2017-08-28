@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -48,7 +49,7 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by Molham on 12/02/16.
  */
-public class TapApp extends Application implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class TapApp extends MultiDexApplication implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     public static final int PERMISSIONS_REQUEST_LOCATION = 33;
     private static final long oneDayMillies = 24 * 60 * 60 * 1000;
@@ -130,8 +131,8 @@ public class TapApp extends Application implements GoogleApiClient.ConnectionCal
         }
     }
 
-    public static void toast(String msg){
-        Toast.makeText(getAppContext(),msg,Toast.LENGTH_LONG).show();
+    public static void toast(String msg) {
+        Toast.makeText(getAppContext(), msg, Toast.LENGTH_LONG).show();
     }
 
     public static void displaySnackBar(String txt) {

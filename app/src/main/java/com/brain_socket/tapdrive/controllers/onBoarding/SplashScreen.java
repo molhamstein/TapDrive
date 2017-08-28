@@ -97,9 +97,10 @@ public class SplashScreen extends AppCompatActivity implements DataStore.DataReq
     public void onDataReady(ServerResult result, boolean success) {
         boolean isLoggedInUser = !DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN).equalsIgnoreCase("");
         if (success) {
-            handler.post(proceedToMainRunnable);
             if (!isLoggedInUser /*&& DataStore.getInstance().isFirstRun()*/) {
                 handler.postDelayed(proceedToIntroRunnable, 1500);
+            } else {
+                handler.post(proceedToMainRunnable);
             }
         } else {
             ArrayList<Category> categories = DataCacheProvider.getInstance().getStoredArrayWithKey(DataCacheProvider.KEY_APP_CATEGORIES, new TypeToken<Category>(){}.getType());

@@ -12,6 +12,7 @@ import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.delegates.OrderUpdatedEvent;
 import com.brain_socket.tapdrive.model.orders.Order;
+import com.brain_socket.tapdrive.model.orders.OrderStatus;
 import com.brain_socket.tapdrive.utils.Helpers;
 import com.bumptech.glide.Glide;
 
@@ -60,7 +61,7 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
 
         Glide.with(context).load(order.getItem().getPhoto()).into(itemImage);
         itemName.setText(order.getItem().getEnglishName());
-        itemStatus.setText(order.getStatus());
+
         if (!order.getTotal().equalsIgnoreCase("")) {
             totalCostTextView.setText("Total Cost: " + order.getTotal() + " AED");
         } else {
@@ -74,20 +75,30 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
         userName.setText(order.getUser().getUsername());
 
         if (isPartner) {
-            itemStatus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DataStore.getInstance().changeItemStatus(Integer.parseInt(order.getId()), order.getStatus(), new DataStore.DataRequestCallback() {
+            itemStatus.setText(OrderStatus.getInstance().getStatuses().get(order.getStatus()));
+
+            if (order.getStatus() != null) {
+                if (!order.getStatus().equalsIgnoreCase("Done")) {
+                    itemStatus.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onDataReady(ServerResult result, boolean success) {
-                            if (result.getPairs().containsKey("order")) {
-                                Order updatedOrder = (Order) result.get("order");
-                                EventBus.getDefault().post(new OrderUpdatedEvent(updatedOrder, position));
-                            }
+                        public void onClick(View v) {
+                            DataStore.getInstance().changeItemStatus(Integer.parseInt(order.getId()), order.getStatus(), new DataStore.DataRequestCallback() {
+                                @Override
+                                public void onDataReady(ServerResult result, boolean success) {
+                                    if (result.getPairs().containsKey("order")) {
+                                        Order updatedOrder = (Order) result.get("order");
+                                        EventBus.getDefault().post(new OrderUpdatedEvent(updatedOrder, position));
+                                    }
+                                }
+                            });
                         }
                     });
+                } else {
+                    itemStatus.setOnClickListener(null);
                 }
-            });
+            }
+        } else {
+            itemStatus.setText(order.getStatus());
         }
 
     }
