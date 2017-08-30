@@ -482,7 +482,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     }
 
     protected ValueAnimator valueAnimate(float accuracy,long duration, ValueAnimator.AnimatorUpdateListener updateListener){
-        Log.d( "valueAnimate: ", "called");
         ValueAnimator va = ValueAnimator.ofFloat(0,accuracy);
         va.setDuration(duration);
         va.addUpdateListener(updateListener);
