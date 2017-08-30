@@ -44,8 +44,8 @@ public class VehicleItemViewHolder extends RecyclerView.ViewHolder {
 
         Glide.with(context).load(car.getPhoto()).into(itemImage);
         itemName.setText(car.getEnglishName());
-        itemDailyPrice.setText(car.getDailyPrice() + " AED");
-        itemHourlyPrice.setText(car.getHourlyPrice() + " AED");
+        itemDailyPrice.setText(car.getDailyPrice() + context.getString(R.string.currency));
+        itemHourlyPrice.setText(car.getHourlyPrice() + context.getString(R.string.currency));
 
         itemDriveNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +60,7 @@ public class VehicleItemViewHolder extends RecyclerView.ViewHolder {
             }
         });
         itemDriveNowButton.setVisibility(enableClickButton ? View.VISIBLE : View.GONE);
+
     }
 
     public VehicleItemViewHolder(Context context, View itemView, Boolean enableButton) {

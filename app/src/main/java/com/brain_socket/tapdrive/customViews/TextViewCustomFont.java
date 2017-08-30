@@ -132,13 +132,13 @@ public class TextViewCustomFont extends TextView {
                     if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
                         fontFaceBold = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Bold.ttf");
                     } else {
-                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Bold.ttf");
+                        fontFaceBold = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Bold.ttf");
                     }
                 } else {
                     if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
                         fontFaceBold = Typeface.createFromAsset(context.getAssets(), "fonts/Montserrat-Bold.ttf");
                     } else {
-                        fontFaceRegular = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Bold.ttf");
+                        fontFaceBold = Typeface.createFromAsset(context.getAssets(), "fonts/DroidKufi-Bold.ttf");
                     }
                 }
 

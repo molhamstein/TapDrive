@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Tap&amp;Drive</string>
+    <string name="app_name">Cannan</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -41,8 +41,8 @@
     <string name="drawer_settings">الإعدادات</string>
     <string name="drawer_notifications">التنبيهات</string>
 
-    <string name="location_not_enabled_msg">Please, Enable Locations services for better results</string>
-    <string name="location_not_enabled_ok">Enable</string>
+    <string name="location_not_enabled_msg">الرجاء تشغيل خدمات الموقع للحصول على أفضل نتيجة</string>
+    <string name="location_not_enabled_ok">موافق</string>
     <string name="location_not_enabled_cancel">إلغاء</string>
 
     <!-- LoginActivity -->
@@ -60,28 +60,28 @@
     <string name="activity_login_field_required">required</string>
 
     <!-- RegisterActivity -->
-    <string name="activity_register_account_info">Account Info</string>
+    <string name="activity_register_account_info">معلومات الحساب</string>
     <string name="activity_register_hint_email">البريد الاكتروني</string>
     <string name="activity_register_hint_phone">رقم الهاتف</string>
     <string name="activity_register_hint_birth_day">المولد</string>
     <string name="activity_register_hint_password">كلمة السر</string>
     <string name="activity_register_already_have_account">لديك حساب سابقا؟</string>
     <string name="activity_register_btn_login">تسجيل الدخول</string>
-    <string name="activity_register_add_your_photo">Add your photo</string>
+    <string name="activity_register_add_your_photo">أضف صورتك</string>
     <string name="activity_register_hint_full_name">الاسم الكامل</string>
-    <string name="activity_register_hint_address">Address</string>
+    <string name="activity_register_hint_address">العنوان</string>
     <string name="activity_register_congrats">تهانينا!</string>
     <string name="activity_register_congrats_msg">يمكتك الان استعراض افضل عروض السيارات واسئجار السيارة الانسب لك</string>
     <string name="activity_register_get_started">الدخول</string>
     <string name="activity_register_field_required">required</string>
-    <string name="activity_register_login_skip">Skip</string>
+    <string name="activity_register_login_skip">تخطي</string>
     <string name="activity_register_next">التالي</string>
     <string name="activity_register_finish">تم</string>
     <string name="activity_register_male">ذكر</string>
     <string name="activity_register_female">أنثى</string>
     <string name="activity_register_step2_title">المعلومات الشخصية</string>
     <string name="activity_register_birthdate">المولد</string>
-    <string name="activity_register_email_invalid">Invalid email address</string>
+    <string name="activity_register_email_invalid">البريد الإلكتروني خاطئ</string>
 
     <!-- MainActivity -->
     <string name="activity_main_toolbar_car">Cars</string>
@@ -94,7 +94,7 @@
 
     <string name="activity_request_failed">Request fail, retry again please.</string>
 
-    <string name="activity_forget_password_desc">Enter Your Email to receive a password reset code</string>
+    <string name="activity_forget_password_desc">Enter Your Email to receive a password rreset code</string>
     <string name="activity_forget_password_email_hint">البريد الاكتروني</string>
     <string name="activity_forget_password_btn_submit">Submit</string>
     <string name="activity_forget_password_request_sent">Forget password request sent, check your mailbox.</string>
@@ -105,15 +105,15 @@
     <string name="settings_screen_title">الإعدادات</string>
     <string name="notifications_screen_title">التنبيهات</string>
     <string name="cars_screen_title">سياراتي</string>
-    <string name="payment_method">Payment method</string>
-    <string name="cash_on_delivery">Cash on Delivery</string>
-    <string name="pay_to_the_driver_when_you_get_your_car">Pay to the driver when you get your car</string>
-    <string name="months">Months</string>
-    <string name="weeks">Weeks</string>
-    <string name="days">Days</string>
-    <string name="hours">Hours</string>
-    <string name="total">Total</string>
-    <string name="book">Book</string>
+    <string name="payment_method">الدفع عن طريق</string>
+    <string name="cash_on_delivery">نقداً عند التسليم</string>
+    <string name="pay_to_the_driver_when_you_get_your_car">قم بالدفع للسائق ندما يقوم بتوصيل السيارة إليك</string>
+    <string name="months">الأشهر</string>
+    <string name="weeks">الأسابيع</string>
+    <string name="days">الأيام</string>
+    <string name="hours">الساعات</string>
+    <string name="total">الإجمالي</string>
+    <string name="book">حجز</string>
     <string name="filters_vehicle">الالية</string>
     <string name="filters_price">التكلفة</string>
     <string name="filters_apply">تطبيق</string>
@@ -122,6 +122,25 @@
     <string name="settings_language">اللغة</string>
     <string name="settings_terms_of_service">شروط الخدمة</string>
     <string name="logout_confirmation">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
-    <string name="please_login_hint">Please login first</string>
+    <string name="please_login_hint">الرجاء تسجيل الدخول أولاً</string>
+    <string name="daily_price">السعر باليوم: </string>
+    <string name="hourly_price">السعر بالساعة: </string>
+    <string name="drive_now">اطلب الآن</string>
+    <string name="total_cost">الكلفة الإجمالية: </string>
+    <string name="from">من: </string>
+    <string name="to">إلى: </string>
+    <string name="booking_information">معلومات الحجز</string>
+    <string name="vehicle_details">معلومات الآلية</string>
+    <string name="trip_details">معلومات الرحلة</string>
+    <string name="booking_from">من الساعة</string>
+    <string name="booking_to">إلى الساعة</string>
+    <string name="total_price">السعر الإجمالي</string>
+    <string name="let_s_drive">ابدأ جولتك</string>
+    <string name="booked_successfully">تم الحجز بنجاح سيتم التواصل معك للتأكيد</string>
+    <string name="currency"> درهم إماراتي</string>
+    <string name="select_booking_period">الرجاءاختيار فترة الحجز قبل المتابعة</string>
+    <string name="return_after_start">تاريخ عودتك يجب أن يكون بعد تاريخ بداية رحلتك</string>
+    <string name="return_after_start_and_before_reservation">تاريخ عودتك يجب أن يكون بعد تاريخ بداية رحلتك وقبل بداية الحجز الذي يلي حجزك</string>
+    <string name="finish">تم</string>
 
 </resources>

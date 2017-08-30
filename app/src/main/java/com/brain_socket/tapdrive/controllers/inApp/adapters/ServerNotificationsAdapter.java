@@ -33,7 +33,7 @@ public class ServerNotificationsAdapter extends RecyclerView.Adapter<RecyclerVie
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
-        View view = inflater.inflate(R.layout.order_item_layout, parent, false);
+        View view = inflater.inflate(R.layout.notifications_item_layout, parent, false);
         viewHolder = new ServerNotificationsItemViewHolder(context, view);
 
         return viewHolder;

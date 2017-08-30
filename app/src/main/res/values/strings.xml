@@ -130,5 +130,24 @@
     <string name="settings_terms_of_service">Terms of service</string>
     <string name="logout_confirmation">Are you sure you want to logout?</string>
     <string name="please_login_hint">Please login first</string>
+    <string name="daily_price">Daily Price: </string>
+    <string name="hourly_price">Hourly Price: </string>
+    <string name="drive_now">Drive Now</string>
+    <string name="total_cost">Total Cost: </string>
+    <string name="from">From: </string>
+    <string name="to">To: </string>
+    <string name="booking_information">Booking Information</string>
+    <string name="vehicle_details">Vehicle Details</string>
+    <string name="trip_details">Trip Details</string>
+    <string name="booking_from">From</string>
+    <string name="booking_to">To</string>
+    <string name="total_price">Total Price</string>
+    <string name="let_s_drive">LET\'S DRIVE</string>
+    <string name="booked_successfully">Booked successfully, will contact you shortly</string>
+    <string name="currency"> AED</string>
+    <string name="select_booking_period">Please select the booking period before you continue</string>
+    <string name="return_after_start">Your return time should be after your start time</string>
+    <string name="return_after_start_and_before_reservation">Your return time should be after your start time and before the start of the next reservation in the same day</string>
+    <string name="finish">Finish</string>
 
 </resources>

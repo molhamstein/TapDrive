@@ -23,7 +23,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="Booking Information"
+            android:text="@string/booking_information"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_title_normal"
             app:fontId="2" />
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="Vehicle Details"
+            android:text="@string/vehicle_details"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_text_normal"
             app:fontId="2" />
@@ -80,7 +80,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Daily Price: "
+                        android:text="@string/daily_price"
                         android:textColor="@color/app_bg"
                         android:textSize="@dimen/ts_text_small"
                         app:fontId="3" />
@@ -106,7 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Hourly Price: "
+                        android:text="@string/hourly_price"
                         android:textColor="@color/app_bg"
                         android:textSize="@dimen/ts_text_small"
                         app:fontId="3" />
@@ -138,7 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="Trip Details"
+            android:text="@string/trip_details"
             android:textColor="@color/black"
             android:textSize="@dimen/ts_text_normal"
             app:fontId="2" />
@@ -174,7 +174,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="From"
+                android:text="@string/booking_from"
                 android:textSize="@dimen/ts_text_normal"
                 app:fontId="3" />
 
@@ -201,7 +201,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="To"
+                android:text="@string/booking_to"
                 android:textSize="@dimen/ts_text_normal"
                 app:fontId="3" />
 
@@ -229,6 +229,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal"
+            android:layout_marginBottom="25dp"
             android:weightSum="2">
 
             <LinearLayout
@@ -241,7 +242,7 @@
                 <com.brain_socket.tapdrive.customViews.TextViewCustomFont
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Price"
+                    android:text="@string/total_price"
                     android:textSize="@dimen/ts_text_normal"
                     app:fontId="3" />
 
@@ -268,7 +269,7 @@
                 android:background="@drawable/yellow_button_background"
                 android:gravity="center"
                 android:scrollbarSize="@android:color/black"
-                android:text="LET'S DRIVE"
+                android:text="@string/let_s_drive"
                 android:textAllCaps="true"
                 android:textColor="@drawable/yellow_text_selector"
                 android:textSize="@dimen/ts_text_normal"

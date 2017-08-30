@@ -17,7 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
@@ -74,6 +74,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     SlidingUpPanelLayout slidingUpPanelLayout;
     @BindView(R.id.vehicles_recycler_view)
     RecyclerView vehiclesRecyclerView;
+    @BindView(R.id.my_location_button)
+    ImageView myLocationButton;
 
     SupportMapFragment fragment;
     GoogleMap googleMap;
@@ -85,10 +87,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
     VehiclesAdapter vehiclesAdapter;
 
-    // pulse animation
+    // user location pulse animation
     private GroundOverlay lastUserCircle;
     private long pulseDuration = 2500;
     private ValueAnimator lastPulseAnimator;
+
+    // marker location pulse animation
+    private GroundOverlay lastMarkerCircle;
+    private ValueAnimator lastMarkerPulseAnimator;
 
     //    AppWorkshopCard vItemDetailsPreview;
     boolean focusMap;
@@ -186,6 +192,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             fragment.getMapAsync(this);
         }
 
+        myLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                focusOnUserLocation();
+            }
+        });
+
         //inital state
         hidePreview();
     }
@@ -209,11 +222,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 this.googleMap.setMyLocationEnabled(true);
-                this.googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                myLocationButton.setVisibility(View.VISIBLE);
             }
         } else {
             this.googleMap.setMyLocationEnabled(true);
-            this.googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            myLocationButton.setVisibility(View.GONE);
         }
         // used to force Google maps bring
         // the marker to top onClick by showing an empty info window
@@ -371,6 +386,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 ///TODO trigger marker animation
                 focusMapOnMarker(marker.getPosition());
                 populateVehiclesData(selectedPartner);
+
+                addMarkerPulsatingEffect(marker.getPosition());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -455,25 +472,25 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     /**
      * adds a pulse animation arround the given coords
      */
-    private void addPulsatingEffect(final LatLng userLatlng){
-        if(lastPulseAnimator != null){
+    private void addPulsatingEffect(final LatLng userLatlng) {
+        if (lastPulseAnimator != null) {
             lastPulseAnimator.cancel();
         }
-        if(lastUserCircle != null)
+        if (lastUserCircle != null)
             lastUserCircle.setPosition(userLatlng);
         lastPulseAnimator = valueAnimate(3000, pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                if(lastUserCircle != null) {
-                    float zoomPrecent =  googleMap.getCameraPosition().zoom / googleMap.getMaxZoomLevel();
+                if (lastUserCircle != null) {
+                    float zoomPrecent = googleMap.getCameraPosition().zoom / googleMap.getMaxZoomLevel();
                     // TODO do some caculations based on th zoom level to make sure the size of the pulse circle remains fixed regardless of zoom level
                     lastUserCircle.setDimensions((Float) animation.getAnimatedValue());
                     lastUserCircle.setTransparency(animation.getAnimatedFraction());
-                }else {
+                } else {
                     BitmapDescriptor image = BitmapDescriptorFactory.fromResource(R.drawable.pulse);
                     lastUserCircle = googleMap.addGroundOverlay(new GroundOverlayOptions()
                             .position(userLatlng, (Float) animation.getAnimatedValue())
-                            .anchor(0.5f,0.5f)
+                            .anchor(0.5f, 0.5f)
                             .transparency(0)
                             .image(image));
                 }
@@ -481,9 +498,38 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         });
     }
 
-    protected ValueAnimator valueAnimate(float accuracy,long duration, ValueAnimator.AnimatorUpdateListener updateListener){
-        Log.d( "valueAnimate: ", "called");
-        ValueAnimator va = ValueAnimator.ofFloat(0,accuracy);
+    /**
+     * adds a pulse animation arround the given coords
+     */
+    private void addMarkerPulsatingEffect(final LatLng markerLatLng) {
+        if (lastMarkerPulseAnimator != null) {
+            lastMarkerPulseAnimator.cancel();
+        }
+        if (lastMarkerCircle != null)
+            lastMarkerCircle.setPosition(markerLatLng);
+        lastMarkerPulseAnimator = valueAnimate(3000, pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (lastMarkerCircle != null) {
+                    float zoomPrecent = googleMap.getCameraPosition().zoom / googleMap.getMaxZoomLevel();
+                    // TODO do some caculations based on th zoom level to make sure the size of the pulse circle remains fixed regardless of zoom level
+                    lastMarkerCircle.setDimensions((Float) animation.getAnimatedValue());
+                    lastMarkerCircle.setTransparency(animation.getAnimatedFraction());
+                } else {
+                    BitmapDescriptor image = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_glow);
+                    lastMarkerCircle = googleMap.addGroundOverlay(new GroundOverlayOptions()
+                            .position(markerLatLng, (Float) animation.getAnimatedValue())
+                            .anchor(0.5f, 0.5f)
+                            .transparency(0)
+                            .image(image));
+                }
+            }
+        });
+    }
+
+    protected ValueAnimator valueAnimate(float accuracy, long duration, ValueAnimator.AnimatorUpdateListener updateListener) {
+        Log.d("valueAnimate: ", "called");
+        ValueAnimator va = ValueAnimator.ofFloat(0, accuracy);
         va.setDuration(duration);
         va.addUpdateListener(updateListener);
         va.setRepeatCount(ValueAnimator.INFINITE);
@@ -556,10 +602,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                     try {
                         if (this.googleMap != null) {
                             this.googleMap.setMyLocationEnabled(true);
-                            this.googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-
-
+                            this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+                            myLocationButton.setVisibility(View.VISIBLE);
+                            myLocationButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    focusOnUserLocation();
+                                }
+                            });
                         }
                     } catch (SecurityException e) {
                         e.printStackTrace();
@@ -595,6 +645,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         getNearbyPartners();
         slidingUpPanelLayout.setPanelHeight(0);
 
+    }
+
+    private void focusOnUserLocation() {
+        LatLng userLocation = new LatLng(DataStore.getInstance().getMyLocationLatitude(), DataStore.getInstance().getMyLocationLongitude());
+        focusMapToCoords(userLocation);
     }
 
 }

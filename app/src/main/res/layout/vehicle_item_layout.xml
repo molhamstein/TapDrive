@@ -57,7 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Daily Price: "
+                        android:text="@string/daily_price"
                         android:textColor="@color/app_bg"
                         android:textSize="@dimen/ts_text_small"
                         app:fontId="3" />
@@ -83,7 +83,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Hourly Price: "
+                        android:text="@string/hourly_price"
                         android:textColor="@color/app_bg"
                         android:textSize="@dimen/ts_text_small"
                         app:fontId="3" />
@@ -112,7 +112,7 @@
                     android:background="@drawable/yellow_button_background"
                     android:gravity="center"
                     android:scrollbarSize="@android:color/black"
-                    android:text="Drive Now"
+                    android:text="@string/drive_now"
                     android:textAllCaps="true"
                     android:textColor="@drawable/yellow_text_selector"
                     android:textSize="@dimen/ts_text_normal"
