@@ -3,6 +3,7 @@ package com.brain_socket.tapdrive.data;
 import android.util.Log;
 
 import com.brain_socket.tapdrive.model.filters.Category;
+import com.brain_socket.tapdrive.model.filters.CategoryField;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
 import com.brain_socket.tapdrive.model.orders.Order;
 import com.brain_socket.tapdrive.model.orders.ServerNotification;
@@ -284,6 +285,62 @@ public class ServerAccess {
 
             // url
             String url = BASE_SERVICE_URL + "/partners/forget_password";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONObject jsonResponse = apiResult.getResponseJsonObject();
+            if (jsonResponse != null) { // check if response is empty
+
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+
+        return result;
+    }
+
+    public ServerResult resetUserPassword(String email, String token, String newPsw) {
+        ServerResult result = new ServerResult();
+        try {
+            // parameters
+            JSONObject jsonPairs = new JSONObject();
+            jsonPairs.put("email", email);
+            jsonPairs.put("token", token);
+            jsonPairs.put("password", newPsw);
+            jsonPairs.put("password_confirmation", newPsw);
+
+            // url
+            String url = BASE_SERVICE_URL + "/auth/resetPassword";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+            JSONObject jsonResponse = apiResult.getResponseJsonObject();
+            if (jsonResponse != null) { // check if response is empty
+
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+
+        return result;
+    }
+
+    public ServerResult resetPartnerPassword(String email, String token, String newPsw){
+        ServerResult result = new ServerResult();
+        try {
+            // parameters
+            JSONObject jsonPairs = new JSONObject();
+            jsonPairs.put("email", email);
+            jsonPairs.put("token", token);
+            jsonPairs.put("password", newPsw);
+            jsonPairs.put("password_confirmation", newPsw);
+
+            // url
+            String url = BASE_SERVICE_URL + "/partners/resetPassword";
 
             // send request
             ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", null);
@@ -598,6 +655,61 @@ public class ServerAccess {
             //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
             e.printStackTrace();
         }
+        return result;
+    }
+
+    public ServerResult createCar(Car newCar, ArrayList<CategoryField> fields, ArrayList<String> selectedOptionsIds, String imagePath) {
+        ServerResult result = new ServerResult();
+        try {
+            // url
+            String url = BASE_SERVICE_URL + "/items";
+            String results;
+            Response response;
+
+            String strOptions = "";
+            String strFields = "";
+            for (int i = 0; i < fields.size(); i++) {
+                strOptions += strOptions + selectedOptionsIds.get(i)+",";
+                strFields += strFields + fields.get(i).getId() + ",";
+            }
+            strFields = strFields.substring(0,strFields.length()-2);
+            strOptions = strOptions.substring(0,strOptions.length()-2);
+
+            MediaType MEDIA_TYPE = MediaType.parse("image/jpg");
+            String extension = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+            if (extension.equalsIgnoreCase("png")) {
+                MEDIA_TYPE = MediaType.parse("image/png");
+            }
+
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).writeTimeout(180, TimeUnit.SECONDS).readTimeout(180, TimeUnit.SECONDS).build();
+            RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("photo", imagePath, RequestBody.create(MEDIA_TYPE, new File(imagePath)))
+                    .addFormDataPart("name_en", newCar.getEnglishName())
+                    .addFormDataPart("name_ar", newCar.getArabicName())
+                    .addFormDataPart("hourly_price", newCar.getHourlyPrice())
+                    .addFormDataPart("daily_price", newCar.getDailyPrice())
+                    .addFormDataPart("weekly_price", newCar.getWeeklyPrice())
+                    .addFormDataPart("monthly_price", newCar.getMonthlyPrice())
+                    .addFormDataPart("fields_ids", strFields)
+                    .addFormDataPart("options_ids", strOptions)
+                    .addFormDataPart("category_id", "1")
+                    .build();
+            Request request = new Request.Builder().url(url).addHeader("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN)).post(body).build();
+            response = client.newCall(request).execute();
+            results = response.body().string();
+
+            result.setStatusCode(response.code());
+            result.setApiError("");
+            JSONObject jsonResponse = new JSONObject(results);
+            if (jsonResponse != null) { // check if response is empty
+                //me = UserModel.fromJson(jsonResponse.getJSONObject("data"));
+            }
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+            e.printStackTrace();
+        }
+        //result.addPair("appUser", me);
+
         return result;
     }
 

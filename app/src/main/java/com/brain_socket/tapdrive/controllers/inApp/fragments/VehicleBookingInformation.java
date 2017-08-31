@@ -331,7 +331,7 @@ public class VehicleBookingInformation extends Fragment {
             int hoursDifference = toHourOfDay - fromHourOfDay;
             totalCost = hoursDifference * Float.parseFloat(car.getHourlyPrice());
 
-            bookPriceValue.setText(totalCost + " AED");
+            bookPriceValue.setText(totalCost + getString(R.string.currency));
             bookingCostDetailsMap.put("Months", new Pair<Integer, Float>(0, 0.0f));
             bookingCostDetailsMap.put("Weeks", new Pair<Integer, Float>(0, 0.0f));
             if (hoursDifference == 24) {
@@ -377,7 +377,7 @@ public class VehicleBookingInformation extends Fragment {
             Map.Entry pair = (Map.Entry) iterator.next();
             totalCost += ((Pair<Integer, Float>) pair.getValue()).second;
         }
-        bookPriceValue.setText(totalCost + " AED");
+        bookPriceValue.setText(totalCost + getString(R.string.currency));
         bookingCostDetailsMap.put("total", new Pair<Integer, Float>(0, totalCost));
 
     }
@@ -386,8 +386,8 @@ public class VehicleBookingInformation extends Fragment {
 
         Glide.with(getActivity()).load(car.getPhoto()).into(itemImage);
         itemName.setText(car.getEnglishName());
-        itemDailyPrice.setText(car.getDailyPrice() + " AED");
-        itemHourlyPrice.setText(car.getHourlyPrice() + " AED");
+        itemDailyPrice.setText(car.getDailyPrice() + getString(R.string.currency));
+        itemHourlyPrice.setText(car.getHourlyPrice() + getString(R.string.currency));
 
     }
 
@@ -433,7 +433,7 @@ public class VehicleBookingInformation extends Fragment {
 
             AlertDialog.Builder builder;
             builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Please select the booking period before you continue")
+            builder.setMessage(R.string.select_booking_period)
                     .setPositiveButton(android.R.string.yes, null)
                     .show();
 
@@ -451,7 +451,7 @@ public class VehicleBookingInformation extends Fragment {
                     if (!checkIfAfterStart(hourOfDay, minute)) {
                         AlertDialog.Builder builder;
                         builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage(lastReservationDate == null ? "Your return time should be after your start time" : "Your return time should be after your start time and before the start of the next reservation in the same day")
+                        builder.setMessage(lastReservationDate == null ? getString(R.string.return_after_start) : getString(R.string.return_after_start_and_before_reservation))
                                 .setPositiveButton(android.R.string.yes, null)
                                 .show();
                         if (hourOfDay != 23) {

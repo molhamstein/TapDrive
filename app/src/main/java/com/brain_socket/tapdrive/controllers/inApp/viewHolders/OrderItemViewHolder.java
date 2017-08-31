@@ -63,13 +63,13 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
         itemName.setText(order.getItem().getEnglishName());
 
         if (!order.getTotal().equalsIgnoreCase("")) {
-            totalCostTextView.setText("Total Cost: " + order.getTotal() + " AED");
+            totalCostTextView.setText(order.getTotal() + context.getString(R.string.currency));
         } else {
-            totalCostTextView.setText("Total Cost: 0 AED");
+            totalCostTextView.setText("0" + context.getString(R.string.currency));
         }
 
-        timeFromTextView.setText("From: " + Helpers.getFormattedDateString(order.getStartDate()));
-        timeToTextView.setText("To: " + Helpers.getFormattedDateString(order.getEndDate()));
+        timeFromTextView.setText(Helpers.getFormattedDateString(order.getStartDate()));
+        timeToTextView.setText(Helpers.getFormattedDateString(order.getEndDate()));
 
         Glide.with(context).load(order.getUser().getPhoto()).into(userImageView);
         userName.setText(order.getUser().getUsername());

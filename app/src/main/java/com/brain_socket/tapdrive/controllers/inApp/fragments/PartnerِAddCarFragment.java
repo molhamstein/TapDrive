@@ -2,8 +2,10 @@ package com.brain_socket.tapdrive.controllers.inApp.fragments;
 
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.brain_socket.tapdrive.data.ServerResult;
+import com.brain_socket.tapdrive.model.partner.Car;
+import com.mvc.imagepicker.ImagePicker;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.brain_socket.tapdrive.R;
@@ -36,11 +41,6 @@ import com.brain_socket.tapdrive.model.partner.Country;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.bumptech.glide.Glide;
 import com.github.florent37.viewanimator.ViewAnimator;
-import com.kbeanie.multipicker.api.CameraImagePicker;
-import com.kbeanie.multipicker.api.ImagePicker;
-import com.kbeanie.multipicker.api.Picker;
-import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
-import com.kbeanie.multipicker.api.entity.ChosenImage;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -122,8 +122,8 @@ public class PartnerِAddCarFragment extends Fragment {
     // filters
     HashMap<FilterTypeView, ArrayList<FilterTypeView>> filterTypeViews = new HashMap<>();
 
-    private ImagePicker imagePicker;
-    private CameraImagePicker cameraImagePicker;
+    //private ImagePicker imagePicker;
+    //private CameraImagePicker cameraImagePicker;
 
     private String selectedProfileImagePath;
     private String categoryOptionsIds;
@@ -134,6 +134,8 @@ public class PartnerِAddCarFragment extends Fragment {
     private float hourlyPrice;
     private Country selectedCountry;
     private City selectedCity;
+    private Bitmap selectedImage;
+    private String selectedImagePath;
 
     private ArrayList<Country> arrayCountries;
 
@@ -142,6 +144,7 @@ public class PartnerِAddCarFragment extends Fragment {
     private ArrayList<View> uiElementsToAnimateInS1;
     private ArrayList<View> uiElementsToAnimateInS2;
 
+    private Dialog loadingDialog;
 
     public PartnerِAddCarFragment() {
         // Required empty public constructor
@@ -241,45 +244,7 @@ public class PartnerِAddCarFragment extends Fragment {
             }
         }
 
-        // image pickers
-        imagePicker = new ImagePicker(this);
-        imagePicker.setImagePickerCallback(new ImagePickerCallback() {
-                                               @Override
-                                               public void onImagesChosen(List<ChosenImage> images) {
-                                                   // Display images
-                                                   if (images != null
-                                                           && images.size() > 0) {
-                                                       selectedProfileImagePath = images.get(0).getThumbnailSmallPath();
-                                                       Glide.with(getActivity()).load(Uri.fromFile(new File(selectedProfileImagePath))).into(itemImage);
-                                                   }
-                                               }
-
-                                               @Override
-                                               public void onError(String message) {
-                                                   // Do error handling
-                                               }
-                                           }
-        );
-
-        cameraImagePicker = new CameraImagePicker(this);
-        cameraImagePicker.setImagePickerCallback(new ImagePickerCallback(){
-                                                     @Override
-                                                     public void onImagesChosen(List<ChosenImage> images) {
-                                                         // Display images
-                                                         if (images != null
-                                                                 && images.size() > 0) {
-                                                             selectedProfileImagePath = images.get(0).getThumbnailSmallPath();
-                                                             Glide.with(getActivity()).load(Uri.fromFile(new File(selectedProfileImagePath))).into(itemImage);
-                                                         }
-                                                     }
-
-                                                     @Override
-                                                     public void onError(String message) {
-                                                         // Do error handling
-                                                     }
-                                                 }
-        );
-
+        loadingDialog = TapApp.getNewLoadingDilaog(getActivity());
         checkForPermission();
 
         arrayCountries = DataStore.getInstance().getCountries();
@@ -339,6 +304,11 @@ public class PartnerِAddCarFragment extends Fragment {
             return;
         }
 
+        if (selectedImagePath == null) {
+            TapApp.toast(getString(R.string.add_car_image_not_set));
+            return;
+        }
+
         moveToStage(1);
     }
 
@@ -352,6 +322,38 @@ public class PartnerِAddCarFragment extends Fragment {
             }
         }
 
+        ArrayList<CategoryField> fields = new ArrayList<>();
+        ArrayList<String> optionsIds = new ArrayList<>();
+        Iterator it = filterTypeViews.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+
+            FilterTypeView parentFilterTypeView = (FilterTypeView) pair.getKey();
+            fields.add(parentFilterTypeView.getCategoryField());
+            optionsIds.add(parentFilterTypeView.getSelectedItem().second);
+
+        }
+
+        Car car = new Car();
+        car.setArabicName(etArabicName.getText().toString());
+        car.setEnglishName(etEnglishName.getText().toString());
+        car.setHourlyPrice(String.valueOf(hourlyPrice));
+        car.setDailyPrice(String.valueOf(dailyPrice));
+        car.setWeeklyPrice(String.valueOf(weeklyPrice));
+        car.setMonthlyPrice(String.valueOf(monthlyPrice));
+
+        loadingDialog.show();
+        DataStore.getInstance().createCar(car, fields, optionsIds, selectedImagePath, new DataStore.DataRequestCallback() {
+            @Override
+            public void onDataReady(ServerResult result, boolean success) {
+                loadingDialog.dismiss();
+                if(success) {
+                    // TODO close fragment
+                } else {
+                    TapApp.toast(getString(R.string.err_connection));
+                }
+            }
+        });
     }
 
     private void moveToStage(int index){
@@ -389,33 +391,8 @@ public class PartnerِAddCarFragment extends Fragment {
 
     private void openImagePicker() {
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
-                .title("Edit Your Profile Image")
-                .content("Where do you want to get your new profile picture from?")
-                .positiveText("Gallery")
-                .negativeText("Camera")
-                .neutralText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        imagePicker.pickImage();
-                    }
-                })
-                .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        cameraImagePicker.pickImage();
-                    }
-                });
+        com.mvc.imagepicker.ImagePicker.pickImage(this, "Select your image:");
 
-        MaterialDialog dialog = builder.build();
-        dialog.show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -604,10 +581,16 @@ public class PartnerِAddCarFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Picker.PICK_IMAGE_DEVICE) {
-            imagePicker.submit(data);
-        } else if (requestCode == Picker.PICK_IMAGE_CAMERA) {
-            cameraImagePicker.submit(data);
+//        if (requestCode == Picker.PICK_IMAGE_DEVICE) {
+//            imagePicker.submit(data);
+//        } else if (requestCode == Picker.PICK_IMAGE_CAMERA) {
+//            cameraImagePicker.submit(data);
+//        }
+        Bitmap bitmap = com.mvc.imagepicker.ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
+        if(bitmap != null ) {
+            selectedImage = bitmap;
+            itemImage.setImageBitmap(bitmap);
+            selectedImagePath = ImagePicker.getImagePathFromResult(getActivity(), requestCode, resultCode, data);
         }
     }
 

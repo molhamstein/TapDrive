@@ -30,7 +30,6 @@ public class ServerNotificationsItemViewHolder extends RecyclerView.ViewHolder {
     private TextViewCustomFont timeToTextView;
     private RoundedImageView itemImage;
     private TextViewCustomFont itemStatus;
-    private CircleImageView userImageView;
 
     private void findViews(View rootView) {
         itemCardView = (CardView) rootView.findViewById(R.id.item_card_view);
@@ -41,7 +40,6 @@ public class ServerNotificationsItemViewHolder extends RecyclerView.ViewHolder {
         timeToTextView = (TextViewCustomFont) rootView.findViewById(R.id.time_to_text_view);
         itemImage = (RoundedImageView) rootView.findViewById(R.id.item_image);
         itemStatus = (TextViewCustomFont) rootView.findViewById(R.id.item_status);
-        userImageView = (CircleImageView) rootView.findViewById(R.id.user_profile_image);
     }
 
 
@@ -53,20 +51,18 @@ public class ServerNotificationsItemViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(ServerNotification serverNotification) {
 
-        Glide.with(context).load(serverNotification.getObject().getItem().getPhoto()).into(itemImage);
         itemName.setText(serverNotification.getObject().getItem().getEnglishName());
         itemStatus.setText(serverNotification.getObject().getStatus());
         if (!serverNotification.getObject().getTotal().equalsIgnoreCase("")) {
-            totalCostTextView.setText("Total Cost: " + serverNotification.getObject().getTotal() + " AED");
+            totalCostTextView.setText(serverNotification.getObject().getTotal() + context.getString(R.string.currency));
         } else {
-            totalCostTextView.setText("Total Cost: 0 AED");
+            totalCostTextView.setText("0" + context.getString(R.string.currency));
         }
 
-        Glide.with(context).load(serverNotification.getObject().getUser().getPhoto()).into(userImageView);
         userName.setText(serverNotification.getObject().getUser().getUsername());
 
-        timeFromTextView.setText("From: " + Helpers.getFormattedDateString(serverNotification.getObject().getStartDate()));
-        timeToTextView.setText("To: " + Helpers.getFormattedDateString(serverNotification.getObject().getEndDate()));
+        timeFromTextView.setText(Helpers.getFormattedDateString(serverNotification.getObject().getStartDate()));
+        timeToTextView.setText(Helpers.getFormattedDateString(serverNotification.getObject().getEndDate()));
 
 
     }

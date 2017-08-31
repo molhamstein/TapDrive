@@ -154,7 +154,7 @@
             android:background="@drawable/shape_black_rounded_button"
             android:gravity="center"
             android:layout_marginBottom="20dp"
-            android:text="Finish"
+            android:text="@string/finish"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_text_normal"
             app:fontId="1" />

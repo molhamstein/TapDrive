@@ -1,10 +1,8 @@
 package com.brain_socket.tapdrive.controllers.onBoarding;
 
 import android.app.Dialog;
-import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
@@ -14,25 +12,35 @@ import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.ServerAccess;
 import com.brain_socket.tapdrive.data.ServerResult;
-import com.brain_socket.tapdrive.utils.Helpers;
 import com.brain_socket.tapdrive.utils.TapApp;
 
-public class ForgetPasswordActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText etEmail;
+public class ResetPasswordActivity extends AppCompatActivity implements View.OnClickListener {
+    private EditText etToken;
+    private EditText etNewPsw;
     private Dialog loadingDialog;
-    private Boolean isPartner;
+
+    // passed data
+    private boolean isPartner;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forget_password);
+        setContentView(R.layout.activity_reset_password);
+        try{
+            email = getIntent().getStringExtra("email");
+            isPartner = getIntent().getBooleanExtra("isPartner", false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         init();
     }
 
     private void init(){
         try{
             loadingDialog = TapApp.getNewLoadingDilaog(this);
-            etEmail = (EditText)findViewById(R.id.etEmail);
+            etToken = (EditText)findViewById(R.id.etToken);
+            etNewPsw = (EditText)findViewById(R.id.etNewPsw);
             View btnSubmit = findViewById(R.id.btnSubmit);
 
             // init toolbar
@@ -59,17 +67,18 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
             boolean cancel = false;
             View focusView = null;
 
-            String email = etEmail.getText().toString();
-            if(email.isEmpty()){
+            String token = etToken.getText().toString();
+            if(token.isEmpty()){
                 cancel = true;
-                etEmail.setError(getString(R.string.activity_register_field_required));
-                focusView = etEmail;
-            }else{
-                if(!Helpers.isValidEmail(email)){
-                    cancel = true;
-                    focusView = etEmail;
-                    etEmail.setError(getString(R.string.activity_register_email_invalid));
-                }
+                etToken.setError(getString(R.string.activity_register_field_required));
+                focusView = etToken;
+            }
+
+            String newPsw = etNewPsw.getText().toString();
+            if(newPsw.isEmpty()){
+                cancel = true;
+                etNewPsw.setError(getString(R.string.activity_register_field_required));
+                focusView = etNewPsw;
             }
 
             if(cancel){
@@ -78,10 +87,11 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
             }
 
             loadingDialog.show();
-            if(isPartner)
-                DataStore.getInstance().attemptForgetPartnerPassword(email,forgetPasswordCallback);
-            else
-                DataStore.getInstance().attemptForgetUserPassword(email,forgetPasswordCallback);
+            if (isPartner) {
+                DataStore.getInstance().attemptResetPartnerPassword(email, token, newPsw, forgetPasswordCallback);
+            } else {
+                DataStore.getInstance().attemptResetUserPassword(email, token, newPsw, forgetPasswordCallback);
+            }
         }catch (Exception ex){
             ex.printStackTrace();
         }
@@ -93,23 +103,16 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
             loadingDialog.dismiss();
             if(success){
                 if(result.getApiError().equals("")){
-                    Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_request_sent), Toast.LENGTH_LONG).show();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent i = new Intent(ForgetPasswordActivity.this, ResetPasswordActivity.class);
-                            i.putExtra("email", etEmail.getText().toString());
-                            i.putExtra("isPartner", isPartner);
-                            startActivity(i);
-                            finish();
-                        }
-                    },1200);
+                    Toast.makeText(ResetPasswordActivity.this, getString(R.string.activity_forget_password_request_sent), Toast.LENGTH_LONG).show();
+                    finish();
                 }else{
                     if(result.getApiError().equals(ServerAccess.USER_NOT_EXIST))
-                        Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_user_not_found), Toast.LENGTH_LONG).show();
+                        Toast.makeText(ResetPasswordActivity.this, getString(R.string.activity_forget_password_user_not_found), Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(ResetPasswordActivity.this, getString(R.string.activity_forget_password_request_failed), Toast.LENGTH_LONG).show();
                 }
             }else{
-                Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_request_failed), Toast.LENGTH_LONG).show();
+                Toast.makeText(ResetPasswordActivity.this, getString(R.string.activity_forget_password_request_failed), Toast.LENGTH_LONG).show();
             }
         }
     };

@@ -114,18 +114,18 @@ public class PaymentFragment extends Fragment {
     private void bindData() {
 
         monthsValueTextView.setText(bookingDetailsHashMap.get("Months").first + "");
-        monthsCostValueTextView.setText(bookingDetailsHashMap.get("Months").second + " AED");
+        monthsCostValueTextView.setText(bookingDetailsHashMap.get("Months").second + getString(R.string.currency));
 
         weeksValueTextView.setText(bookingDetailsHashMap.get("Weeks").first + "");
-        weeksCostValueTextView.setText(bookingDetailsHashMap.get("Weeks").second + " AED");
+        weeksCostValueTextView.setText(bookingDetailsHashMap.get("Weeks").second + getString(R.string.currency));
 
         daysValueTextView.setText(bookingDetailsHashMap.get("Days").first + "");
-        daysCostValueTextView.setText(bookingDetailsHashMap.get("Days").second + " AED");
+        daysCostValueTextView.setText(bookingDetailsHashMap.get("Days").second + getString(R.string.currency));
 
         hoursValueTextView.setText(bookingDetailsHashMap.get("Hours").first + "");
-        hoursCostValueTextView.setText(bookingDetailsHashMap.get("Hours").second + " AED");
+        hoursCostValueTextView.setText(bookingDetailsHashMap.get("Hours").second + getString(R.string.currency));
 
-        totalCostValueTextView.setText(bookingDetailsHashMap.get("total").second + " AED");
+        totalCostValueTextView.setText(bookingDetailsHashMap.get("total").second + getString(R.string.currency));
 
     }
 
@@ -149,7 +149,7 @@ public class PaymentFragment extends Fragment {
                         loaderView.setVisibility(View.GONE);
 
                         if (success) {
-                            Toast.makeText(getActivity(), "Your item has been booked successfully", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.booked_successfully, Toast.LENGTH_LONG).show();
                             EventBus.getDefault().post(new CarBookedEvent());
                         }
 
