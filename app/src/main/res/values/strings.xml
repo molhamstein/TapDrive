@@ -40,6 +40,7 @@
     <string name="drawer_payment">PAYMENT</string>
     <string name="drawer_trips">TRIP HISTORY</string>
     <string name="drawer_partner_cars">MY CARS</string>
+    <string name="drawer_partner_invoices">INVOICES</string>
     <string name="drawer_wish">WISH LIST</string>
     <string name="drawer_settings">SETTINGS</string>
     <string name="drawer_notifications">NOTIFICATIONS</string>
@@ -101,9 +102,39 @@
     <string name="activity_forget_password_request_failed">Forget password request failed</string>
     <string name="activity_forget_password_user_not_found">User not found</string>
 
+    <!-- reset psw -->
+    <string name="activity_reset_password_title">CHANGE PASSWORD</string>
+    <string name="activity_reset_password_desc">Check your email for a password reset code</string>
+    <string name="activity_reset_password_token_placeholder">Password reset code</string>
+    <string name="activity_reset_password_psw_placeholder">New Passwrod</string>
+    <string name="activity_reset_password_btn">SUBMIT</string>
+    <string name="activity_reset_password_success">Password changed successfully</string>
+
     <!-- partner cars-->
     <string name="cars_list_title">My Cars</string>
     <string name="cars_list_empty">You haven\'t added any cars</string>
+
+    <!-- add car -->
+    <string name="add_car_title">Add Car</string>
+    <string name="add_car_title1">Car info</string>
+    <string name="add_car_title2">Car Pricing</string>
+    <string name="add_car_title3">Area</string>
+    <string name="add_car_country">Country</string>
+    <string name="add_car_city">"City</string>
+    <string name="add_car_title4">Car Details</string>
+    <string name="add_car_en_name_placeholder">English Name</string>
+    <string name="add_car_ar_name_placeholder">Arabic Name</string>
+    <string name="add_car_monthly">Monthly</string>
+    <string name="add_car_weekly">Weekly</string>
+    <string name="add_car_daily">Daily</string>
+    <string name="add_car_hourly">Hourly</string>
+    <string name="add_car_next">Next</string>
+    <string name="add_car_finish">Finish</string>
+    <string name="add_car_price_not_set">Please set the prices</string>
+    <string name="add_car_name_not_set">Please set the car title</string>
+    <string name="add_car_image_not_set">Please add the car image</string>
+    <string name="add_car_info_not_set">Please add the car info</string>
+    <string name="add_car_success">Car Adedd Successfully</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -112,6 +143,7 @@
     <string name="settings_screen_title">Settings</string>
     <string name="notifications_screen_title">Notifications</string>
     <string name="cars_screen_title">My Cars</string>
+    <string name="invoices_screen_title">Invoices</string>
     <string name="payment_method">Payment method</string>
     <string name="cash_on_delivery">Cash on Delivery</string>
     <string name="pay_to_the_driver_when_you_get_your_car">Pay to the driver when you get your car</string>

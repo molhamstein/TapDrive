@@ -1,0 +1,404 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:clickable="true"
+    tools:context="com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation">
+
+    <LinearLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/stage1_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/add_car_title1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="2" />
+
+            <LinearLayout
+                android:id="@+id/vCarBasicInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.brain_socket.tapdrive.customViews.RoundedImageView
+                    android:id="@+id/item_image"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_margin="5dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_add_car"
+                    app:corner_radius="5dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <com.brain_socket.tapdrive.customViews.EditTextCustomFont
+                        android:id="@+id/etEnglishName"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/shape_rounded_edit_text"
+                        android:gravity="center"
+                        android:hint="@string/add_car_en_name_placeholder"
+                        android:inputType="textEmailAddress"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="30dp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="1" />
+
+
+                    <com.brain_socket.tapdrive.customViews.EditTextCustomFont
+                        android:id="@+id/etArabicName"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/shape_rounded_edit_text"
+                        android:gravity="center"
+                        android:hint="@string/add_car_ar_name_placeholder"
+                        android:inputType="textEmailAddress"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="30dp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="1" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/vSep1"
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginTop="10dp"
+                android:background="#ededed" />
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/title2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="@string/add_car_title2"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="2" />
+
+            <LinearLayout
+                android:id="@+id/vPricing"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/btnMonthly"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/add_car_monthly"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="3" />
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/tvPriceMonthly"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/add_car_monthly"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="2" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0.6dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/black" />
+
+                <LinearLayout
+                    android:id="@+id/btnWeekly"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/add_car_weekly"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="3" />
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/tvPriceWeekly"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/add_car_monthly"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="2" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0.6dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/black" />
+
+                <LinearLayout
+                    android:id="@+id/btnDaily"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/add_car_daily"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="3" />
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/tvPriceDaily"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/add_car_monthly"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="2" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0.6dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/black" />
+
+                <LinearLayout
+                    android:id="@+id/btnHourly"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/add_car_hourly"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="3" />
+
+                    <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/tvPriceHourly"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/add_car_monthly"
+                        android:textSize="@dimen/ts_text_normal"
+                        app:fontId="2" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/vSep2"
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginTop="2dp"
+                android:background="#ededed" />
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/title3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="@string/add_car_title3"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="2" />
+
+            <LinearLayout
+                android:id="@+id/vCountryInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal">
+
+                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/add_car_country"
+                    android:textSize="@dimen/ts_text_normal"
+                    app:fontId="3" />
+
+                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                    android:id="@+id/tvSelectedCountry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:text="-"
+                    android:textSize="@dimen/ts_text_normal"
+                    app:fontId="2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/vCityInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:orientation="horizontal">
+
+                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/add_car_city"
+                    android:textSize="@dimen/ts_text_normal"
+                    app:fontId="2" />
+
+                <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                    android:id="@+id/tvSelectedCity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:text="-"
+                    android:textSize="@dimen/ts_text_normal"
+                    app:fontId="3" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/vSep3"
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginTop="5dp"
+                android:background="#ededed" />
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/btnNext"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/yellow_button_background"
+                android:gravity="center"
+                android:scrollbarSize="@android:color/black"
+                android:text="@string/add_car_next"
+                android:textAllCaps="true"
+                android:textColor="@drawable/yellow_text_selector"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="3" />
+
+        </LinearLayout>
+
+        <!-- stage 2 -->
+        <LinearLayout
+            android:id="@+id/stage2_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/title4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/add_car_title4"
+                android:textColor="@color/black"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="2" />
+
+            <LinearLayout
+                android:id="@+id/filter_types_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+            </LinearLayout>
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/btnFinish"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/yellow_button_background"
+                android:gravity="center"
+                android:scrollbarSize="@android:color/black"
+                android:text="@string/add_car_finish"
+                android:textAllCaps="true"
+                android:textColor="@drawable/yellow_text_selector"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="3" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

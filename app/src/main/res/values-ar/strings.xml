@@ -37,6 +37,7 @@
     <string name="drawer_payment">المدفوعات</string>
     <string name="drawer_trips">الحجوزات السابقة</string>
     <string name="drawer_partner_cars">سياراتي</string>
+    <string name="drawer_partner_invoices">الوصولات</string>
     <string name="drawer_wish">المفضلة</string>
     <string name="drawer_settings">الإعدادات</string>
     <string name="drawer_notifications">التنبيهات</string>
@@ -92,6 +93,28 @@
     <string name="cars_list_title">سياراتي</string>
     <string name="cars_list_empty">لم تقم باضافة اي سيارات بعد</string>
 
+    <!-- Add Car -->
+    <string name="add_car_title">اضافة سيارة</string>
+    <string name="add_car_title1">معلومات السيارة</string>
+    <string name="add_car_title2">تسعيرة السيارة</string>
+    <string name="add_car_title3">المنطقة</string>
+    <string name="add_car_country">البلد</string>
+    <string name="add_car_city">"المدينة</string>
+    <string name="add_car_title4">معلومات اضافية</string>
+    <string name="add_car_en_name_placeholder">الاسم بالانكليزية</string>
+    <string name="add_car_ar_name_placeholder">الاسم بالعربي</string>
+    <string name="add_car_monthly">شهرياً</string>
+    <string name="add_car_weekly">اسبوعياً</string>
+    <string name="add_car_daily">يومياً</string>
+    <string name="add_car_hourly">بالساعة</string>
+    <string name="add_car_next">التالي</string>
+    <string name="add_car_finish">تم</string>
+    <string name="add_car_price_not_set">الرجاء تحديد السعر</string>
+    <string name="add_car_name_not_set">الرجاء تحديد اسم السيارة</string>
+    <string name="add_car_image_not_set">الرجاء تحديد صورة السيارة</string>
+    <string name="add_car_info_not_set">الرجاء تحديد معلومات السيارة</string>
+    <string name="add_car_success">تم اضافة السيارة بنجاح</string>
+
     <string name="activity_request_failed">Request fail, retry again please.</string>
 
     <string name="activity_forget_password_desc">Enter Your Email to receive a password rreset code</string>
@@ -100,6 +123,15 @@
     <string name="activity_forget_password_request_sent">Forget password request sent, check your mailbox.</string>
     <string name="activity_forget_password_request_failed">Forget password request failed</string>
     <string name="activity_forget_password_user_not_found">User not found</string>
+
+    <!-- reset psw -->
+    <string name="activity_reset_password_title">تغير كلمة السر</string>
+    <string name="activity_reset_password_desc">تحقق من بريدك الالكتروني لتجد رمز اعادة تعين كلمة السر</string>
+    <string name="activity_reset_password_token_placeholder">رمز اعادة تعيين كلمة السر</string>
+    <string name="activity_reset_password_psw_placeholder">كلمة السر الجديدة</string>
+    <string name="activity_reset_password_btn">ارسال</string>
+    <string name="activity_reset_password_success">تم تغير كلمة السر</string>
+
     <string name="loading">جاري التحميل</string>
     <string name="history_screen_title">الحجوزات السابقة</string>
     <string name="settings_screen_title">الإعدادات</string>

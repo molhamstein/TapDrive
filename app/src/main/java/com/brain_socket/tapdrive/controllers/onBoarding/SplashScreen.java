@@ -67,6 +67,7 @@ public class SplashScreen extends AppCompatActivity implements DataStore.DataReq
 
         //Call getCategories API
         DataStore.getInstance().getCategories(this);
+        DataStore.getInstance().getCountries(null);
 
     }
 

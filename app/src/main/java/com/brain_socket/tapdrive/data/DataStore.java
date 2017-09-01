@@ -6,7 +6,9 @@ import android.util.Log;
 
 import com.brain_socket.tapdrive.model.AppCarBrand;
 import com.brain_socket.tapdrive.model.filters.Category;
+import com.brain_socket.tapdrive.model.filters.CategoryField;
 import com.brain_socket.tapdrive.model.filters.MapFilters;
+import com.brain_socket.tapdrive.model.partner.Car;
 import com.brain_socket.tapdrive.model.partner.Country;
 import com.brain_socket.tapdrive.model.user.UserModel;
 import com.google.gson.reflect.TypeToken;
@@ -354,10 +356,40 @@ public class DataStore {
         }).start();
     }
 
+    public void attemptResetUserPassword(final String email, final String token, final String newPsw, final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.resetUserPassword(email, token, newPsw);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void attemptResetPartnerPassword(final String email, final String token, final String newPsw, final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.resetPartnerPassword(email, token, newPsw);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     /**
-     * attempting login using phone number
-     *
-     * @param email
+     * attempting login using email  &psw
      */
 
     public void attemptLogin(final String email, final String password, final String name, final String socialId, final String socialPlatform, final DataRequestCallback callback) {
@@ -412,43 +444,6 @@ public class DataStore {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void requestVerificationMsg(final DataRequestCallback callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean success = true;
-                ServerResult result = serverHandler.requestVerificationMsg(apiAccessToken);
-                if (result.connectionFailed()) {
-                    success = false;
-                }
-                if (callback != null)
-                    invokeCallback(callback, success, result);
-            }
-        }).start();
-    }
-
-    public void verifyAccount(final String verifMsg, final DataRequestCallback callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean success = true;
-                ServerResult result = serverHandler.verifyAccount(apiAccessToken, verifMsg);
-                if (result.connectionFailed()) {
-                    success = false;
-                } else {
-                    //boolean loginSuccess = (Boolean) data.get("verified");
-                    if (!result.isValid()) {
-                        setAccessMode(App_ACCESS_MODE.NOT_VERIFIED);
-                    } else {
-                        setAccessMode(App_ACCESS_MODE.VERIFIED);
-                    }
-                }
-                if (callback != null)
-                    invokeCallback(callback, success, result);
-            }
-        }).start();
     }
 
 
@@ -550,6 +545,36 @@ public class DataStore {
         }).start();
     }
 
+    public void getPartnerInvoices(final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.getPartnerInvoices();
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
+    public void createCar(final Car newCar, final ArrayList<CategoryField> fields, final ArrayList<String> selectedOptionsIds, final String imagePath, final DataRequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.createCar(newCar, fields, selectedOptionsIds, imagePath);
+                if (result.getRequestStatusCode() >= 400) {
+                    success = false;
+                } else {
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     public boolean isFirstRun() {
         return isFirstRun;
     }
@@ -605,6 +630,10 @@ public class DataStore {
 
     public void setCountries(ArrayList<Country> countries) {
         DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_COUNTRIES, countries);
+    }
+
+    public ArrayList<Country> getCountries(){
+        return DataCacheProvider.getInstance().getStoredArrayWithKey(DataCacheProvider.KEY_APP_COUNTRIES, new TypeToken<ArrayList<Country>>() {}.getType());
     }
 
     public void setApiAccessToken(String apiAccessToken) {

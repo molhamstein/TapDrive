@@ -373,7 +373,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
         MaterialDialog dialog = builder.build();
         dialog.show();
-
     }
 
     private void changeSelectedGender(Gender gen) {

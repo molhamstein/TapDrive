@@ -29,6 +29,7 @@ public class DataCacheProvider {
     public static final String KEY_APP_ACCESS_MODE = "accessMode";
     public static final String KEY_APP_CATEGORIES = "categories";
     public static final String KEY_APP_COUNTRIES = "countries";
+    public static final String KEY_APP_CITIES = "cities";
     public static final String KEY_APP_LOCALE = "locale";
 
 

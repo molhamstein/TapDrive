@@ -1,5 +1,7 @@
 package com.brain_socket.tapdrive.model.filters;
 
+import java.util.ArrayList;
+
 /**
  * Created by EYADOOS-PC on 8/1/2017.
  */

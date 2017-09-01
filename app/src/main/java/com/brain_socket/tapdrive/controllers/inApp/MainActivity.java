@@ -40,6 +40,8 @@ import com.brain_socket.tapdrive.controllers.inApp.fragments.InnerForgetPassword
 import com.brain_socket.tapdrive.controllers.inApp.fragments.InnerLoginFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.MapFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerCarsFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerInvoicesFragment;
+import com.brain_socket.tapdrive.controllers.inApp.fragments.PartnerِAddCarFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.PaymentFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG_PROFILE_FRAG = "profileFrag";
     private static String TAG_PAYMENT_FRAG = "paymentFrag";
     private static String TAG_CARS_FRAG = "carsFrag";
+    private static String TAG_INVOICES_FRAG = "invoicesFrag";
     private static String TAG_NOTIFICATIONS_FRAG = "notificationsFrag";
     private static String TAG_PARTNER_LOGIN_FRAG = "partnerLoginFrag";
 
@@ -379,6 +382,9 @@ public class MainActivity extends AppCompatActivity
 
             MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
             carsMenuItem.setVisible(false);
+
+            MenuItem invoicesMenuItem = navigationViewMenu.findItem(R.id.nav_partner_invoices);
+            invoicesMenuItem.setVisible(false);
         }
 
         initFiltersView();
@@ -694,6 +700,8 @@ public class MainActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_partner_cars) {
             openPartnerCarsScreen();
+        } else if (id == R.id.nav_partner_invoices) {
+            openPartnerInvoicesScreen();
         } else {
             openSettingsScreen();
         }
@@ -873,7 +881,7 @@ public class MainActivity extends AppCompatActivity
         toolbarTitle.setVisibility(View.VISIBLE);
 
         fragmentManager = getSupportFragmentManager();
-        PartnerCarsFragment carsFragment = PartnerCarsFragment.newInstance();
+        PartnerِAddCarFragment carsFragment = PartnerِAddCarFragment.newInstance();
         fragment = carsFragment;
         fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.pull_in_right,
@@ -882,6 +890,21 @@ public class MainActivity extends AppCompatActivity
                         R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_CARS_FRAG)
                 .addToBackStack(TAG_CARS_FRAG)
+                .commit();
+    }
+
+    private void openPartnerInvoicesScreen() {
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText(R.string.invoices_screen_title);
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        fragmentManager = getSupportFragmentManager();
+        PartnerInvoicesFragment invoicesFragment = PartnerInvoicesFragment.newInstance();
+        fragment = invoicesFragment;
+        fragmentManager.beginTransaction()
+                .add(R.id.flMainFragmentContainer, fragment, TAG_INVOICES_FRAG)
+                .addToBackStack(TAG_INVOICES_FRAG)
                 .commit();
     }
 
