@@ -425,10 +425,14 @@ public class DataStore {
                 } else {
                     if (result.isValid()) {
                         me = (UserModel) result.getPairs().get("appUser");
-                        apiAccessToken = me.getToken();
-                        setApiAccessToken(apiAccessToken);
-                        setMe(me);
-                        broadcastloginStateChange();
+                        if (me != null) {
+                            apiAccessToken = me.getToken();
+                            setApiAccessToken(apiAccessToken);
+                            setMe(me);
+                            broadcastloginStateChange();
+                        } else {
+                            success = false;
+                        }
                     }
                 }
                 invokeCallback(callback, success, result); // invoking the callback
@@ -632,8 +636,9 @@ public class DataStore {
         DataCacheProvider.getInstance().storeArrayWithKey(DataCacheProvider.KEY_APP_COUNTRIES, countries);
     }
 
-    public ArrayList<Country> getCountries(){
-        return DataCacheProvider.getInstance().getStoredArrayWithKey(DataCacheProvider.KEY_APP_COUNTRIES, new TypeToken<ArrayList<Country>>() {}.getType());
+    public ArrayList<Country> getCountries() {
+        return DataCacheProvider.getInstance().getStoredArrayWithKey(DataCacheProvider.KEY_APP_COUNTRIES, new TypeToken<ArrayList<Country>>() {
+        }.getType());
     }
 
     public void setApiAccessToken(String apiAccessToken) {

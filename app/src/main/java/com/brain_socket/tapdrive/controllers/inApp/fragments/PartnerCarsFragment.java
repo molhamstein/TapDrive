@@ -80,16 +80,16 @@ public class PartnerCarsFragment extends Fragment {
         @Override
         public void onDataReady(ServerResult result, boolean success) {
             if (success) {
-                ArrayList<Car> orders;
+                ArrayList<Car> cars;
                 try {
 
                     if (result.getPairs().containsKey("cars")) {
-                        orders = new ArrayList<>();
+                        cars = new ArrayList<>();
                         @SuppressWarnings("unchecked")
-                        ArrayList<Car> receivedOrders = (ArrayList<Car>) result.get("cars");
-                        orders.addAll(receivedOrders);
+                        ArrayList<Car> receivedCars = (ArrayList<Car>) result.get("cars");
+                        cars.addAll(receivedCars);
 
-                        updateDataAdapter(orders);
+                        updateDataAdapter(cars);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -98,12 +98,12 @@ public class PartnerCarsFragment extends Fragment {
         }
     };
 
-    private void updateDataAdapter(ArrayList<Car> orders) {
+    private void updateDataAdapter(ArrayList<Car> cars) {
 
         loaderView.setVisibility(View.GONE);
 
-        if (orders.size() > 0) {
-            carsAdapter.setData(orders);
+        if (cars.size() > 0) {
+            carsAdapter.setData(cars);
             carsAdapter.notifyDataSetChanged();
         } else {
             dataRecyclerView.setVisibility(View.GONE);
