@@ -17,12 +17,12 @@
     <string name="exit">Exit</string>
 
     <!-- about pager -->
-    <string name="about_pager_title_1">Welcome to the first app for Car rental in the region.</string>
-    <string name="about_pager_desc_1">Lorem ipsum dolor sit amet, consectetur adipiscing</string>
+    <string name="about_pager_title_1">Welcome to Canaan App</string>
+    <string name="about_pager_desc_1">The First and Best Car Rental Service in MENA &amp; GCC regions</string>
     <string name="about_pager_title_2">No Hassle just TapDrive</string>
-    <string name="about_pager_desc_2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien elit, sodales vel lectus quis, semper.</string>
-    <string name="about_pager_title_3">Easy and fast to use</string>
-    <string name="about_pager_desc_3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien elit, sodales vel lectus quis, semper scelerisque ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et</string>
+    <string name="about_pager_desc_2">It’s a hassle-free service for listing and booking cars from various options</string>
+    <string name="about_pager_title_3">Fast &amp; Easy to Use</string>
+    <string name="about_pager_desc_3">Book your ride in 3 easy steps, really simple and super fast</string>
     <string name="about_pager_btn_next">Next</string>
 
     <!--filters -->

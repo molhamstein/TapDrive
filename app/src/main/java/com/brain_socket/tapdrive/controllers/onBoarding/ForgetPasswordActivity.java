@@ -26,6 +26,11 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password);
+        try{
+            isPartner = getIntent().getBooleanExtra("isPartner", false);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         init();
     }
 
@@ -103,7 +108,7 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
                             startActivity(i);
                             finish();
                         }
-                    },1200);
+                    },1500);
                 }else{
                     if(result.getApiError().equals(ServerAccess.USER_NOT_EXIST))
                         Toast.makeText(ForgetPasswordActivity.this, getString(R.string.activity_forget_password_user_not_found), Toast.LENGTH_LONG).show();

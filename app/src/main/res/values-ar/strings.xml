@@ -14,12 +14,12 @@
     <string name="exit">الخروج</string>
 
     <!-- about pager -->
-    <string name="about_pager_title_1">اهلا بك في اول تطبيق لتأجير السيارات في المنطقة</string>
-    <string name="about_pager_desc_1">Lorem ipsum dolor sit amet, consectetur adipiscing</string>
+    <string name="about_pager_title_1">اهلا بك في تطبيق كنعان</string>
+    <string name="about_pager_desc_1">أول و افضل تطبيق لتاجير السيارات في الشرق الاوسط و الخليج العربي</string>
     <string name="about_pager_title_2">لا مزيد من البحث جد السيارة التي تناسبك بسهولة</string>
-    <string name="about_pager_desc_2">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien elit, sodales vel lectus quis, semper.</string>
+    <string name="about_pager_desc_2">خدمة بغاية البساطة و السهولة لايجاد و استئجار مختلف انواع السيارات</string>
     <string name="about_pager_title_3">سرعة و سهولة في الاستخدام</string>
-    <string name="about_pager_desc_3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi sapien elit, sodales vel lectus quis, semper scelerisque ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et</string>
+    <string name="about_pager_desc_3">احجز سيارتك الان بثلاث خطوات بسيطة فقط</string>
     <string name="about_pager_btn_next">التالي</string>
 
     <!--filters -->

@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
+        toolbar.setNavigationIcon(R.drawable.ic_ham_menu);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -219,6 +219,8 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
+        toggle.setDrawerIndicatorEnabled(false); //disable "hamburger to arrow" drawable
+        toggle.setHomeAsUpIndicator(R.drawable.ic_ham_menu);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
