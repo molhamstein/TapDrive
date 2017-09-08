@@ -94,6 +94,7 @@ public class InnerLoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         loadingDialog = TapApp.getNewLoadingDilaog(getActivity());
+
     }
 
     private void hideUiElements() {
@@ -174,8 +175,9 @@ public class InnerLoginFragment extends Fragment {
             }
 
             loadingDialog.show();
+
             if (screenType == PARTNER_LOGIN) {
-                DataStore.getInstance().attemptPartnerLogin(email, password, "", "", loginCallback);
+                DataStore.getInstance().attemptPartnerLogin(email, password, loginCallback);
             } else {
                 DataStore.getInstance().attemptLogin(email, password, "", "", "", loginCallback);
             }
@@ -195,6 +197,8 @@ public class InnerLoginFragment extends Fragment {
                 } else {
                     Toast.makeText(getApplicationContext(), getString(R.string.activity_login_email_or_pass_is_wrong), Toast.LENGTH_LONG).show();
                 }
+            } else {
+                Toast.makeText(getApplicationContext(), getString(R.string.activity_login_email_or_pass_is_wrong), Toast.LENGTH_LONG).show();
             }
         }
     };

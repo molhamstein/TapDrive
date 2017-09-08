@@ -97,7 +97,7 @@ public class SplashScreen extends AppCompatActivity implements DataStore.DataReq
     public void onDataReady(ServerResult result, boolean success) {
         boolean isLoggedInUser = !DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN).equalsIgnoreCase("");
         if (success) {
-            if (!isLoggedInUser /*&& DataStore.getInstance().isFirstRun()*/) {
+            if (!isLoggedInUser && DataStore.getInstance().isFirstRun()) {
                 handler.postDelayed(proceedToIntroRunnable, 1500);
             } else {
                 handler.post(proceedToMainRunnable);
@@ -119,7 +119,6 @@ public class SplashScreen extends AppCompatActivity implements DataStore.DataReq
                 showConnectionErrorDialog();
             }
         }
-        DataStore.getInstance().setFirstRun(false);
     }
 
     private void showConnectionErrorDialog() {

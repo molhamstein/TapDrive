@@ -175,8 +175,8 @@ public class Partner extends AppBaseModel {
         this.cars = cars;
     }
 
-    public int getMarkerResource() {
-        return R.drawable.ic_marker_sport;
+    public int getMarkerResource(Boolean isSelected) {
+        return isSelected?R.drawable.ic_marker_sport_active:R.drawable.ic_marker_sport;
     }
 
     public LatLng getCoords(){

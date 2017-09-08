@@ -272,7 +272,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
                     locatableWorkshop.markerOptions = new MarkerOptions()
                             .position(partner.getCoords())
-                            .icon(BitmapDescriptorFactory.fromResource(locatableWorkshop.partner.getMarkerResource()))
+                            .icon(BitmapDescriptorFactory.fromResource(locatableWorkshop.partner.getMarkerResource(isSelected)))
                             .anchor(0.5f, 0.5f);
                     this.providers.add(locatableWorkshop);
                 }
@@ -392,6 +392,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_active));
                 focusMapOnMarker(marker.getPosition());
                 populateVehiclesData(selectedPartner);
+                drawProvidersOnMap(this.providers, false);
             }
         } catch (Exception e) {
             e.printStackTrace();

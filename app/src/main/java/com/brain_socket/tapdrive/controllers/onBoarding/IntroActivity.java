@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.prolificinteractive.parallaxpager.ParallaxContainer;
 import com.prolificinteractive.parallaxpager.ParallaxContextWrapper;
@@ -24,7 +25,7 @@ public class IntroActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             if (currentPageIndex >= 2) {
-                Intent i = new Intent(IntroActivity.this, LoginActivity.class);
+                Intent i = new Intent(IntroActivity.this, MainActivity.class);
                 startActivity(i);
                 finish();
             } else {

@@ -154,7 +154,11 @@ public class TapApp extends MultiDexApplication implements GoogleApiClient.Conne
         dialogLoading.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         dialogLoading.setContentView(R.layout.layout_loading_diag);
-        dialogLoading.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        try {
+            dialogLoading.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return dialogLoading;
     }
 

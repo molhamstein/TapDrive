@@ -132,6 +132,9 @@
     <string name="activity_reset_password_btn">ارسال</string>
     <string name="activity_reset_password_success">تم تغير كلمة السر</string>
 
+    <!--invoices-->
+    <string name="invoices_date">التاريخ</string>
+
     <string name="loading">جاري التحميل</string>
     <string name="history_screen_title">الحجوزات السابقة</string>
     <string name="settings_screen_title">الإعدادات</string>

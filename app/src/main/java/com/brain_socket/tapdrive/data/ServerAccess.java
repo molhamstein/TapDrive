@@ -108,7 +108,7 @@ public class ServerAccess {
         return result;
     }
 
-    public ServerResult partnerLogin(String email, String password, String socialId, String socialToken) {
+    public ServerResult partnerLogin(String email, String password) {
         ServerResult result = new ServerResult();
         UserModel me = null;
         boolean isRegistered = false;
@@ -117,8 +117,6 @@ public class ServerAccess {
             JSONObject jsonPairs = new JSONObject();
             jsonPairs.put("email", email);
             jsonPairs.put("password", password);
-            jsonPairs.put("social_id", socialId);
-            jsonPairs.put("social_platform", socialToken);
 
             // url
             String url = BASE_SERVICE_URL + "/partners/login";

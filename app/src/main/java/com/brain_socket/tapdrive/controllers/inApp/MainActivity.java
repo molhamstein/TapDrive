@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -47,6 +47,7 @@ import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation;
+import com.brain_socket.tapdrive.controllers.onBoarding.LoginActivity;
 import com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen;
 import com.brain_socket.tapdrive.customViews.FilterTypeView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity
     private static String TAG_PROFILE_FRAG = "profileFrag";
     private static String TAG_PAYMENT_FRAG = "paymentFrag";
     private static String TAG_CARS_FRAG = "carsFrag";
+    private static String TAG_ADD_CAR_FRAG = "addCarFrag";
     private static String TAG_INVOICES_FRAG = "invoicesFrag";
     private static String TAG_NOTIFICATIONS_FRAG = "notificationsFrag";
     private static String TAG_PARTNER_LOGIN_FRAG = "partnerLoginFrag";
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity
     TextViewCustomFont partnerQuestionButton;
     ImageView headerLogoImageView;
     View dimmingView;
+    ImageView addCarImageView;
 
     UserModel me;
 
@@ -122,6 +125,19 @@ public class MainActivity extends AppCompatActivity
         DataStore.getInstance().addUpdateBroadcastListener(this);
         init();
         showMap();
+
+        // show login screen on first run if user is not logged in
+        boolean isLoggedInUser = !DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN).equalsIgnoreCase("");
+        if (!isLoggedInUser && DataStore.getInstance().isFirstRun()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(i);
+                }
+            }, 1500);
+        }
+        DataStore.getInstance().setFirstRun(false);
     }
 
     @Override
@@ -174,7 +190,13 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationIcon(R.drawable.ic_ham_menu);
+        addCarImageView = (ImageView) findViewById(R.id.add_car_icon);
+        addCarImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPartnerAddCarScreen();
+            }
+        });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -219,28 +241,27 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        toggle.setDrawerIndicatorEnabled(false); //disable "hamburger to arrow" drawable
-        toggle.setHomeAsUpIndicator(R.drawable.ic_ham_menu);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-//        toggle.setDrawerIndicatorEnabled(false);
-//        toggle.setHomeAsUpIndicator(R.drawable.ic_menu);
-//
-//        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (drawer.isDrawerOpen(GravityCompat.START)) {
-//                    drawer.closeDrawer(GravityCompat.START);
-//                } else {
-//                    drawer.openDrawer(GravityCompat.START);
-//                }
-//            }
-//        });
+        toggle.setDrawerIndicatorEnabled(false);
+        toggle.setHomeAsUpIndicator(R.drawable.ic_ham_menu);
+
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    drawer.openDrawer(GravityCompat.START);
+                }
+            }
+        });
 
         getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
+
                 if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     toggleFiltersButton.setVisibility(View.GONE);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);// show back button
@@ -250,6 +271,12 @@ public class MainActivity extends AppCompatActivity
                             onBackPressed();
                         }
                     });
+
+                    if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                        if (getSupportFragmentManager().getBackStackEntryAt(0).getName().equalsIgnoreCase(TAG_CARS_FRAG)) {
+                            addCarImageView.setVisibility(View.VISIBLE);
+                        }
+                    }
                 } else {
                     //show hamburger
                     removeMainFragmentContainerMargins();
@@ -257,7 +284,10 @@ public class MainActivity extends AppCompatActivity
                     toolbarLogo.setVisibility(View.GONE);
                     toggleFiltersButton.setVisibility(View.VISIBLE);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    toggle.setDrawerIndicatorEnabled(false);
+                    toggle.setHomeAsUpIndicator(R.drawable.ic_ham_menu);
                     toggle.syncState();
+                    addCarImageView.setVisibility(View.GONE);
                     toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -364,6 +394,10 @@ public class MainActivity extends AppCompatActivity
                 carsMenuItem.setVisible(true);
                 applyFontToMenuItem(carsMenuItem);
 
+                MenuItem invoicesMenuItem = navigationViewMenu.findItem(R.id.nav_partner_invoices);
+                invoicesMenuItem.setVisible(true);
+                applyFontToMenuItem(invoicesMenuItem);
+
                 MenuItem profileMenuItem = navigationViewMenu.findItem(R.id.nav_profile);
                 profileMenuItem.setVisible(false);
 
@@ -371,6 +405,9 @@ public class MainActivity extends AppCompatActivity
             } else {
                 MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
                 carsMenuItem.setVisible(false);
+
+                MenuItem invoicesMenuItem = navigationViewMenu.findItem(R.id.nav_partner_invoices);
+                invoicesMenuItem.setVisible(false);
             }
 
         } else {
@@ -667,7 +704,7 @@ public class MainActivity extends AppCompatActivity
             animator.start();
 
             toggleFiltersButton.setBackgroundColor(Color.TRANSPARENT);
-            toggleFiltersButton.setColorFilter(Color.parseColor("#ededed"));
+            toggleFiltersButton.setColorFilter(null);
             isFiltersOpen = false;
 
             dimmingView.setVisibility(View.GONE);
@@ -882,8 +919,10 @@ public class MainActivity extends AppCompatActivity
         toolbarTitle.setText(R.string.cars_screen_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
+        addCarImageView.setVisibility(View.VISIBLE);
+
         fragmentManager = getSupportFragmentManager();
-        PartnerِAddCarFragment carsFragment = PartnerِAddCarFragment.newInstance();
+        PartnerCarsFragment carsFragment = PartnerCarsFragment.newInstance();
         fragment = carsFragment;
         fragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.pull_in_right,
@@ -892,6 +931,29 @@ public class MainActivity extends AppCompatActivity
                         R.anim.push_out_right)
                 .add(R.id.flMainFragmentContainer, fragment, TAG_CARS_FRAG)
                 .addToBackStack(TAG_CARS_FRAG)
+                .commit();
+    }
+
+    private void openPartnerAddCarScreen() {
+
+        applyMainFragmentContainerMargins();
+
+        toolbarLogo.setVisibility(View.GONE);
+        toolbarTitle.setText(R.string.cars_screen_title);
+        toolbarTitle.setVisibility(View.VISIBLE);
+
+        addCarImageView.setVisibility(View.GONE);
+
+        fragmentManager = getSupportFragmentManager();
+        PartnerِAddCarFragment carsFragment = PartnerِAddCarFragment.newInstance();
+        fragment = carsFragment;
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.pull_in_right,
+                        R.anim.push_out_left,
+                        R.anim.pull_in_left,
+                        R.anim.push_out_right)
+                .add(R.id.flMainFragmentContainer, fragment, TAG_ADD_CAR_FRAG)
+                .addToBackStack(TAG_ADD_CAR_FRAG)
                 .commit();
     }
 

@@ -136,6 +136,9 @@
     <string name="add_car_info_not_set">Please add the car info</string>
     <string name="add_car_success">Car Adedd Successfully</string>
 
+    <!--invoices-->
+    <string name="invoices_date">Date</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading">LOADING</string>
