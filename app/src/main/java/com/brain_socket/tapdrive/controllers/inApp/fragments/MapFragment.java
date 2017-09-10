@@ -272,7 +272,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
                     locatableWorkshop.markerOptions = new MarkerOptions()
                             .position(partner.getCoords())
-                            .icon(BitmapDescriptorFactory.fromResource(locatableWorkshop.partner.getMarkerResource()));
+                            .icon(BitmapDescriptorFactory.fromResource(locatableWorkshop.partner.getMarkerResource(isSelected)))
+                            .anchor(0.5f, 0.5f);
                     this.providers.add(locatableWorkshop);
                 }
                 // Map
@@ -293,6 +294,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             if (providers != null && googleMap != null) {
                 googleMap.clear();
                 lastUserCircle = null;
+                lastMarkerCircle = null;
+
+                if(selectedPartner != null) {
+                    addMarkerPulsatingEffect(selectedPartner.partner.getCoords());
+                }
 
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 for (LocatableWorkshop provider : providers) {
@@ -384,11 +390,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 displayProviderDetailsPreview(locatableWorkshop);
                 selectedPartner = locatableWorkshop;
                 //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_active));
-                ///TODO trigger marker animation
                 focusMapOnMarker(marker.getPosition());
                 populateVehiclesData(selectedPartner);
-
-                addMarkerPulsatingEffect(marker.getPosition());
+                drawProvidersOnMap(this.providers, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -485,7 +489,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
                 if (lastUserCircle != null) {
                     float zoomPrecent = googleMap.getCameraPosition().zoom / googleMap.getMaxZoomLevel();
                     // TODO do some caculations based on th zoom level to make sure the size of the pulse circle remains fixed regardless of zoom level
-                    lastUserCircle.setDimensions((Float) animation.getAnimatedValue());
+                    lastUserCircle.setDimensions((Float) animation.getAnimatedValue() * (2-zoomPrecent));
                     lastUserCircle.setTransparency(animation.getAnimatedFraction());
                 } else {
                     BitmapDescriptor image = BitmapDescriptorFactory.fromResource(R.drawable.pulse);
@@ -508,20 +512,20 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         }
         if (lastMarkerCircle != null)
             lastMarkerCircle.setPosition(markerLatLng);
-        lastMarkerPulseAnimator = valueAnimate(3000, pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
+        lastMarkerPulseAnimator = valueAnimate(4000, pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 if (lastMarkerCircle != null) {
                     float zoomPrecent = googleMap.getCameraPosition().zoom / googleMap.getMaxZoomLevel();
                     // TODO do some caculations based on th zoom level to make sure the size of the pulse circle remains fixed regardless of zoom level
-                    lastMarkerCircle.setDimensions((Float) animation.getAnimatedValue());
+                    Log.d("scale", "scal is " + zoomPrecent);
+                    lastMarkerCircle.setDimensions((Float) animation.getAnimatedValue() * (2-zoomPrecent));
                     lastMarkerCircle.setTransparency(animation.getAnimatedFraction());
                 } else {
                     BitmapDescriptor image = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_glow);
                     lastMarkerCircle = googleMap.addGroundOverlay(new GroundOverlayOptions()
                             .position(markerLatLng, (Float) animation.getAnimatedValue())
                             .anchor(0.5f, 0.5f)
-                            .transparency(0)
                             .image(image));
                 }
             }
@@ -529,7 +533,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     }
 
     protected ValueAnimator valueAnimate(float accuracy, long duration, ValueAnimator.AnimatorUpdateListener updateListener) {
-        Log.d("valueAnimate: ", "called");
         ValueAnimator va = ValueAnimator.ofFloat(0, accuracy);
         va.setDuration(duration);
         va.addUpdateListener(updateListener);

@@ -1,7 +1,9 @@
 package com.brain_socket.tapdrive.controllers.onBoarding;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -103,8 +105,13 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
             loadingDialog.dismiss();
             if(success){
                 if(result.getApiError().equals("")){
-                    Toast.makeText(ResetPasswordActivity.this, getString(R.string.activity_forget_password_request_sent), Toast.LENGTH_LONG).show();
-                    finish();
+                    Toast.makeText(ResetPasswordActivity.this, getString(R.string.activity_reset_password_success), Toast.LENGTH_LONG).show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    },1500);
                 }else{
                     if(result.getApiError().equals(ServerAccess.USER_NOT_EXIST))
                         Toast.makeText(ResetPasswordActivity.this, getString(R.string.activity_forget_password_user_not_found), Toast.LENGTH_LONG).show();

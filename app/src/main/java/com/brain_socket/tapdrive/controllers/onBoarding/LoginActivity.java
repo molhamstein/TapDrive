@@ -156,6 +156,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void animateLoginPageUiElements(View v, int delay) {
 
+        v.setAlpha(0);
         ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(500)
                 .interpolator(new OvershootInterpolator())
                 .start();
@@ -163,6 +164,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void forgetPassword() {
         Intent i = new Intent(LoginActivity.this, ForgetPasswordActivity.class);
+        i.putExtra("isPartner", false);
         startActivity(i);
     }
 
@@ -316,6 +318,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String id = acct.getId();
                 DataStore.getInstance().attemptLogin(email, "", fullName, id, "Google+", loginCallback);
             }
+        } else {
+          loadingDialog.dismiss();
         }
     }
 

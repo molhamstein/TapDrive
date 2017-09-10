@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.brain_socket.tapdrive.R;
+import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
 import com.brain_socket.tapdrive.data.DataStore;
 import com.prolificinteractive.parallaxpager.ParallaxContainer;
 import com.prolificinteractive.parallaxpager.ParallaxContextWrapper;
@@ -18,16 +19,19 @@ public class IntroActivity extends AppCompatActivity {
 
     ParallaxContainer parallaxContainer;
 
+    int currentPageIndex = 0;
+
     OnClickListener onNextClick = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.btnNext3) {
-                Intent i = new Intent(IntroActivity.this, LoginActivity.class);
+            if (currentPageIndex >= 2) {
+                Intent i = new Intent(IntroActivity.this, MainActivity.class);
                 startActivity(i);
                 finish();
             } else {
                 parallaxContainer.getViewPager().setCurrentItem(parallaxContainer.getViewPager().getCurrentItem() + 1, true);
             }
+            currentPageIndex ++;
         }
     };
 
@@ -76,9 +80,16 @@ public class IntroActivity extends AppCompatActivity {
             View btn2 = findViewById(R.id.btnNext2);
             View btn3 = findViewById(R.id.btnNext3);
 
+            View root1 = findViewById(R.id.root1);
+            View root2 = findViewById(R.id.root2);
+            View root3 = findViewById(R.id.root3);
+
             btn1.setOnClickListener(onNextClick);
             btn2.setOnClickListener(onNextClick);
             btn3.setOnClickListener(onNextClick);
+            root1.setOnClickListener(onNextClick);
+            root2.setOnClickListener(onNextClick);
+            root3.setOnClickListener(onNextClick);
         } catch (Exception e) {
             e.printStackTrace();
         }

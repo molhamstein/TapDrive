@@ -414,12 +414,12 @@ public class DataStore {
         }).start();
     }
 
-    public void attemptPartnerLogin(final String email, final String password, final String socialId, final String socialPlatform, final DataRequestCallback callback) {
+    public void attemptPartnerLogin(final String email, final String password, final DataRequestCallback callback) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 boolean success = true;
-                ServerResult result = serverHandler.partnerLogin(email, password, socialId, socialPlatform);
+                ServerResult result = serverHandler.partnerLogin(email, password);
                 if (result.getRequestStatusCode() >= 400) {
                     success = false;
                 } else {

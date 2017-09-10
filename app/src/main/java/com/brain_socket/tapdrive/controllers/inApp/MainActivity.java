@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -47,6 +47,7 @@ import com.brain_socket.tapdrive.controllers.inApp.fragments.ProfileFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation;
+import com.brain_socket.tapdrive.controllers.onBoarding.LoginActivity;
 import com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen;
 import com.brain_socket.tapdrive.customViews.FilterTypeView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
@@ -124,6 +125,19 @@ public class MainActivity extends AppCompatActivity
         DataStore.getInstance().addUpdateBroadcastListener(this);
         init();
         showMap();
+
+        // show login screen on first run if user is not logged in
+        boolean isLoggedInUser = !DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN).equalsIgnoreCase("");
+        if (!isLoggedInUser && DataStore.getInstance().isFirstRun()) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(i);
+                }
+            }, 1500);
+        }
+        DataStore.getInstance().setFirstRun(false);
     }
 
     @Override
@@ -380,6 +394,10 @@ public class MainActivity extends AppCompatActivity
                 carsMenuItem.setVisible(true);
                 applyFontToMenuItem(carsMenuItem);
 
+                MenuItem invoicesMenuItem = navigationViewMenu.findItem(R.id.nav_partner_invoices);
+                invoicesMenuItem.setVisible(true);
+                applyFontToMenuItem(invoicesMenuItem);
+
                 MenuItem profileMenuItem = navigationViewMenu.findItem(R.id.nav_profile);
                 profileMenuItem.setVisible(false);
 
@@ -387,6 +405,9 @@ public class MainActivity extends AppCompatActivity
             } else {
                 MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
                 carsMenuItem.setVisible(false);
+
+                MenuItem invoicesMenuItem = navigationViewMenu.findItem(R.id.nav_partner_invoices);
+                invoicesMenuItem.setVisible(false);
             }
 
         } else {

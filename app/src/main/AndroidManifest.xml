@@ -63,6 +63,9 @@
         <activity android:name=".controllers.onBoarding.ForgetPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".controllers.onBoarding.ResetPasswordActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3c4381bbbd14b58c2f0358d64aac639156a9cf72" />
