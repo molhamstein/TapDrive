@@ -344,9 +344,9 @@ public class MainActivity extends AppCompatActivity
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 DataStore.getInstance().logoutUser();
-                                Intent intent = new Intent(MainActivity.this, SplashScreen.class);
-                                MainActivity.this.startActivity(intent);
-                                MainActivity.this.finish();
+//                                Intent intent = new Intent(MainActivity.this, SplashScreen.class);
+//                                MainActivity.this.startActivity(intent);
+//                                MainActivity.this.finish();
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -1090,16 +1090,28 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoginStateChange() {
 
-        me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
-        init();
+        if (me != null) {
+
+            me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
+            init();
+
+        } else {
+
+            init();
+
+        }
 
     }
 
     @Override
     public void onUserInfoUpdated() {
 
-        me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
-        init();
+        if (me != null) {
+
+            me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
+            init();
+
+        }
 
     }
 }
