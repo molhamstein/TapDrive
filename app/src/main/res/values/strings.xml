@@ -37,8 +37,10 @@
     <string name="drawer_help">Are you a partner</string>
     <string name="drawer_logout">logout</string>
     <string name="drawer_profile">PROFILE</string>
+    <string name="drawer_login">LOGIN</string>
     <string name="drawer_payment">PAYMENT</string>
-    <string name="drawer_trips">TRIP HISTORY</string>
+    <string name="drawer_trips">TRIPS</string>
+    <string name="drawer_orders">ORDERS</string>
     <string name="drawer_partner_cars">MY CARS</string>
     <string name="drawer_partner_invoices">INVOICES</string>
     <string name="drawer_wish">WISH LIST</string>
