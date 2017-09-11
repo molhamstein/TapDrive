@@ -44,6 +44,8 @@
     <string name="drawer_wish">WISH LIST</string>
     <string name="drawer_settings">SETTINGS</string>
     <string name="drawer_notifications">NOTIFICATIONS</string>
+    <string name="drawer_orders">ORDERS</string>
+    <string name="drawer_login">LOGIN</string>
 
     <string name="location_not_enabled_msg">Please, Enable Locations services for better results</string>
     <string name="location_not_enabled_ok">Enable</string>
@@ -184,5 +186,12 @@
     <string name="return_after_start">Your return time should be after your start time</string>
     <string name="return_after_start_and_before_reservation">Your return time should be after your start time and before the start of the next reservation in the same day</string>
     <string name="finish">Finish</string>
+    <string name="choose_button_text">Choose</string>
+    <string name="select_text">Select</string>
+    <string name="notification_description">You have sent a rent request</string>
+    <string name="notification_order_sent">You have sent a rent request</string>
+    <string name="notification_new_order">New rent request</string>
+    <string name="notification_order_approved">Order approved</string>
+    <string name="select_image_text">Select your image:</string>
 
 </resources>

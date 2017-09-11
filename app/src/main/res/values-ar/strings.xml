@@ -41,6 +41,8 @@
     <string name="drawer_wish">المفضلة</string>
     <string name="drawer_settings">الإعدادات</string>
     <string name="drawer_notifications">التنبيهات</string>
+    <string name="drawer_orders">الحجوزات</string>
+    <string name="drawer_login">تسجيل الدخول</string>
 
     <string name="location_not_enabled_msg">الرجاء تشغيل خدمات الموقع للحصول على أفضل نتيجة</string>
     <string name="location_not_enabled_ok">موافق</string>
@@ -177,5 +179,12 @@
     <string name="return_after_start">تاريخ عودتك يجب أن يكون بعد تاريخ بداية رحلتك</string>
     <string name="return_after_start_and_before_reservation">تاريخ عودتك يجب أن يكون بعد تاريخ بداية رحلتك وقبل بداية الحجز الذي يلي حجزك</string>
     <string name="finish">تم</string>
+    <string name="choose_button_text">اختيار</string>
+    <string name="select_text">اختر </string>
+    <string name="notification_description">لقد قمت بإرسال طلب حجز</string>
+    <string name="notification_order_sent">قمت بطلب استئجار</string>
+    <string name="notification_new_order">طلب استئجار جديد</string>
+    <string name="notification_order_approved">تم تأكيد طلب الاستئجار</string>
+    <string name="select_image_text">قم باختيار الصورة:</string>
 
 </resources>

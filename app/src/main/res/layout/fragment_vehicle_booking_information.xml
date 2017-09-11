@@ -29,6 +29,7 @@
             app:fontId="2" />
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+            android:id="@+id/vehicle_details_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -39,6 +40,7 @@
             app:fontId="2" />
 
         <LinearLayout
+            android:id="@+id/vehicle_details_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -77,6 +79,7 @@
                     android:layout_gravity="center_horizontal">
 
                     <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/daily_price_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -103,6 +106,7 @@
                     android:layout_gravity="center_horizontal">
 
                     <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                        android:id="@+id/hourly_price_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -128,12 +132,14 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/separator_1"
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:layout_marginTop="10dp"
             android:background="#ededed" />
 
         <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+            android:id="@+id/trip_details_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -144,6 +150,7 @@
             app:fontId="2" />
 
         <View
+            android:id="@+id/separator_2"
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:layout_marginTop="2dp"
@@ -159,18 +166,21 @@
             app:mcv_headerTextAppearance="@style/CalendarHeaderTextAppearance"/>
 
         <View
+            android:id="@+id/separator_3"
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:layout_marginTop="2dp"
             android:background="#ededed" />
 
         <LinearLayout
+            android:id="@+id/from_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
             <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/from_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -192,12 +202,14 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/to_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
             <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/to_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -219,12 +231,14 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/separator_4"
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:layout_marginTop="5dp"
             android:background="#ededed" />
 
         <LinearLayout
+            android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
