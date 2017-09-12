@@ -3,6 +3,7 @@ package com.brain_socket.tapdrive.controllers.inApp.viewHolders;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.brain_socket.tapdrive.R;
@@ -74,15 +75,19 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
         Glide.with(context).load(order.getUser().getPhoto()).into(userImageView);
         userName.setText(order.getUser().getUsername());
 
+        Log.d("EYAD", "bind: " + isPartner);
+
         if (isPartner) {
-            itemStatus.setText(OrderStatus.getInstance().getStatuses().get(order.getStatus()));
+            Log.d("EYAD", "bind: " + order.getStatus());
+            Log.d("EYAD", "bind: " + OrderStatus.getInstance(context).getPartnerStatuses().get(order.getStatus()));
+            itemStatus.setText(OrderStatus.getInstance(context).getPartnerStatuses().get(order.getStatus()));
 
             if (order.getStatus() != null) {
                 if (!order.getStatus().equalsIgnoreCase("Done")) {
                     itemStatus.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            DataStore.getInstance().changeItemStatus(Integer.parseInt(order.getId()), OrderStatus.getInstance().getNewStatuses().get(order.getStatus()), new DataStore.DataRequestCallback() {
+                            DataStore.getInstance().changeItemStatus(Integer.parseInt(order.getId()), OrderStatus.getInstance(context).getNewStatuses().get(order.getStatus()), new DataStore.DataRequestCallback() {
                                 @Override
                                 public void onDataReady(ServerResult result, boolean success) {
                                     if (result.getPairs().containsKey("order")) {
@@ -98,7 +103,7 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
                 }
             }
         } else {
-            itemStatus.setText(order.getStatus());
+            itemStatus.setText(OrderStatus.getInstance(context).getStatuses().get(order.getStatus()));
         }
 
     }

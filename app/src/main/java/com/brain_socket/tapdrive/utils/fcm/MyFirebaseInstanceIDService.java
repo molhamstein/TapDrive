@@ -2,6 +2,10 @@ package com.brain_socket.tapdrive.utils.fcm;
 
 import android.util.Log;
 
+import com.brain_socket.tapdrive.data.DataCacheProvider;
+import com.brain_socket.tapdrive.data.DataStore;
+import com.brain_socket.tapdrive.data.ServerResult;
+import com.brain_socket.tapdrive.model.user.UserModel;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -34,7 +38,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     /**
      * Persist token to third-party servers.
-     *
+     * <p>
      * Modify this method to associate the user's FCM InstanceID token with any server-side account
      * maintained by your application.
      *
@@ -42,5 +46,20 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
+
+        UserModel me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, UserModel.class);
+        DataCacheProvider.getInstance().storeStringWithKey(DataCacheProvider.KEY_FCM_TOKEN, token);
+
+        if (me != null) {
+
+            DataStore.getInstance().setFCMId(token, new DataStore.DataRequestCallback() {
+                @Override
+                public void onDataReady(ServerResult result, boolean success) {
+
+                }
+            });
+
+        }
+
     }
 }

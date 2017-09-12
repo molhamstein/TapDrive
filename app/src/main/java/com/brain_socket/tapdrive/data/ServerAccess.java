@@ -386,6 +386,9 @@ public class ServerAccess {
     public ServerResult changeItemStatus(int orderId, String status) {
         ServerResult result = new ServerResult();
         try {
+
+            Log.d("EYAD", "changeItemStatus: " + status);
+
             // parametersn
             JSONObject jsonPairs = new JSONObject();
             jsonPairs.put("order_id", orderId);
@@ -411,6 +414,36 @@ public class ServerAccess {
             Log.d("EYAD", "changeItemStatus: " + jsonObject);
             Order order = Order.fromJson(jsonObject);
             result.addPair("order", order);
+
+        } catch (Exception e) {
+            //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);
+        }
+        return result;
+
+    }
+
+    public ServerResult setFCMId(String fcmToken) {
+        ServerResult result = new ServerResult();
+        try {
+
+            // parametersn
+            JSONObject jsonPairs = new JSONObject();
+            jsonPairs.put("fcm_id", fcmToken);
+            jsonPairs.put("_method", "PUT");
+
+            JSONObject headers = new JSONObject();
+            headers.put("token", DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_ACCESS_TOKEN));
+
+            // url
+            String url = BASE_SERVICE_URL + "/base_user/set_fcm_id";
+
+            // send request
+            ApiRequestResult apiResult = httpRequest(url, jsonPairs, "post", headers);
+            result.setStatusCode(apiResult.getStatusCode());
+            result.setApiError(apiResult.getApiError());
+
+            JSONObject jsonObject = apiResult.getResponseJsonObject();
+            Log.d("EYAD", "setFCMId: " + jsonObject);
 
         } catch (Exception e) {
             //result.setStatusCode(RESPONCE_FORMAT_ERROR_CODE);

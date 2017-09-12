@@ -324,6 +324,30 @@ public class DataStore {
         }).start();
     }
 
+    public void setFCMId(final String fcmToken,
+                                 final DataRequestCallback callback) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = true;
+                ServerResult result = serverHandler.setFCMId(fcmToken);
+                if (result.connectionFailed()) {
+                    success = false;
+                } else {
+                    try {
+                        if (result.isValid()) {
+
+                        }
+                    } catch (Exception e) {
+                        success = false;
+                    }
+                }
+                invokeCallback(callback, success, result); // invoking the callback
+            }
+        }).start();
+    }
+
     public void attemptForgetUserPassword(final String email, final DataRequestCallback callback) {
 
         new Thread(new Runnable() {

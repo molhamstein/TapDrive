@@ -193,5 +193,11 @@
     <string name="notification_new_order">New rent request</string>
     <string name="notification_order_approved">Order approved</string>
     <string name="select_image_text">Select your image:</string>
+    <string name="order_state_pending">Pending</string>
+    <string name="order_state_approve">Approve</string>
+    <string name="order_state_approved">Approved</string>
+    <string name="order_state_on_the_way">On the way</string>
+    <string name="order_state_delivered">Delivered</string>
+    <string name="order_state_completed">Completed</string>
 
 </resources>

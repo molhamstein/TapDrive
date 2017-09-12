@@ -48,11 +48,11 @@ import com.brain_socket.tapdrive.controllers.inApp.fragments.SettingsFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.TripHistoryFragment;
 import com.brain_socket.tapdrive.controllers.inApp.fragments.VehicleBookingInformation;
 import com.brain_socket.tapdrive.controllers.onBoarding.LoginActivity;
-import com.brain_socket.tapdrive.controllers.onBoarding.SplashScreen;
 import com.brain_socket.tapdrive.customViews.FilterTypeView;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
 import com.brain_socket.tapdrive.data.DataCacheProvider;
 import com.brain_socket.tapdrive.data.DataStore;
+import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
 import com.brain_socket.tapdrive.delegates.CarBookedEvent;
 import com.brain_socket.tapdrive.delegates.FilterSelectedEvent;
@@ -431,6 +431,29 @@ public class MainActivity extends AppCompatActivity
         }
 
         initFiltersView();
+
+
+        String fcmToken = DataCacheProvider.getInstance().getStoredStringWithKey(DataCacheProvider.KEY_FCM_TOKEN);
+
+        if (me != null) {
+
+            if (fcmToken != null) {
+
+                if (!fcmToken.equalsIgnoreCase("")) {
+
+                    DataStore.getInstance().setFCMId(fcmToken, new DataStore.DataRequestCallback() {
+                        @Override
+                        public void onDataReady(ServerResult result, boolean success) {
+
+                        }
+                    });
+
+                }
+
+            }
+
+
+        }
 
     }
 
@@ -897,7 +920,7 @@ public class MainActivity extends AppCompatActivity
         if (!me.getType().equalsIgnoreCase("PARTNER")) {
             toolbarTitle.setText(R.string.history_screen_title);
         } else {
-            toolbarTitle.setText("Orders");
+            toolbarTitle.setText(R.string.drawer_orders);
         }
         toolbarTitle.setVisibility(View.VISIBLE);
 

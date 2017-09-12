@@ -31,6 +31,7 @@ public class DataCacheProvider {
     public static final String KEY_APP_COUNTRIES = "countries";
     public static final String KEY_APP_CITIES = "cities";
     public static final String KEY_APP_LOCALE = "locale";
+    public static final String KEY_FCM_TOKEN = "fcm_token";
 
 
     private static DataCacheProvider cacheProvider = null;

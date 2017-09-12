@@ -186,5 +186,11 @@
     <string name="notification_new_order">طلب استئجار جديد</string>
     <string name="notification_order_approved">تم تأكيد طلب الاستئجار</string>
     <string name="select_image_text">قم باختيار الصورة:</string>
+    <string name="order_state_pending">بانتظار الرد</string>
+    <string name="order_state_approve">الموافقة</string>
+    <string name="order_state_approved">تم الموافقة</string>
+    <string name="order_state_on_the_way">قيد التوصيل</string>
+    <string name="order_state_delivered">تم التوصيل</string>
+    <string name="order_state_completed">تم</string>
 
 </resources>
