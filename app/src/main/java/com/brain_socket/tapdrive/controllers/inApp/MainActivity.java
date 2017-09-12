@@ -56,6 +56,7 @@ import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.delegates.BookVehicleButtonClicked;
 import com.brain_socket.tapdrive.delegates.CarBookedEvent;
 import com.brain_socket.tapdrive.delegates.FilterSelectedEvent;
+import com.brain_socket.tapdrive.delegates.ForegroundNotificationRecievedEvent;
 import com.brain_socket.tapdrive.delegates.PermissionGrantedEvent;
 import com.brain_socket.tapdrive.model.filters.Category;
 import com.brain_socket.tapdrive.model.filters.CategoryField;
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity
     ImageView headerLogoImageView;
     View dimmingView;
     ImageView addCarImageView;
+    ImageView notificationsImageView;
 
     UserModel me;
 
@@ -190,6 +192,7 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
+        notificationsImageView = (ImageView) findViewById(R.id.notification_icon);
         addCarImageView = (ImageView) findViewById(R.id.add_car_icon);
         addCarImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1162,4 +1165,20 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onForegroundNotificationRecieved(ForegroundNotificationRecievedEvent foregroundNotificationRecievedEvent) {
+
+        notificationsImageView.setVisibility(View.VISIBLE);
+
+        notificationsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notificationsImageView.setVisibility(View.GONE);
+                openNotificationsScreen();
+            }
+        });
+
+    }
+
 }

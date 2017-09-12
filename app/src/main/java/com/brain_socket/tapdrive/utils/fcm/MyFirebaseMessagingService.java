@@ -11,8 +11,11 @@ import android.util.Log;
 
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.controllers.inApp.MainActivity;
+import com.brain_socket.tapdrive.delegates.ForegroundNotificationRecievedEvent;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by eyadmhanna on 8/18/17.
@@ -62,6 +65,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             sendNotification(remoteMessage.getNotification().getBody());
+            EventBus.getDefault().post(new ForegroundNotificationRecievedEvent());
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

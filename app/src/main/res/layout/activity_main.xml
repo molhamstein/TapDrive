@@ -85,6 +85,15 @@
                         android:layout_gravity="end"
                         android:src="@drawable/ic_filters" />
 
+                    <ImageView
+                        android:id="@+id/notification_icon"
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_new_notification"
+                        />
+
                 </android.support.v7.widget.Toolbar>
 
             <!--</android.support.design.widget.AppBarLayout>-->
