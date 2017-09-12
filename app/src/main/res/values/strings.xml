@@ -46,8 +46,6 @@
     <string name="drawer_wish">WISH LIST</string>
     <string name="drawer_settings">SETTINGS</string>
     <string name="drawer_notifications">NOTIFICATIONS</string>
-    <string name="drawer_orders">ORDERS</string>
-    <string name="drawer_login">LOGIN</string>
 
     <string name="location_not_enabled_msg">Please, Enable Locations services for better results</string>
     <string name="location_not_enabled_ok">Enable</string>
