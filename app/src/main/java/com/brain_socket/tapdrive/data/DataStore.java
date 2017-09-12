@@ -106,7 +106,7 @@ public class DataStore {
         //brands = cache.getStoredArrayWithKey(DataCacheProvider.KEY_APP_ARRAY_BRANDS, new TypeToken<ArrayList<BrandModel>>() {}.getType());
         me = DataCacheProvider.getInstance().getStoredObjectWithKey(DataCacheProvider.KEY_APP_USER_ME, new TypeToken<UserModel>() {
         }.getType());
-        isFirstRun = DataCacheProvider.getInstance().getStoredIntWithKey(DataCacheProvider.KEY_APP_USER_ME) == 0;
+        isFirstRun = DataCacheProvider.getInstance().getStoredIntWithKey(DataCacheProvider.KEY_APP_IS_FIRST_RUNN) == 0;
     }
 
     //--------------------

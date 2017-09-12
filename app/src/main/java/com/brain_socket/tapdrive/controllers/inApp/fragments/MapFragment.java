@@ -389,10 +389,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             if (locatableWorkshop != null) {
                 displayProviderDetailsPreview(locatableWorkshop);
                 selectedPartner = locatableWorkshop;
-                //marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_active));
+                //marker.setIcon(BitmapDescriptorFactory.fromResource(locatableWorkshop.partner.getMarkerResource(true)));
                 focusMapOnMarker(marker.getPosition());
                 populateVehiclesData(selectedPartner);
-                drawProvidersOnMap(this.providers, false);
+
+                updateView(this.partners, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -483,13 +484,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         }
         if (lastUserCircle != null)
             lastUserCircle.setPosition(userLatlng);
-        lastPulseAnimator = valueAnimate(3000, pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
+        lastPulseAnimator = valueAnimate(1, pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 if (lastUserCircle != null) {
-                    float zoomPrecent = googleMap.getCameraPosition().zoom / googleMap.getMaxZoomLevel();
-                    // TODO do some caculations based on th zoom level to make sure the size of the pulse circle remains fixed regardless of zoom level
-                    lastUserCircle.setDimensions((Float) animation.getAnimatedValue() * (2-zoomPrecent));
+                    //float zoomPrecent = googleMap.getCameraPosition().zoom / googleMap.getMaxZoomLevel();
+                    //Log.d("scaleZoom", " zoom:" + (Float) animation.getAnimatedValue() * (radius * 0.2f));
+                    // TODO do some calculations based on th zoom level to make sure the size of the pulse circle remains fixed regardless of zoom level
+                    lastUserCircle.setDimensions((Float) animation.getAnimatedValue() * (radius * 0.4f));
                     lastUserCircle.setTransparency(animation.getAnimatedFraction());
                 } else {
                     BitmapDescriptor image = BitmapDescriptorFactory.fromResource(R.drawable.pulse);
@@ -512,14 +514,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         }
         if (lastMarkerCircle != null)
             lastMarkerCircle.setPosition(markerLatLng);
-        lastMarkerPulseAnimator = valueAnimate(4000, pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
+        lastMarkerPulseAnimator = valueAnimate(0.9f, pulseDuration, new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 if (lastMarkerCircle != null) {
                     float zoomPrecent = googleMap.getCameraPosition().zoom / googleMap.getMaxZoomLevel();
                     // TODO do some caculations based on th zoom level to make sure the size of the pulse circle remains fixed regardless of zoom level
-                    Log.d("scale", "scal is " + zoomPrecent);
-                    lastMarkerCircle.setDimensions((Float) animation.getAnimatedValue() * (2-zoomPrecent));
+                    lastMarkerCircle.setDimensions( ((Float) animation.getAnimatedValue() + 0.4f) * (radius * 0.4f));
                     lastMarkerCircle.setTransparency(animation.getAnimatedFraction());
                 } else {
                     BitmapDescriptor image = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_glow);
@@ -532,8 +533,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
         });
     }
 
-    protected ValueAnimator valueAnimate(float accuracy, long duration, ValueAnimator.AnimatorUpdateListener updateListener) {
-        ValueAnimator va = ValueAnimator.ofFloat(0, accuracy);
+    protected ValueAnimator valueAnimate(float maxVal, long duration, ValueAnimator.AnimatorUpdateListener updateListener) {
+        ValueAnimator va = ValueAnimator.ofFloat(0, maxVal);
         va.setDuration(duration);
         va.addUpdateListener(updateListener);
         va.setRepeatCount(ValueAnimator.INFINITE);

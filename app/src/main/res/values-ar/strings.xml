@@ -31,7 +31,7 @@
     <string name="filters_select_all">Select all</string>
     <string name="filters_select_car_type">Select Car Type</string>
 
-    <string name="drawer_help">المساعدة</string>
+    <string name="drawer_help">لديك حساب شريك؟</string>
     <string name="drawer_logout">الخروج</string>
     <string name="drawer_profile">الصفحة الشخصية</string>
     <string name="drawer_payment">المدفوعات</string>
@@ -174,7 +174,7 @@
     <string name="total_price">السعر الإجمالي</string>
     <string name="let_s_drive">ابدأ جولتك</string>
     <string name="booked_successfully">تم الحجز بنجاح سيتم التواصل معك للتأكيد</string>
-    <string name="currency"> درهم إماراتي</string>
+    <string name="currency"> درهم</string>
     <string name="select_booking_period">الرجاءاختيار فترة الحجز قبل المتابعة</string>
     <string name="return_after_start">تاريخ عودتك يجب أن يكون بعد تاريخ بداية رحلتك</string>
     <string name="return_after_start_and_before_reservation">تاريخ عودتك يجب أن يكون بعد تاريخ بداية رحلتك وقبل بداية الحجز الذي يلي حجزك</string>
