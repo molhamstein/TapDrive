@@ -51,7 +51,7 @@ public class ServerNotificationsItemViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(ServerNotification serverNotification) {
 
-        itemName.setText(serverNotification.getObject().getItem().getEnglishName());
+        itemName.setText(serverNotification.getObject().getItem().getName());
         itemStatus.setText(serverNotification.getObject().getStatus());
         if (!serverNotification.getObject().getTotal().equalsIgnoreCase("")) {
             totalCostTextView.setText(serverNotification.getObject().getTotal() + context.getString(R.string.currency));
@@ -59,7 +59,13 @@ public class ServerNotificationsItemViewHolder extends RecyclerView.ViewHolder {
             totalCostTextView.setText("0" + context.getString(R.string.currency));
         }
 
-        userName.setText(serverNotification.getObject().getUser().getUsername());
+        if (serverNotification.getType().equalsIgnoreCase("ORDER_SENT")) {
+            userName.setText(R.string.notification_order_sent);
+        } else if (serverNotification.getType().equalsIgnoreCase("NEW_ORDER")) {
+            userName.setText(R.string.notification_new_order);
+        } else if (serverNotification.getType().equalsIgnoreCase("ORDER_APPROVED")) {
+            userName.setText(R.string.notification_order_approved);
+        }
 
         timeFromTextView.setText(Helpers.getFormattedDateString(serverNotification.getObject().getStartDate()));
         timeToTextView.setText(Helpers.getFormattedDateString(serverNotification.getObject().getEndDate()));

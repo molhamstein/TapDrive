@@ -2,6 +2,7 @@ package com.brain_socket.tapdrive.model.partner;
 
 import com.brain_socket.tapdrive.model.AppBaseModel;
 import com.brain_socket.tapdrive.model.filters.CategoryField;
+import com.brain_socket.tapdrive.utils.LocalizationHelper;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.google.gson.annotations.SerializedName;
 
@@ -80,4 +81,24 @@ public class Country extends AppBaseModel {
     public void setCities(ArrayList<City> cities) {
         this.cities = cities;
     }
+
+    public String getName() {
+
+        String locale = LocalizationHelper.getCurrentLocale();
+        if (!locale.equalsIgnoreCase("")) {
+            if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                return getEnglishName();
+            } else {
+                return getArabicName();
+            }
+        } else {
+            if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                return getEnglishName();
+            } else {
+                return getArabicName();
+            }
+        }
+
+    }
+
 }

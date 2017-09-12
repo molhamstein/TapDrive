@@ -60,7 +60,7 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
     public void bind(final Order order, boolean isPartner, final int position) {
 
         Glide.with(context).load(order.getItem().getPhoto()).into(itemImage);
-        itemName.setText(order.getItem().getEnglishName());
+        itemName.setText(order.getItem().getName());
 
         if (!order.getTotal().equalsIgnoreCase("")) {
             totalCostTextView.setText(order.getTotal() + context.getString(R.string.currency));
@@ -82,7 +82,7 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
                     itemStatus.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            DataStore.getInstance().changeItemStatus(Integer.parseInt(order.getId()), order.getStatus(), new DataStore.DataRequestCallback() {
+                            DataStore.getInstance().changeItemStatus(Integer.parseInt(order.getId()), OrderStatus.getInstance().getNewStatuses().get(order.getStatus()), new DataStore.DataRequestCallback() {
                                 @Override
                                 public void onDataReady(ServerResult result, boolean success) {
                                     if (result.getPairs().containsKey("order")) {

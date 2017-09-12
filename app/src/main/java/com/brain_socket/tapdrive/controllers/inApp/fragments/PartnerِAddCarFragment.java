@@ -272,10 +272,10 @@ public class PartnerِAddCarFragment extends Fragment {
             tvPriceHourly.setText("-");
 
         if(selectedCountry != null)
-            tvSelectedCountry.setText(selectedCountry.getEnglishName());
+            tvSelectedCountry.setText(selectedCountry.getName());
 
         if(selectedCity != null)
-            tvSelectedCity.setText(selectedCity.getEnglishName());
+            tvSelectedCity.setText(selectedCity.getName());
     }
 
     private void attempMoveToStage2(){
@@ -391,7 +391,7 @@ public class PartnerِAddCarFragment extends Fragment {
 
     private void openImagePicker() {
 
-        com.mvc.imagepicker.ImagePicker.pickImage(this, "Select your image:");
+        com.mvc.imagepicker.ImagePicker.pickImage(this, getString(R.string.select_image_text));
 
     }
 
@@ -480,7 +480,7 @@ public class PartnerِAddCarFragment extends Fragment {
 
         ArrayList<String> data = new ArrayList<>();
         for (int i = 0; i < selectedCountry.getCities().size(); i++) {
-            data.add(selectedCountry.getCities().get(i).getEnglishName());
+            data.add(selectedCountry.getCities().get(i).getName());
         }
 
         new MaterialDialog.Builder(getContext())
@@ -494,7 +494,7 @@ public class PartnerِAddCarFragment extends Fragment {
                         return true;
                     }
                 })
-                .positiveText("Choose")
+                .positiveText(getString(R.string.choose_button_text))
                 .show();
     }
 
@@ -503,7 +503,7 @@ public class PartnerِAddCarFragment extends Fragment {
 
         ArrayList<String> data = new ArrayList<>();
         for (int i = 0; i < arrayCountries.size(); i++) {
-            data.add(arrayCountries.get(i).getEnglishName());
+            data.add(arrayCountries.get(i).getName());
         }
 
         new MaterialDialog.Builder(getContext())
@@ -517,7 +517,7 @@ public class PartnerِAddCarFragment extends Fragment {
                         return true;
                     }
                 })
-                .positiveText("Choose")
+                .positiveText(getString(R.string.choose_button_text))
                 .show();
     }
 
@@ -559,7 +559,7 @@ public class PartnerِAddCarFragment extends Fragment {
                         return true;
                     }
                 })
-                .positiveText("Choose")
+                .positiveText(getString(R.string.choose_button_text))
                 .show();
     }
 

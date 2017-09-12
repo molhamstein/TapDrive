@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.LinearLayout;
 
 import com.brain_socket.tapdrive.R;
@@ -72,6 +73,34 @@ public class VehicleBookingInformation extends Fragment {
     @BindView(R.id.content_layout)
     LinearLayout contentLayout;
     Unbinder unbinder;
+    @BindView(R.id.vehicle_details_text_view)
+    TextViewCustomFont vehicleDetailsTextView;
+    @BindView(R.id.daily_price_text_view)
+    TextViewCustomFont dailyPriceTextView;
+    @BindView(R.id.hourly_price_text_view)
+    TextViewCustomFont hourlyPriceTextView;
+    @BindView(R.id.separator_1)
+    View separator1;
+    @BindView(R.id.trip_details_text_view)
+    TextViewCustomFont tripDetailsTextView;
+    @BindView(R.id.separator_2)
+    View separator2;
+    @BindView(R.id.separator_3)
+    View separator3;
+    @BindView(R.id.from_text_view)
+    TextViewCustomFont fromTextView;
+    @BindView(R.id.from_layout)
+    LinearLayout fromLayout;
+    @BindView(R.id.to_text_view)
+    TextViewCustomFont toTextView;
+    @BindView(R.id.to_layout)
+    LinearLayout toLayout;
+    @BindView(R.id.separator_4)
+    View separator4;
+    @BindView(R.id.bottom_layout)
+    LinearLayout bottomLayout;
+    @BindView(R.id.vehicle_details_layout)
+    LinearLayout vehicleDetailsLayout;
 
     private Car car;
     boolean selectedRange = false;
@@ -81,6 +110,9 @@ public class VehicleBookingInformation extends Fragment {
     int fromHourOfDay = 0, fromMinute = 0, toHourOfDay = 0, toMinute = 0;
 
     HashMap<String, Pair<Integer, Float>> bookingCostDetailsMap = null;
+
+    private ArrayList<View> uiElements;
+    private boolean didAnimateViews = false;
 
     public VehicleBookingInformation() {
         // Required empty public constructor
@@ -98,6 +130,22 @@ public class VehicleBookingInformation extends Fragment {
         // Inflate the layout for this fragment
         View inflatedView = inflater.inflate(R.layout.fragment_vehicle_booking_information, container, false);
         unbinder = ButterKnife.bind(this, inflatedView);
+
+        if (uiElements == null) uiElements = new ArrayList<View>();
+        uiElements.add(title);
+        uiElements.add(vehicleDetailsTextView);
+        uiElements.add(vehicleDetailsLayout);
+        uiElements.add(separator1);
+        uiElements.add(tripDetailsTextView);
+        uiElements.add(separator2);
+        uiElements.add(calendarView);
+        uiElements.add(separator3);
+        uiElements.add(fromLayout);
+        uiElements.add(toLayout);
+        uiElements.add(separator4);
+        uiElements.add(bottomLayout);
+
+        hideUiElements();
 
         return inflatedView;
     }
@@ -385,7 +433,7 @@ public class VehicleBookingInformation extends Fragment {
     private void bindData() {
 
         Glide.with(getActivity()).load(car.getPhoto()).into(itemImage);
-        itemName.setText(car.getEnglishName());
+        itemName.setText(car.getName());
         itemDailyPrice.setText(car.getDailyPrice() + getString(R.string.currency));
         itemHourlyPrice.setText(car.getHourlyPrice() + getString(R.string.currency));
 
@@ -550,5 +598,36 @@ public class VehicleBookingInformation extends Fragment {
 
     public void setCar(Car car) {
         this.car = car;
+    }
+
+    private void hideUiElements() {
+        if (uiElements != null && uiElements.size() > 0) {
+            for (View v : uiElements) {
+                v.setAlpha(0);
+            }
+        }
+    }
+
+    private void animateUiElementsArray() {
+        if (uiElements != null && uiElements.size() > 0) {
+            for (int i = 0; i < uiElements.size(); i++) {
+                animatePageUiElements(uiElements.get(i), ((i + 1) * 130));
+            }
+        }
+    }
+
+    private void animatePageUiElements(View v, int delay) {
+        com.github.florent37.viewanimator.ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(500)
+                .interpolator(new OvershootInterpolator())
+                .start();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!didAnimateViews) {
+            animateUiElementsArray();
+            didAnimateViews = true;
+        }
     }
 }

@@ -387,7 +387,11 @@ public class MainActivity extends AppCompatActivity
 
             if (me.getType().equalsIgnoreCase("PARTNER")) {
                 MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
+<<<<<<< HEAD
+                menuItem.setTitle(R.string.drawer_orders);
+=======
                 menuItem.setTitle(getString(R.string.drawer_orders));
+>>>>>>> 5557e20d15fc51a1bce28061c9ba401c703ef6a9
                 applyFontToMenuItem(menuItem);
 
                 MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);
@@ -416,11 +420,19 @@ public class MainActivity extends AppCompatActivity
 
         } else {
             MenuItem menuItem = navigationViewMenu.findItem(R.id.nav_profile);
+<<<<<<< HEAD
+            menuItem.setTitle(R.string.drawer_login);
+            applyFontToMenuItem(menuItem);
+
+            MenuItem tripsMenuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
+            tripsMenuItem.setTitle(R.string.drawer_trips);
+=======
             menuItem.setTitle(getString(R.string.drawer_login));
             applyFontToMenuItem(menuItem);
 
             MenuItem tripsMenuItem = navigationViewMenu.findItem(R.id.nav_trip_history);
             tripsMenuItem.setTitle(getString(R.string.drawer_trips));
+>>>>>>> 5557e20d15fc51a1bce28061c9ba401c703ef6a9
             applyFontToMenuItem(tripsMenuItem);
 
             MenuItem carsMenuItem = navigationViewMenu.findItem(R.id.nav_partner_cars);

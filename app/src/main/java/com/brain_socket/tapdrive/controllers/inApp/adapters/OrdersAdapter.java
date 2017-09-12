@@ -78,7 +78,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onItemStatusChanges(OrderUpdatedEvent orderUpdatedEvent) {
-        Log.d("EYAD", "onItemStatusChanges: HERE ");
         getData().get(orderUpdatedEvent.getPosition()).setStatus(orderUpdatedEvent.getUpdatedOrder().getStatus());
         this.notifyItemChanged(orderUpdatedEvent.getPosition());
     }

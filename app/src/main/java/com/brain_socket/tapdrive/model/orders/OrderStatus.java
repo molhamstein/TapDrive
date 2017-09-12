@@ -13,6 +13,7 @@ public class OrderStatus {
     private static OrderStatus instance = null;
 
     private LinkedHashMap<String, String> statuses;
+    private LinkedHashMap<String, String> newStatuses;
 
     public static OrderStatus getInstance() {
         if (instance == null) {
@@ -31,6 +32,12 @@ public class OrderStatus {
         statuses.put("Delivered", "Mark as done");
         statuses.put("Done", "Done");
 
+        newStatuses = new LinkedHashMap<>();
+        statuses.put("PENDING", "APPROVED");
+        statuses.put("Approved", "ON_THE_WAY");
+        statuses.put("Delivery", "DELIVERED");
+        statuses.put("Delivered", "COMPLETED");
+
     }
 
     public LinkedHashMap<String, String> getStatuses() {
@@ -39,5 +46,13 @@ public class OrderStatus {
 
     public void setStatuses(LinkedHashMap<String, String> statuses) {
         this.statuses = statuses;
+    }
+
+    public LinkedHashMap<String, String> getNewStatuses() {
+        return newStatuses;
+    }
+
+    public void setNewStatuses(LinkedHashMap<String, String> newStatuses) {
+        this.newStatuses = newStatuses;
     }
 }

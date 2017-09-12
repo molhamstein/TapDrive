@@ -6,14 +6,12 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +19,6 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.brain_socket.tapdrive.R;
 import com.brain_socket.tapdrive.customViews.EditTextCustomFont;
 import com.brain_socket.tapdrive.customViews.TextViewCustomFont;
@@ -34,21 +30,14 @@ import com.brain_socket.tapdrive.model.user.UserModel;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.bumptech.glide.Glide;
 import com.hbb20.CountryCodePicker;
-import com.kbeanie.multipicker.api.CameraImagePicker;
-import com.kbeanie.multipicker.api.ImagePicker;
-import com.kbeanie.multipicker.api.Picker;
-import com.kbeanie.multipicker.api.callbacks.ImagePickerCallback;
-import com.kbeanie.multipicker.api.entity.ChosenImage;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,8 +84,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
     private UserModel me;
 
-    private ImagePicker imagePicker;
-    private CameraImagePicker cameraImagePicker;
     private String selectedProfileImagePath;
 
     private boolean requiredPermissionGranted = false;
@@ -105,6 +92,9 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
     private boolean clicked = false;
 
     private Dialog loadingDialog;
+
+    private Bitmap selectedImage;
+    private String selectedImagePath;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -137,52 +127,6 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
         uiElements.add(finishButton);
 
         hideUiElements();
-
-        imagePicker = new ImagePicker(ProfileFragment.this);
-        imagePicker.setImagePickerCallback(new ImagePickerCallback() {
-                                               @Override
-                                               public void onImagesChosen(List<ChosenImage> images) {
-                                                   // Display images
-                                                   if (images != null
-                                                           && images.size() > 0) {
-                                                       selectedProfileImagePath = images.get(0).getThumbnailSmallPath();
-                                                       Glide.with(getActivity()).load(Uri.fromFile(new File(selectedProfileImagePath))).into(userProfileImage);
-                                                   }
-                                               }
-
-                                               @Override
-                                               public void onError(String message) {
-                                                   // Do error handling
-                                               }
-                                           }
-        );
-
-        cameraImagePicker = new CameraImagePicker(ProfileFragment.this);
-        cameraImagePicker.setImagePickerCallback(new ImagePickerCallback(){
-                                               @Override
-                                               public void onImagesChosen(List<ChosenImage> images) {
-                                                   // Display images
-                                                   try {
-
-                                                       if (images != null
-                                                               && images.size() > 0) {
-                                                           selectedProfileImagePath = images.get(0).getThumbnailSmallPath();
-                                                           if (selectedProfileImagePath != null) {
-                                                               Glide.with(getActivity()).load(Uri.fromFile(new File(selectedProfileImagePath))).into(userProfileImage);
-                                                           }
-                                                       }
-
-                                                   } catch (Exception e) {
-                                                       e.printStackTrace();
-                                                   }
-                                               }
-
-                                               @Override
-                                               public void onError(String message) {
-                                                   // Do error handling
-                                               }
-                                           }
-        );
 
         checkForPermission();
 
@@ -315,7 +259,7 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
                 gender == Gender.Male ? "male" : "female",
                 userBirthdayEditText.getText().toString(),
                 "1",
-                selectedProfileImagePath,
+                selectedImagePath,
                 new DataStore.DataRequestCallback() {
                     @Override
                     public void onDataReady(ServerResult result, boolean success) {
@@ -346,33 +290,8 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
     private void openImagePicker() {
 
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(getActivity())
-                .title("Edit Your Profile Image")
-                .content("Where do you want to get your new profile picture from?")
-                .positiveText("Gallery")
-                .negativeText("Camera")
-                .neutralText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        imagePicker.pickImage();
-                    }
-                })
-                .onNeutral(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-                    }
-                })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        cameraImagePicker.pickImage();
-                    }
-                });
+        com.mvc.imagepicker.ImagePicker.pickImage(this, getString(R.string.select_image_text));
 
-        MaterialDialog dialog = builder.build();
-        dialog.show();
     }
 
     private void changeSelectedGender(Gender gen) {
@@ -407,11 +326,13 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Picker.PICK_IMAGE_DEVICE) {
-            imagePicker.submit(data);
-        } else if (requestCode == Picker.PICK_IMAGE_CAMERA) {
-            cameraImagePicker.submit(data);
+        Bitmap bitmap = com.mvc.imagepicker.ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
+        if (bitmap != null) {
+            selectedImage = bitmap;
+            userProfileImage.setImageBitmap(bitmap);
+            selectedImagePath = com.mvc.imagepicker.ImagePicker.getImagePathFromResult(getActivity(), requestCode, resultCode, data);
         }
+
     }
 
 }

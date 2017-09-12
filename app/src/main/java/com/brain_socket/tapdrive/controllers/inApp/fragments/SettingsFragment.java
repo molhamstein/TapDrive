@@ -58,12 +58,14 @@ public class SettingsFragment extends Fragment {
                 englishLanguageButton.setChecked(true);
             } else {
                 arabicLanguageButton.setChecked(true);
+                englishLanguageButton.setChecked(false);
             }
         } else {
             if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
                 englishLanguageButton.setChecked(true);
             } else {
                 arabicLanguageButton.setChecked(true);
+                englishLanguageButton.setChecked(false);
             }
         }
 

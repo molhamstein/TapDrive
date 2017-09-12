@@ -66,7 +66,7 @@ public class FilterTypeView extends RelativeLayout {
 
         filterValueText = (TextViewCustomFont) inflatedView.findViewById(R.id.filter_value_text);
 
-        filterValueText.setText(getCategoryField().getEnglishName());
+        filterValueText.setText(getCategoryField().getName());
         inflatedView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +93,7 @@ public class FilterTypeView extends RelativeLayout {
         }
 
         new MaterialDialog.Builder(getContext())
-                .title("Select " + getCategoryField().getEnglishName())
+                .title(getContext().getString(R.string.select_text) + getCategoryField().getName())
                 .items(data == null ? getCategoryField().getOptions() : data)
                 .itemsCallbackSingleChoice(getSelectedItem() == null ? 0 : getSelectedItem().first, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
@@ -104,7 +104,7 @@ public class FilterTypeView extends RelativeLayout {
                          **/
                         if (text != null) {
                             if (!text.toString().equalsIgnoreCase("")) {
-                                filterValueText.setText(getCategoryField().getEnglishName() + ": " + text);
+                                filterValueText.setText(getCategoryField().getName() + ": " + text);
                                 if (data == null) {
                                     setSelectedItem(new Pair<>(which, getCategoryField().getOptions().get(which).getId()));
                                     EventBus.getDefault().post(new FilterSelectedEvent(FilterTypeView.this, getCategoryField().getOptions().get(which).getId()));
@@ -118,7 +118,7 @@ public class FilterTypeView extends RelativeLayout {
                         return true;
                     }
                 })
-                .positiveText("Choose")
+                .positiveText(R.string.choose_button_text)
                 .show();
 
     }
@@ -137,7 +137,7 @@ public class FilterTypeView extends RelativeLayout {
         }
 
         new MaterialDialog.Builder(getContext())
-                .title("Select " + getCategoryField().getEnglishName())
+                .title(getContext().getString(R.string.select_text) + getCategoryField().getName())
                 .items(fieldOptions)
                 .itemsCallbackSingleChoice(getSelectedItem() == null ? 0 : getSelectedItem().first, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
@@ -148,7 +148,7 @@ public class FilterTypeView extends RelativeLayout {
                          **/
                         if (text != null) {
                             if (!text.toString().equalsIgnoreCase("")) {
-                                filterValueText.setText(getCategoryField().getEnglishName() + ": " + text);
+                                filterValueText.setText(getCategoryField().getName() + ": " + text);
                                 setSelectedItem(new Pair<>(which, fieldOptions.get(which).getId()));
                                 EventBus.getDefault().post(new FilterSelectedEvent(FilterTypeView.this, fieldOptions.get(which).getId()));
                             }
@@ -156,7 +156,7 @@ public class FilterTypeView extends RelativeLayout {
                         return true;
                     }
                 })
-                .positiveText("Choose")
+                .positiveText(R.string.choose_button_text)
                 .show();
 
 
@@ -165,7 +165,7 @@ public class FilterTypeView extends RelativeLayout {
     public void clearSelected() {
 
         setSelectedItem(null);
-        filterValueText.setText(getCategoryField().getEnglishName());
+        filterValueText.setText(getCategoryField().getName());
 
     }
 
