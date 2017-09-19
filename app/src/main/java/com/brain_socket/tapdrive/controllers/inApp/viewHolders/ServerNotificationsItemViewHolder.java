@@ -51,8 +51,10 @@ public class ServerNotificationsItemViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(ServerNotification serverNotification) {
 
+        Glide.with(context).load(serverNotification.getObject().getItem().getPhoto()).into(itemImage);
+
         itemName.setText(serverNotification.getObject().getItem().getName());
-        itemStatus.setText(serverNotification.getObject().getStatus());
+        itemStatus.setVisibility(View.GONE);
         if (!serverNotification.getObject().getTotal().equalsIgnoreCase("")) {
             totalCostTextView.setText(serverNotification.getObject().getTotal() + context.getString(R.string.currency));
         } else {

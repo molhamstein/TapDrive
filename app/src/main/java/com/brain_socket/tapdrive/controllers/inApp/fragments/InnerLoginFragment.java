@@ -21,6 +21,7 @@ import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.model.user.UserModel;
 import com.brain_socket.tapdrive.utils.Helpers;
 import com.brain_socket.tapdrive.utils.TapApp;
+import com.github.florent37.viewanimator.ViewAnimator;
 
 import java.util.ArrayList;
 
@@ -52,6 +53,16 @@ public class InnerLoginFragment extends Fragment {
     @BindView(R.id.app_logo)
     ImageView appLogo;
     Unbinder unbinder;
+    @BindView(R.id.btnNewUser)
+    TextViewCustomFont btnNewUser;
+    @BindView(R.id.vSeperator)
+    View vSeperator;
+    @BindView(R.id.tvOrConnectWith)
+    TextViewCustomFont tvOrConnectWith;
+    @BindView(R.id.btnFacebookLogin)
+    TextViewCustomFont btnFacebookLogin;
+    @BindView(R.id.btnTwitterLogin)
+    TextViewCustomFont btnTwitterLogin;
 
     private Dialog loadingDialog;
 
@@ -84,6 +95,20 @@ public class InnerLoginFragment extends Fragment {
         uiElements.add(btnForgetPassword);
         uiElements.add(btnLogin);
 
+        if (screenType == PARTNER_LOGIN) {
+            btnNewUser.setVisibility(View.GONE);
+            vSeperator.setVisibility(View.GONE);
+            tvOrConnectWith.setVisibility(View.GONE);
+            btnFacebookLogin.setVisibility(View.GONE);
+            btnTwitterLogin.setVisibility(View.GONE);
+        } else {
+            uiElements.add(btnNewUser);
+            uiElements.add(vSeperator);
+            uiElements.add(tvOrConnectWith);
+            uiElements.add(btnFacebookLogin);
+            uiElements.add(btnTwitterLogin);
+        }
+
         hideUiElements();
 
         return inflatedView;
@@ -114,7 +139,7 @@ public class InnerLoginFragment extends Fragment {
     }
 
     private void animatePageUiElements(View v, int delay) {
-        com.github.florent37.viewanimator.ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(500)
+        ViewAnimator.animate(v).startDelay(delay).dp().translationY(30, 0).alpha(0, 1).duration(500)
                 .interpolator(new OvershootInterpolator())
                 .start();
     }
@@ -131,7 +156,7 @@ public class InnerLoginFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.btnForgetPassword, R.id.btnLogin})
+    @OnClick({R.id.btnForgetPassword, R.id.btnLogin, R.id.btnNewUser, R.id.btnFacebookLogin, R.id.btnTwitterLogin})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnForgetPassword:
@@ -139,6 +164,12 @@ public class InnerLoginFragment extends Fragment {
                 break;
             case R.id.btnLogin:
                 login();
+                break;
+            case R.id.btnNewUser:
+                break;
+            case R.id.btnFacebookLogin:
+                break;
+            case R.id.btnTwitterLogin:
                 break;
         }
     }
@@ -210,4 +241,5 @@ public class InnerLoginFragment extends Fragment {
     public void setScreenType(int screenType) {
         this.screenType = screenType;
     }
+
 }

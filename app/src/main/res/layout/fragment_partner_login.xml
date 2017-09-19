@@ -101,6 +101,72 @@
                 android:text="@string/activity_login_btn_login"
                 app:fontId="2"/>
 
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/btnNewUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text="@string/activity_login_btn_new_user"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="2" />
+
+            <View
+                android:id="@+id/vSeperator"
+                android:layout_width="@dimen/login_element_width"
+                android:layout_height="0.6dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:background="@color/black"></View>
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/tvOrConnectWith"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:text="@string/activity_login_or_connect_with"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_text_normal"
+                app:fontId="1" />
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/btnFacebookLogin"
+                android:layout_width="@dimen/login_element_width"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/shape_rounded_facebook_button"
+                android:drawableLeft="@drawable/ic_fb"
+                android:drawableStart="@drawable/ic_fb"
+                android:gravity="center"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:text="@string/activity_login_btn_facebook"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_text_small"
+                app:fontId="2" />
+
+            <com.brain_socket.tapdrive.customViews.TextViewCustomFont
+                android:id="@+id/btnTwitterLogin"
+                android:layout_width="@dimen/login_element_width"
+                android:layout_height="@dimen/login_button_height"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/shape_rounded_twitter_button"
+                android:drawableLeft="@drawable/ic_google_plus"
+                android:drawableStart="@drawable/ic_google_plus"
+                android:gravity="center"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:text="@string/activity_login_btn_twitter"
+                android:textColor="@color/white"
+                android:textSize="@dimen/ts_text_small"
+                app:fontId="2" />
+
         </LinearLayout>
 
     </LinearLayout>

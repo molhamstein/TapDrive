@@ -58,14 +58,12 @@ public class SettingsFragment extends Fragment {
                 englishLanguageButton.setChecked(true);
             } else {
                 arabicLanguageButton.setChecked(true);
-                englishLanguageButton.setChecked(false);
             }
         } else {
             if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
                 englishLanguageButton.setChecked(true);
             } else {
                 arabicLanguageButton.setChecked(true);
-                englishLanguageButton.setChecked(false);
             }
         }
 
@@ -89,6 +87,7 @@ public class SettingsFragment extends Fragment {
                 getActivity().startActivity(intent);
                 getActivity().finish();
                 getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                arabicLanguageButton.setChecked(false);
                 break;
             case R.id.arabic_language_button:
                 LocalizationHelper.setLocale(getActivity(), "ar");
@@ -99,6 +98,7 @@ public class SettingsFragment extends Fragment {
                 getActivity().startActivity(intent1);
                 getActivity().finish();
                 getActivity().overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                englishLanguageButton.setChecked(false);
                 break;
             case R.id.terms_of_service_button:
                 break;

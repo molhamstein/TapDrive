@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="English"
-                android:checked="true"
+                android:checked="false"
                 android:theme="@style/MyRadioButton"
                 android:textColor="@color/white"
                 android:textSize="@dimen/ts_text_normal" />

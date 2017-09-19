@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="10dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:src="@drawable/ic_location_btn"/>
 
     </FrameLayout>

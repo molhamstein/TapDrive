@@ -48,6 +48,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -224,12 +225,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
             if (ContextCompat.checkSelfPermission(getActivity(), permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 this.googleMap.setMyLocationEnabled(true);
                 this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-                myLocationButton.setVisibility(View.VISIBLE);
             }
         } else {
             this.googleMap.setMyLocationEnabled(true);
             this.googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            myLocationButton.setVisibility(View.GONE);
         }
         // used to force Google maps bring
         // the marker to top onClick by showing an empty info window
@@ -247,6 +246,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
 
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.map_style);
         this.googleMap.setMapStyle(style);
+
+        if (DataStore.getInstance().getMeLastLocation() == null) {
+            myLocationButton.setVisibility(View.GONE);
+        } else {
+            myLocationButton.setVisibility(View.VISIBLE);
+        }
 
         // initial data load
         selectedPartner = null;
@@ -653,8 +658,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, OnMap
     }
 
     private void focusOnUserLocation() {
-        LatLng userLocation = new LatLng(DataStore.getInstance().getMyLocationLatitude(), DataStore.getInstance().getMyLocationLongitude());
-        focusMapToCoords(userLocation);
+        if (DataStore.getInstance().getMeLastLocation() != null) {
+            LatLng userLocation = new LatLng(DataStore.getInstance().getMeLastLocation().getLatitude(), DataStore.getInstance().getMeLastLocation().getLongitude());
+            focusMapToCoords(userLocation);
+        } else {
+            LatLng userLocation = new LatLng(DataStore.getInstance().getMyLocationLatitude(), DataStore.getInstance().getMyLocationLongitude());
+            focusMapToCoords(userLocation);
+        }
     }
 
 }

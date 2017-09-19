@@ -27,6 +27,7 @@ import com.brain_socket.tapdrive.data.DataStore;
 import com.brain_socket.tapdrive.data.ServerResult;
 import com.brain_socket.tapdrive.delegates.PermissionGrantedEvent;
 import com.brain_socket.tapdrive.model.user.UserModel;
+import com.brain_socket.tapdrive.utils.LocalizationHelper;
 import com.brain_socket.tapdrive.utils.TapApp;
 import com.bumptech.glide.Glide;
 import com.hbb20.CountryCodePicker;
@@ -296,17 +297,62 @@ public class ProfileFragment extends Fragment implements DatePickerDialog.OnDate
 
     private void changeSelectedGender(Gender gen) {
         if (gender != gen) {
-            if (gender == Gender.Male) {
-                com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(126).duration(400)
-                        .interpolator(new OvershootInterpolator())
-                        .start();
-                gender = Gender.Female;
+
+            String locale = LocalizationHelper.getCurrentLocale();
+            if (!locale.equalsIgnoreCase("")) {
+                if (locale.equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                    if (gender == Gender.Male) {
+                        com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(126).duration(400)
+                                .interpolator(new OvershootInterpolator())
+                                .start();
+                        gender = Gender.Female;
+                    } else {
+                        com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(0).duration(400)
+                                .interpolator(new OvershootInterpolator())
+                                .start();
+                        gender = Gender.Male;
+                    }
+                } else {
+                    if (gender == Gender.Male) {
+                        com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(-140).duration(400)
+                                .interpolator(new OvershootInterpolator())
+                                .start();
+                        gender = Gender.Female;
+                    } else {
+                        com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(0).duration(400)
+                                .interpolator(new OvershootInterpolator())
+                                .start();
+                        gender = Gender.Male;
+                    }
+                }
             } else {
-                com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(0).duration(400)
-                        .interpolator(new OvershootInterpolator())
-                        .start();
-                gender = Gender.Male;
+                if (LocalizationHelper.getDeviceLocale().equalsIgnoreCase(LocalizationHelper.ENGLISH_LOCALE)) {
+                    if (gender == Gender.Male) {
+                        com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(126).duration(400)
+                                .interpolator(new OvershootInterpolator())
+                                .start();
+                        gender = Gender.Female;
+                    } else {
+                        com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(0).duration(400)
+                                .interpolator(new OvershootInterpolator())
+                                .start();
+                        gender = Gender.Male;
+                    }
+                } else {
+                    if (gender == Gender.Male) {
+                        com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(-140).duration(400)
+                                .interpolator(new OvershootInterpolator())
+                                .start();
+                        gender = Gender.Female;
+                    } else {
+                        com.github.florent37.viewanimator.ViewAnimator.animate(vGenderSelector).dp().translationX(0).duration(400)
+                                .interpolator(new OvershootInterpolator())
+                                .start();
+                        gender = Gender.Male;
+                    }
+                }
             }
+
         }
     }
 

@@ -759,13 +759,14 @@ public class MainActivity extends AppCompatActivity
                 openNotificationsScreen();
             } else {
                 Toast.makeText(this, R.string.please_login_hint, Toast.LENGTH_SHORT).show();
+                openInnerLoginFragment(InnerLoginFragment.USER_LOGIN);
             }
         } else if (id == R.id.nav_trip_history) {
-
             if (me != null) {
                 openTripHistoryScreen();
             } else {
                 Toast.makeText(this, R.string.please_login_hint, Toast.LENGTH_SHORT).show();
+                openInnerLoginFragment(InnerLoginFragment.USER_LOGIN);
             }
         } else if (id == R.id.nav_partner_cars) {
             openPartnerCarsScreen();
@@ -835,24 +836,33 @@ public class MainActivity extends AppCompatActivity
 
     private void openInnerLoginFragment(int screenType) {
 
-        applyMainFragmentContainerMargins();
+        if (screenType == InnerLoginFragment.PARTNER_LOGIN) {
 
-        drawer.closeDrawer(GravityCompat.START);
+            applyMainFragmentContainerMargins();
 
-        toolbarTitle.setText("PARTNER LOGIN");
-        toolbarTitle.setVisibility(View.VISIBLE);
+            drawer.closeDrawer(GravityCompat.START);
 
-        fragmentManager = getSupportFragmentManager();
-        InnerLoginFragment innerLoginFragment = InnerLoginFragment.newInstance(screenType);
-        fragment = innerLoginFragment;
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.pull_in_right,
-                        R.anim.push_out_left,
-                        R.anim.pull_in_left,
-                        R.anim.push_out_right)
-                .add(R.id.flMainFragmentContainer, fragment, TAG_PARTNER_LOGIN_FRAG)
-                .addToBackStack(TAG_PARTNER_LOGIN_FRAG)
-                .commit();
+            toolbarTitle.setText("PARTNER LOGIN");
+            toolbarTitle.setVisibility(View.VISIBLE);
+
+            fragmentManager = getSupportFragmentManager();
+            InnerLoginFragment innerLoginFragment = InnerLoginFragment.newInstance(screenType);
+            fragment = innerLoginFragment;
+            fragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.pull_in_right,
+                            R.anim.push_out_left,
+                            R.anim.pull_in_left,
+                            R.anim.push_out_right)
+                    .add(R.id.flMainFragmentContainer, fragment, TAG_PARTNER_LOGIN_FRAG)
+                    .addToBackStack(TAG_PARTNER_LOGIN_FRAG)
+                    .commit();
+
+        } else {
+
+            Intent loginIntent = new Intent(this, LoginActivity.class);
+            this.startActivity(loginIntent);
+
+        }
 
     }
 
